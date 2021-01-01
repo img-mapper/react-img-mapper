@@ -9,13 +9,18 @@
     "prop-types": "^15.7.2",
     "react-fast-compare": "^3.2.0"
   },
+  "homepage": "https://nishargshah.github.io/react-img-mapper",
   "devDependencies": {
+    "gh-pages": "^3.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.1"
   },
   "scripts": {
-    "start": "react-scripts start"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "react-scripts start",
+    "build": "react-scripts build"
   },
   "keywords": [
     "react",

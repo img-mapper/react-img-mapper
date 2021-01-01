@@ -4,10 +4,15 @@ React Component to highlight interactive zones in images
 
 > basically clone of https://github.com/coldiary/react-image-mapper but with some enhancements
 
+## Installation
+
+```
+npm install react-img-mapper --save
+```
 
 ## Demo & Examples
 
-Live demo: coming soon
+Live demo: [demo](https://nishargshah.github.io/react-img-mapper)
 
 To build the example locally, run:
 
@@ -17,12 +22,6 @@ npm start
 ```
 
 Then open [`localhost:3000`](http://localhost:3000) in a browser.
-
-## Installation
-
-```
-npm install react-img-mapper --save
-```
 
 ## Usage
 
@@ -52,6 +51,8 @@ import ImageMapper from 'react-img-mapper';
 |**active**|*bool*|Enable/Disable highlighting|`true`|
 |**imgWidth**|*number*|Original image width|`null`|
 
+&nbsp;
+
 |Props callbacks|Called on|signature|
 |---|---|---|
 |**onLoad**|Image loading and canvas initialization completed|`(): void`|
@@ -61,6 +62,8 @@ import ImageMapper from 'react-img-mapper';
 |**onClick**|Click on a zone in image|`(area: obj, index: num, event): void`|
 |**onImageClick**|Click outside of a zone in image|`(event): void`|
 |**onImageMouseMove**|Moving mouse on the image itself|`(event): void`|
+
+&nbsp;
 
 Map is an object describing highlighted areas in the image.
 
@@ -77,6 +80,8 @@ Its structure is similar to the HTML syntax of mapping:
 |**shape**|*string*|Either `rect`, `circle` or `poly`|
 |**coords**|*array of number*|Coordinates delimiting the zone according to the specified shape: <ul><li>**rect**: `top-left-X`,`top-left-Y`,`bottom-right-X`,`bottom-right-Y`</li><li>**circle**: `center-X`,`center-Y`,`radius`</li><li>**poly**: Every point in the polygon path as `point-X`,`point-Y`,...</li></ul>|
 |**href**|*string*|Target link for a click in the zone (note that if you provide a onClick prop, `href` will be prevented)|
+
+&nbsp;
 
 When received from an event handler, an area is extended with the following properties:
 
