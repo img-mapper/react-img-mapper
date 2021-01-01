@@ -1,28 +1,31 @@
 {
   "name": "react-img-mapper",
   "version": "0.1.0",
-  "private": true,
+  "description": "React Component to highlight interactive zones in images",
+  "main": "src/lib/ImageMapper.js",
+  "author": "Nisharg Shah",
+  "license": "MIT",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.8",
-    "@testing-library/react": "^11.2.2",
-    "@testing-library/user-event": "^12.6.0",
+    "prop-types": "^15.7.2",
+    "react-fast-compare": "^3.2.0"
+  },
+  "devDependencies": {
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-scripts": "4.0.1",
-    "web-vitals": "^0.2.4"
+    "react-scripts": "4.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-scripts start"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
+  "keywords": [
+    "react",
+    "react-img-mapper",
+    "react-image-mapper",
+    "img-mapper",
+    "image-mapper",
+    "img mapper",
+    "image mapper"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",
