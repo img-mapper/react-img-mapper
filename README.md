@@ -1,70 +1,108 @@
-# Getting Started with Create React App
+# React Img Mapper
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React Component to highlight interactive zones in images
 
-## Available Scripts
+> basically clone of https://github.com/coldiary/react-image-mapper but with some enhancements
 
-In the project directory, you can run:
 
-### `npm start`
+## Demo & Examples
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Live demo: coming soon
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+To build the example locally, run:
 
-### `npm test`
+```
+npm install
+npm start
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Then open [`localhost:3000`](http://localhost:3000) in a browser.
 
-### `npm run build`
+## Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+npm install react-img-mapper --save
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Usage
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Import the component as you normally do, and add it wherever you like in your JSX views as below:
 
-### `npm run eject`
+```javascript
+// ES5 require
+var ImageMapper = require('react-img-mapper');
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+// ES6 import
+import ImageMapper from 'react-img-mapper';
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<ImageMapper src={IMAGE_URL} map={AREAS_MAP}/>
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Properties
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+|Props|type|Description|default|
+|---|---|---|---|
+|**src**|*string*|Image source url| **required**|
+|**map**|*string*|Mapping description| `{ name: generated, areas: [ ] }`<br/>(see below) |
+|**fillColor**|*string*|Fill color of the highlighted zone|`rgba(255, 255, 255, 0.5)`|
+|**strokeColor**|*string*|Border color of the highlighted zone|`rgba(0, 0, 0, 0.5)`|
+|**lineWidth**|*number*|Border thickness of the highlighted zone|`1`|
+|**width**|*number*|Image width|`Displayed width`|
+|**height**|*number*|Image height|`Displayed height`|
+|**active**|*bool*|Enable/Disable highlighting|`true`|
+|**imgWidth**|*number*|Original image width|`null`|
 
-## Learn More
+|Props callbacks|Called on|signature|
+|---|---|---|
+|**onLoad**|Image loading and canvas initialization completed|`(): void`|
+|**onMouseEnter**|Hovering a zone in image|`(area: obj, index: num, event): void`|
+|**onMouseLeave**|Leaving a zone in image|`(area: obj, index: num, event): void`|
+|**onMouseMove**|Moving mouse on a zone in image|`(area: obj, index: num, event): void`|
+|**onClick**|Click on a zone in image|`(area: obj, index: num, event): void`|
+|**onImageClick**|Click outside of a zone in image|`(event): void`|
+|**onImageMouseMove**|Moving mouse on the image itself|`(event): void`|
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Map is an object describing highlighted areas in the image.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Its structure is similar to the HTML syntax of mapping:
 
-### Code Splitting
+- **map**: (*object*) Object to describe highlighted zones
+	- **name**: (*string*) Name of the map, used to bind to the image.
+	- **areas**: (*array*) Array of **area objects**
+		- **area**: (*object*) Shaped like below :
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+|Property| type|Description|
+|---|:---:|---|
+|**_id**|*string*|Uniquely identify an area. Index in array is used if this value is not provided.|
+|**shape**|*string*|Either `rect`, `circle` or `poly`|
+|**coords**|*array of number*|Coordinates delimiting the zone according to the specified shape: <ul><li>**rect**: `top-left-X`,`top-left-Y`,`bottom-right-X`,`bottom-right-Y`</li><li>**circle**: `center-X`,`center-Y`,`radius`</li><li>**poly**: Every point in the polygon path as `point-X`,`point-Y`,...</li></ul>|
+|**href**|*string*|Target link for a click in the zone (note that if you provide a onClick prop, `href` will be prevented)|
 
-### Analyzing the Bundle Size
+When received from an event handler, an area is extended with the following properties:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+|Property| type|Description|
+|---|:---:|---|
+|**scaledCoords**|*array of number*|Scaled coordinates (see [Dynamic Scaling](#dynamic-scaling) below)|
+|**center**|*array of number*|Coordinates positionning the center or centroid of the area: `[X, Y]`|
 
-### Making a Progressive Web App
+## Dynamic scaling
+When a parent component updates the **width** prop on `<ImageMapper>`, the area coordinates also have to be scaled. This can be accomplied by specifying both the new **width** and a constant **imgWidth**. **imgWidth** is the width of the original image. `<ImageMapper>` will calculate the new coordinates for each area. For example:
+```javascript
+/* assume that image is actually 1500px wide */
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+// this will be a 1:1 scale, areas will be 3x bigger than they should be
+<ImageMapper width={500} />
 
-### Advanced Configuration
+// this will be the same 1:1 scale, same problem with areas being too big
+<ImageMapper width={500} imgWidth={500} />
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+// this will scale the areas to 1/3rd, they will now fit the 500px image on the screen
+<ImageMapper width={500} imgWidth={1500} />
+```
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## License
 
-### `npm run build` fails to minify
+Distributed with an MIT License. See LICENSE.txt for more details!
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Copyright (c) 2021 Nisharg Shah
