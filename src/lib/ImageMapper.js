@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
-import isEqual from "react-fast-compare";
-import styles from "./styles";
+import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
+import isEqual from 'react-fast-compare';
+import styles from './styles';
 
 const ImageMapper = props => {
   const [map, setMap] = useState(JSON.parse(JSON.stringify(props.map)));
@@ -24,15 +24,15 @@ const ImageMapper = props => {
 
   useEffect(() => {
     console.log('mount');
-    ctx.current = canvas.current.getContext("2d");
+    ctx.current = canvas.current.getContext('2d');
     updateCacheMap();
     setRendered(true);
   }, []);
 
   const updateCacheMap = () => {
-    setMap(JSON.parse(JSON.stringify(props.map)))
+    setMap(JSON.parse(JSON.stringify(props.map)));
     initCanvas();
-  }
+  };
 
   const callingFn = (shape, coords, fillColor, lineWidth, strokeColor) => {
     if (shape === 'rect') {
@@ -44,7 +44,7 @@ const ImageMapper = props => {
     if (shape === 'poly') {
       return drawPoly(coords, fillColor, lineWidth, strokeColor);
     }
-  }
+  };
 
   const drawRect = (coords, fillColor, lineWidth, strokeColor) => {
     let [left, top, right, bot] = coords;
@@ -54,7 +54,7 @@ const ImageMapper = props => {
     ctx.current.strokeRect(left, top, right - left, bot - top);
     ctx.current.fillRect(left, top, right - left, bot - top);
     ctx.current.fillStyle = props.fillColor;
-  }
+  };
 
   const drawCircle = (coords, fillColor, lineWidth, strokeColor) => {
     ctx.current.fillStyle = fillColor;
@@ -66,13 +66,10 @@ const ImageMapper = props => {
     ctx.current.stroke();
     ctx.current.fill();
     ctx.current.fillStyle = props.fillColor;
-  }
+  };
 
   const drawPoly = (coords, fillColor, lineWidth, strokeColor) => {
-    const newCoords = coords.reduce(
-      (a, v, i, s) => (i % 2 ? a : [...a, s.slice(i, i + 2)]),
-      []
-    );
+    const newCoords = coords.reduce((a, v, i, s) => (i % 2 ? a : [...a, s.slice(i, i + 2)]), []);
     const first = newCoords.unshift();
 
     ctx.current.fillStyle = fillColor;
@@ -86,35 +83,37 @@ const ImageMapper = props => {
     ctx.current.stroke();
     ctx.current.fill();
     ctx.current.fillStyle = props.fillColor;
-  }
+  };
 
   const initCanvas = () => {
     if (props.width) img.current.width = props.width;
     if (props.height) img.current.height = props.height;
 
-    canvas.current.width = props.width || props.natural ? img.current.naturalWidth : img.current.clientWidth;
-    canvas.current.height = props.height || props.natural ? img.current.naturalHeight : img.current.clientHeight;
+    canvas.current.width =
+      props.width || props.natural ? img.current.naturalWidth : img.current.clientWidth;
+    canvas.current.height =
+      props.height || props.natural ? img.current.naturalHeight : img.current.clientHeight;
     container.current.style.width =
-      (props.width || props.natural ? img.current.naturalWidth : img.current.clientWidth) + "px";
+      (props.width || props.natural ? img.current.naturalWidth : img.current.clientWidth) + 'px';
     container.current.style.height =
-      (props.height || props.natural ? img.current.naturalHeight : img.current.clientHeight) + "px";
+      (props.height || props.natural ? img.current.naturalHeight : img.current.clientHeight) + 'px';
 
-    ctx.current = canvas.current.getContext("2d");
+    ctx.current = canvas.current.getContext('2d');
     ctx.current.fillStyle = props.fillColor;
     //ctx.strokeStyle = props.strokeColor;
 
     if (props.onLoad) props.onLoad();
 
     renderPrefilledAreas();
-  }
+  };
 
   const hoverOn = (area, index, event) => {
-    const shape = event.target.getAttribute("shape");
+    const shape = event.target.getAttribute('shape');
 
     if (props.active) {
       callingFn(
         shape,
-        event.target.getAttribute("coords").split(","),
+        event.target.getAttribute('coords').split(','),
         area.fillColor,
         area.lineWidth || props.lineWidth,
         area.strokeColor || props.strokeColor
@@ -122,7 +121,7 @@ const ImageMapper = props => {
     }
 
     if (props.onMouseEnter) props.onMouseEnter(area, index, event);
-  }
+  };
 
   const hoverOff = (area, index, event) => {
     if (props.active) {
@@ -131,35 +130,35 @@ const ImageMapper = props => {
     }
 
     if (props.onMouseLeave) props.onMouseLeave(area, index, event);
-  }
+  };
 
   const click = (area, index, event) => {
     if (props.onClick) {
       event.preventDefault();
       props.onClick(area, index, event);
     }
-  }
+  };
 
   const imageClick = event => {
     if (props.onImageClick) {
       event.preventDefault();
       props.onImageClick(event);
     }
-  }
+  };
 
   const mouseMove = (area, index, event) => {
     if (props.onMouseMove) props.onMouseMove(area, index, event);
-  }
+  };
 
   const imageMouseMove = (area, index, event) => {
     if (props.onImageMouseMove) props.onImageMouseMove(area, index, event);
-  }
+  };
 
   const scaleCoords = coords => {
-    const {imgWidth, width} = props;
+    const { imgWidth, width } = props;
     const scale = width && imgWidth && imgWidth > 0 ? width / imgWidth : 1;
     return coords.map(coord => coord * scale);
-  }
+  };
 
   const renderPrefilledAreas = () => {
     map.areas.map(area => {
@@ -172,7 +171,7 @@ const ImageMapper = props => {
         area.strokeColor || props.strokeColor
       );
     });
-  }
+  };
 
   const computeCenter = area => {
     if (!area) return [0, 0];
@@ -180,35 +179,35 @@ const ImageMapper = props => {
     const scaledCoords = scaleCoords(area.coords);
 
     switch (area.shape) {
-      case "circle":
+      case 'circle':
         return [scaledCoords[0], scaledCoords[1]];
-      case "poly":
-      case "rect":
+      case 'poly':
+      case 'rect':
       default: {
         // Calculate centroid
         const n = scaledCoords.length / 2;
-        const {y, x} = scaledCoords.reduce(
-          ({y, x}, val, idx) => {
-            return !(idx % 2) ? {y, x: x + val / n} : {y: y + val / n, x};
+        const { y, x } = scaledCoords.reduce(
+          ({ y, x }, val, idx) => {
+            return !(idx % 2) ? { y, x: x + val / n } : { y: y + val / n, x };
           },
-          {y: 0, x: 0}
+          { y: 0, x: 0 }
         );
         return [x, y];
       }
     }
-  }
+  };
 
   const renderAreas = () => {
     return map.areas.map((area, index) => {
       const scaledCoords = scaleCoords(area.coords);
       const center = computeCenter(area);
-      const extendedArea = {...area, scaledCoords, center};
+      const extendedArea = { ...area, scaledCoords, center };
 
       return (
         <area
           key={area._id || index}
           shape={area.shape}
-          coords={scaledCoords.join(",")}
+          coords={scaledCoords.join(',')}
           onMouseEnter={event => hoverOn(extendedArea, index, event)}
           onMouseLeave={event => hoverOff(extendedArea, index, event)}
           onMouseMove={event => mouseMove(extendedArea, index, event)}
@@ -218,7 +217,7 @@ const ImageMapper = props => {
         />
       );
     });
-  }
+  };
 
   return (
     <div id="img-mapper" style={styles(props).container} ref={container}>
@@ -239,17 +238,17 @@ const ImageMapper = props => {
       </map>
     </div>
   );
-}
+};
 
 ImageMapper.defaultProps = {
   active: true,
-  fillColor: "rgba(255, 255, 255, 0.5)",
+  fillColor: 'rgba(255, 255, 255, 0.5)',
   lineWidth: 1,
   map: {
     areas: [],
-    name: "image-map-" + Math.random()
+    name: 'image-map-' + Math.random(),
   },
-  strokeColor: "rgba(0, 0, 0, 0.5)",
+  strokeColor: 'rgba(0, 0, 0, 0.5)',
   natural: false,
 };
 
@@ -280,29 +279,27 @@ ImageMapper.propTypes = {
           href: PropTypes.string,
           shape: PropTypes.string,
           preFillColor: PropTypes.string,
-          fillColor: PropTypes.string
-        })
+          fillColor: PropTypes.string,
+        }),
       })
     ),
-    name: PropTypes.string
-  })
+    name: PropTypes.string,
+  }),
 };
 
 export default React.memo(ImageMapper, (prevProps, nextProps) => {
   const watchedProps = [
-    "active",
-    "fillColor",
-    "height",
-    "imgWidth",
-    "lineWidth",
-    "src",
-    "strokeColor",
-    "width"
+    'active',
+    'fillColor',
+    'height',
+    'imgWidth',
+    'lineWidth',
+    'src',
+    'strokeColor',
+    'width',
   ];
 
-  const propChanged = watchedProps.some(
-    prop => prevProps[prop] !== nextProps[prop]
-  );
+  const propChanged = watchedProps.some(prop => prevProps[prop] !== nextProps[prop]);
 
   return isEqual(prevProps.map, nextProps.map) || !propChanged;
 });
