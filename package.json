@@ -1,6 +1,6 @@
 {
   "name": "react-img-mapper",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "React Component to highlight interactive zones in images",
   "keywords": [
     "react",
@@ -27,7 +27,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
-    "compile": "babel src/lib/ImageMapper.js -d lib"
+    "compile": "babel src/lib/** -d lib"
   },
   "browserslist": {
     "production": [
