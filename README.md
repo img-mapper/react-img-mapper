@@ -30,7 +30,7 @@ npm start
 
 Then open [`localhost:3000`](http://localhost:3000) in a browser.
 
-If you want to change something and want to make a compiled file, you just need to run `npx webpack`
+If you want to change something and want to make a compiled file, you just need to run `npm run compile`
 
 ## Usage
 
