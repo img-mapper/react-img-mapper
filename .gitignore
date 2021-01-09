@@ -6,7 +6,8 @@
 .pnp.js
 .idea
 package-lock.json
-lib
+/lib
+.eslintcache
 
 # testing
 /coverage

@@ -30,6 +30,8 @@ npm start
 
 Then open [`localhost:3000`](http://localhost:3000) in a browser.
 
+If you want to change something and want to make a compiled file, you just need to run `npx webpack`
+
 ## Usage
 
 Import the component as you normally do, and add it wherever you like in your JSX views as below:
