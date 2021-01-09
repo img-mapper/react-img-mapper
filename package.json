@@ -10,6 +10,13 @@
     "react-fast-compare": "^3.2.0"
   },
   "homepage": "https://nishargshah.github.io/react-img-mapper",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NishargShah/react-img-mapper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NishargShah/react-img-mapper/issues"
+  },
   "devDependencies": {
     "gh-pages": "^3.1.0"
   },

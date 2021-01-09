@@ -1,34 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import isEqual from "react-fast-compare";
-
-let absPos = {
-  position: "absolute",
-  top: 0,
-  left: 0
-};
-
-const styles = props => {
-  return ({
-    container: {
-      position: "relative"
-    },
-    canvas: {
-      ...absPos,
-      pointerEvents: "none",
-      zIndex: 2
-    },
-    img: {
-      ...absPos,
-      zIndex: 1,
-      userSelect: "none"
-    },
-    map: (
-      props?.onClick && {
-        cursor: "pointer"
-      }) || undefined
-  });
-}
+import styles from "./styles";
 
 const ImageMapper = props => {
   const [map, setMap] = useState(JSON.parse(JSON.stringify(props.map)));
@@ -56,7 +29,6 @@ const ImageMapper = props => {
     setRendered(true);
   }, []);
 
-  // DONE
   const updateCacheMap = () => {
     setMap(JSON.parse(JSON.stringify(props.map)))
     initCanvas();
@@ -64,18 +36,17 @@ const ImageMapper = props => {
 
   const callingFn = (shape, coords, fillColor, lineWidth, strokeColor) => {
     if (shape === 'rect') {
-      return drawrect(coords, fillColor, lineWidth, strokeColor);
+      return drawRect(coords, fillColor, lineWidth, strokeColor);
     }
     if (shape === 'circle') {
-      return drawcircle(coords, fillColor, lineWidth, strokeColor);
+      return drawCircle(coords, fillColor, lineWidth, strokeColor);
     }
     if (shape === 'poly') {
-      return drawpoly(coords, fillColor, lineWidth, strokeColor);
+      return drawPoly(coords, fillColor, lineWidth, strokeColor);
     }
   }
 
-  // DONE
-  const drawrect = (coords, fillColor, lineWidth, strokeColor) => {
+  const drawRect = (coords, fillColor, lineWidth, strokeColor) => {
     let [left, top, right, bot] = coords;
     ctx.current.fillStyle = fillColor;
     ctx.current.lineWidth = lineWidth;
@@ -85,8 +56,7 @@ const ImageMapper = props => {
     ctx.current.fillStyle = props.fillColor;
   }
 
-  // DONE
-  const drawcircle = (coords, fillColor, lineWidth, strokeColor) => {
+  const drawCircle = (coords, fillColor, lineWidth, strokeColor) => {
     ctx.current.fillStyle = fillColor;
     ctx.current.beginPath();
     ctx.current.lineWidth = lineWidth;
@@ -98,8 +68,7 @@ const ImageMapper = props => {
     ctx.current.fillStyle = props.fillColor;
   }
 
-  // DONE
-  const drawpoly = (coords, fillColor, lineWidth, strokeColor) => {
+  const drawPoly = (coords, fillColor, lineWidth, strokeColor) => {
     const newCoords = coords.reduce(
       (a, v, i, s) => (i % 2 ? a : [...a, s.slice(i, i + 2)]),
       []
@@ -119,18 +88,16 @@ const ImageMapper = props => {
     ctx.current.fillStyle = props.fillColor;
   }
 
-  // DONE
   const initCanvas = () => {
     if (props.width) img.current.width = props.width;
-
     if (props.height) img.current.height = props.height;
 
-    canvas.current.width = props.width || img.current.clientWidth;
-    canvas.current.height = props.height || img.current.clientHeight;
+    canvas.current.width = props.width || props.natural ? img.current.naturalWidth : img.current.clientWidth;
+    canvas.current.height = props.height || props.natural ? img.current.naturalHeight : img.current.clientHeight;
     container.current.style.width =
-      (props.width || img.current.clientWidth) + "px";
+      (props.width || props.natural ? img.current.naturalWidth : img.current.clientWidth) + "px";
     container.current.style.height =
-      (props.height || img.current.clientHeight) + "px";
+      (props.height || props.natural ? img.current.naturalHeight : img.current.clientHeight) + "px";
 
     ctx.current = canvas.current.getContext("2d");
     ctx.current.fillStyle = props.fillColor;
@@ -141,7 +108,6 @@ const ImageMapper = props => {
     renderPrefilledAreas();
   }
 
-  // DONE
   const hoverOn = (area, index, event) => {
     const shape = event.target.getAttribute("shape");
 
@@ -158,7 +124,6 @@ const ImageMapper = props => {
     if (props.onMouseEnter) props.onMouseEnter(area, index, event);
   }
 
-  // DONE
   const hoverOff = (area, index, event) => {
     if (props.active) {
       ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
@@ -168,7 +133,6 @@ const ImageMapper = props => {
     if (props.onMouseLeave) props.onMouseLeave(area, index, event);
   }
 
-  // DONE
   const click = (area, index, event) => {
     if (props.onClick) {
       event.preventDefault();
@@ -176,7 +140,6 @@ const ImageMapper = props => {
     }
   }
 
-  // DONE
   const imageClick = event => {
     if (props.onImageClick) {
       event.preventDefault();
@@ -184,25 +147,20 @@ const ImageMapper = props => {
     }
   }
 
-  // DONE
   const mouseMove = (area, index, event) => {
     if (props.onMouseMove) props.onMouseMove(area, index, event);
   }
 
-  // DONE
   const imageMouseMove = (area, index, event) => {
     if (props.onImageMouseMove) props.onImageMouseMove(area, index, event);
   }
 
-  // DONE
   const scaleCoords = coords => {
     const {imgWidth, width} = props;
-    // calculate scale based on current 'width' and the original 'imgWidth'
     const scale = width && imgWidth && imgWidth > 0 ? width / imgWidth : 1;
     return coords.map(coord => coord * scale);
   }
 
-  // DONE
   const renderPrefilledAreas = () => {
     map.areas.map(area => {
       if (!area.preFillColor) return;
@@ -216,7 +174,6 @@ const ImageMapper = props => {
     });
   }
 
-  // DONE
   const computeCenter = area => {
     if (!area) return [0, 0];
 
@@ -241,7 +198,6 @@ const ImageMapper = props => {
     }
   }
 
-  // DONE
   const renderAreas = () => {
     return map.areas.map((area, index) => {
       const scaledCoords = scaleCoords(area.coords);
@@ -264,10 +220,10 @@ const ImageMapper = props => {
     });
   }
 
-  // DONE
   return (
-    <div style={styles(props).container} ref={container}>
+    <div id="img-mapper" style={styles(props).container} ref={container}>
       <img
+        className="img-mapper-img"
         style={styles().img}
         src={props.src}
         useMap={`#${map.name}`}
@@ -277,8 +233,8 @@ const ImageMapper = props => {
         onClick={imageClick}
         onMouseMove={imageMouseMove}
       />
-      <canvas ref={canvas} style={styles().canvas} />
-      <map name={map.name} style={styles().map}>
+      <canvas className="img-mapper-canvas" ref={canvas} style={styles().canvas} />
+      <map className="img-mapper-map" name={map.name} style={styles().map}>
         {isRendered && renderAreas()}
       </map>
     </div>
@@ -293,7 +249,8 @@ ImageMapper.defaultProps = {
     areas: [],
     name: "image-map-" + Math.random()
   },
-  strokeColor: "rgba(0, 0, 0, 0.5)"
+  strokeColor: "rgba(0, 0, 0, 0.5)",
+  natural: false,
 };
 
 ImageMapper.propTypes = {
@@ -305,6 +262,7 @@ ImageMapper.propTypes = {
   src: PropTypes.string.isRequired,
   strokeColor: PropTypes.string,
   width: PropTypes.number,
+  natural: PropTypes.bool,
 
   onClick: PropTypes.func,
   onMouseMove: PropTypes.func,

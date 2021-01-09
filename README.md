@@ -2,7 +2,14 @@
 
 React Component to highlight interactive zones in images
 
-> basically clone of https://github.com/coldiary/react-image-mapper but with some enhancements
+> This repository is based on react-image-mapper but with some enhancements
+
+```
+1. Decreased size of bundled
+2. Added Natural Dimentions options ( For Network Image )
+3. Added image highlight stay feature
+4. Promise to be maintained this repository
+```
 
 ## Installation
 
@@ -50,6 +57,7 @@ import ImageMapper from 'react-img-mapper';
 |**height**|*number*|Image height|`Displayed height`|
 |**active**|*bool*|Enable/Disable highlighting|`true`|
 |**imgWidth**|*number*|Original image width|`null`|
+|**natural**|*bool*|Give the original dimensions ( height & width ) to canvas and image wrapper|`false`|
 
 &nbsp;
 
