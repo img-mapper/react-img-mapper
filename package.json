@@ -2,35 +2,6 @@
   "name": "react-img-mapper",
   "version": "0.2.0",
   "description": "React Component to highlight interactive zones in images",
-  "main": "lib/ImageMapper.js",
-  "author": "Nisharg Shah",
-  "license": "MIT",
-  "dependencies": {
-    "prop-types": "^15.7.2",
-    "react-fast-compare": "^3.2.0"
-  },
-  "homepage": "https://nishargshah.github.io/react-img-mapper",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/NishargShah/react-img-mapper.git"
-  },
-  "bugs": {
-    "url": "https://github.com/NishargShah/react-img-mapper/issues"
-  },
-  "devDependencies": {
-    "gh-pages": "^3.1.0"
-  },
-  "peerDependencies": {
-    "react": "16.x || 17.x",
-    "react-dom": "16.x || 17.x",
-    "react-scripts": "3.x || 4.x"
-  },
-  "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build"
-  },
   "keywords": [
     "react",
     "react-img-mapper",
@@ -40,6 +11,23 @@
     "img mapper",
     "image mapper"
   ],
+  "homepage": "https://nishargshah.github.io/react-img-mapper",
+  "bugs": {
+    "url": "https://github.com/NishargShah/react-img-mapper/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NishargShah/react-img-mapper.git"
+  },
+  "license": "MIT",
+  "author": "Nisharg Shah",
+  "main": "lib/ImageMapper.js",
+  "scripts": {
+    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "react-scripts start"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -51,5 +39,29 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "dependencies": {
+    "prop-types": "^15.7.2",
+    "react-fast-compare": "^3.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.17.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "gh-pages": "^3.1.0",
+    "prettier": "^2.2.1",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-scripts": "4.0.1"
+  },
+  "peerDependencies": {
+    "react": "16.x || 17.x",
+    "react-dom": "16.x || 17.x",
+    "react-scripts": "3.x || 4.x"
   }
 }

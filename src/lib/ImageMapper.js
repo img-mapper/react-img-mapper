@@ -18,14 +18,12 @@ const ImageMapper = props => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
     } else {
-      console.log('update');
       updateCacheMap();
       initCanvas();
     }
   }, [props, isInitialMount]);
 
   useEffect(() => {
-    console.log('mount');
     ctx.current = canvas.current.getContext('2d');
     updateCacheMap();
     setRendered(true);
@@ -192,13 +190,12 @@ const ImageMapper = props => {
       case 'poly':
       case 'rect':
       default: {
-        // Calculate centroid
         const n = scaledCoords.length / 2;
-        const { y, x } = scaledCoords.reduce(
+        const { scaleY, scaleX } = scaledCoords.reduce(
           ({ y, x }, val, idx) => (!(idx % 2) ? { y, x: x + val / n } : { y: y + val / n, x }),
           { y: 0, x: 0 }
         );
-        return [x, y];
+        return [scaleX, scaleY];
       }
     }
   };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ImageMapper from '../lib/ImageMapper';
-import './NewClaim.scss';
+import './example.css';
 
 const MAP = {
   name: 'my-map',
@@ -56,12 +56,12 @@ const Example = () => {
   };
 
   const clickedOutside = e => {
-    const coords = {x: e.nativeEvent.layerX, y: e.nativeEvent.layerY};
+    const coords = { x: e.nativeEvent.layerX, y: e.nativeEvent.layerY };
     setMsg(`You clicked on the image at coords ${JSON.stringify(coords)} !`);
   };
 
   const moveOnImage = e => {
-    const coords = {x: e.nativeEvent.layerX, y: e.nativeEvent.layerY};
+    const coords = { x: e.nativeEvent.layerX, y: e.nativeEvent.layerY };
     setMsg(`You moved on the image at coords ${JSON.stringify(coords)} !`);
   };
 
@@ -76,11 +76,11 @@ const Example = () => {
   };
 
   const moveOnArea = (area, e) => {
-    const coords = {x: e.nativeEvent.layerX, y: e.nativeEvent.layerY};
+    const coords = { x: e.nativeEvent.layerX, y: e.nativeEvent.layerY };
     setMoveMsg(`You moved on ${area.shape} ${area.name} at coords ${JSON.stringify(coords)} !`);
   };
 
-  const getTipPosition = area => ({top: `${area.center[1]}px`, left: `${area.center[0]}px`});
+  const getTipPosition = area => ({ top: `${area.center[1]}px`, left: `${area.center[0]}px` });
 
   const firstBlock = `
   <div className="container">
@@ -154,12 +154,11 @@ const Example = () => {
   return (
     <div className="grid">
       <div className="presenter">
-        <div style={{position: 'relative'}}>
+        <div style={{ position: 'relative' }}>
           <ImageMapper
             src={URL}
             map={MAP}
-            width={600}
-            height={800}
+            width={500}
             onLoad={load}
             onClick={area => clicked(area)}
             onMouseEnter={area => enterArea(area)}
@@ -171,7 +170,7 @@ const Example = () => {
             strokeColor="black"
           />
           {hoveredArea && (
-            <span className="tooltip" style={{...getTipPosition(hoveredArea)}}>
+            <span className="tooltip" style={{ ...getTipPosition(hoveredArea) }}>
               {hoveredArea && hoveredArea.name}
             </span>
           )}
@@ -193,7 +192,7 @@ const Example = () => {
           {codeDetails ? '[-]' : '[+]'}
         </span>
         <pre className="highlight">
-          <code className="js" style={{display: codeDetails ? 'block' : 'none'}}>
+          <code className="js" style={{ display: codeDetails ? 'block' : 'none' }}>
             {thirdBlock}
           </code>
         </pre>
@@ -202,7 +201,7 @@ const Example = () => {
           {stylingDetails ? '[-]' : '[+]'}
         </span>
         <pre className="highlight">
-          <code className="css" style={{display: stylingDetails ? 'block' : 'none'}}>
+          <code className="css" style={{ display: stylingDetails ? 'block' : 'none' }}>
             {fourthBlock}
           </code>
         </pre>
