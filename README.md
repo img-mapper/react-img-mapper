@@ -6,7 +6,7 @@ React Component to highlight interactive zones in images
 
 ```
 1. Decreased size of bundled
-2. Added Natural Dimentions options ( For Network Image )
+2. Added Natural Dimensions options ( For Network Image )
 3. Added image highlight stay feature
 4. Promise to be maintained this repository
 ```
@@ -75,7 +75,7 @@ import ImageMapper from 'react-img-mapper';
 
 &nbsp;
 
-Map is an object describing highlighted areas in the image.
+A map is an object describing highlighted areas in the image.
 
 Its structure is similar to the HTML syntax of mapping:
 
@@ -86,10 +86,10 @@ Its structure is similar to the HTML syntax of mapping:
 
 |Property| type|Description|
 |---|:---:|---|
-|**_id**|*string*|Uniquely identify an area. Index in array is used if this value is not provided.|
+|**_id**|*string*|Uniquely identify an area. An index in an array is used if this value is not provided.|
 |**shape**|*string*|Either `rect`, `circle` or `poly`|
 |**coords**|*array of number*|Coordinates delimiting the zone according to the specified shape: <ul><li>**rect**: `top-left-X`,`top-left-Y`,`bottom-right-X`,`bottom-right-Y`</li><li>**circle**: `center-X`,`center-Y`,`radius`</li><li>**poly**: Every point in the polygon path as `point-X`,`point-Y`,...</li></ul>|
-|**href**|*string*|Target link for a click in the zone (note that if you provide a onClick prop, `href` will be prevented)|
+|**href**|*string*|Target link for a click in the zone (note that if you provide an onClick prop, `href` will be prevented)|
 
 &nbsp;
 
@@ -101,7 +101,7 @@ When received from an event handler, an area is extended with the following prop
 |**center**|*array of number*|Coordinates positionning the center or centroid of the area: `[X, Y]`|
 
 ## Dynamic scaling
-When a parent component updates the **width** prop on `<ImageMapper>`, the area coordinates also have to be scaled. This can be accomplied by specifying both the new **width** and a constant **imgWidth**. **imgWidth** is the width of the original image. `<ImageMapper>` will calculate the new coordinates for each area. For example:
+When a parent component updates the **width** prop on `<ImageMapper>`, the area coordinates also have to be scaled. This can be accomplished by specifying both the new **width** and a constant **imgWidth**. **imgWidth** is the width of the original image. `<ImageMapper>` will calculate the new coordinates for each area. For example:
 ```javascript
 /* assume that image is actually 1500px wide */
 
