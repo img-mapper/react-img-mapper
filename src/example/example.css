@@ -1,8 +1,3 @@
-/*
-// Examples Stylesheet
-// -------------------
-*/
-
 body {
 	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 	font-size: 14px;
@@ -15,7 +10,7 @@ body {
 	position: absolute;
 	color: #fff;
 	padding: 10px;
-	background: rgba(0,0,0,0.8);
+	background: rgba(0, 0, 0, .8);
 	transform: translate3d(-50%, -50%, 0);
 	border-radius: 5px;
 	pointer-events: none;
@@ -38,7 +33,7 @@ a:hover {
 }
 
 .grid {
-	margin-top: 50p;
+	margin-top: 50px;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -65,10 +60,15 @@ a:hover {
 	color: #999;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
 	color: #222;
 	font-weight: 100;
-	margin: 0.5em 0;
+	margin: .5em 0;
 }
 
 pre.message {
@@ -80,7 +80,7 @@ pre.message {
 label {
 	color: #999;
 	display: inline-block;
-	font-size: 0.85em;
+	font-size: .85em;
 	font-weight: bold;
 	margin: 1em 0;
 	text-transform: uppercase;
@@ -90,4 +90,8 @@ label {
 	margin: 15px 0;
 	font-style: italic;
 	color: #999;
+}
+
+.highlight {
+	background-color: #f0f0f0;
 }

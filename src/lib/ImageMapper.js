@@ -4,7 +4,9 @@ import isEqual from 'react-fast-compare';
 import styles from './styles';
 
 const ImageMapper = props => {
-  const [map, setMap] = useState(JSON.parse(JSON.stringify(props.map)));
+  const { map: mapProp, src: srcProp } = props;
+
+  const [map, setMap] = useState(JSON.parse(JSON.stringify(mapProp)));
   const [isRendered, setRendered] = useState(false);
   const container = useRef(null);
   const img = useRef(null);
@@ -30,7 +32,7 @@ const ImageMapper = props => {
   }, []);
 
   const updateCacheMap = () => {
-    setMap(JSON.parse(JSON.stringify(props.map)));
+    setMap(JSON.parse(JSON.stringify(mapProp)));
     initCanvas();
   };
 
@@ -44,10 +46,11 @@ const ImageMapper = props => {
     if (shape === 'poly') {
       return drawPoly(coords, fillColor, lineWidth, strokeColor);
     }
+    return false;
   };
 
   const drawRect = (coords, fillColor, lineWidth, strokeColor) => {
-    let [left, top, right, bot] = coords;
+    const [left, top, right, bot] = coords;
     ctx.current.fillStyle = fillColor;
     ctx.current.lineWidth = lineWidth;
     ctx.current.strokeStyle = strokeColor;
@@ -89,14 +92,18 @@ const ImageMapper = props => {
     if (props.width) img.current.width = props.width;
     if (props.height) img.current.height = props.height;
 
-    canvas.current.width =
-      props.width || props.natural ? img.current.naturalWidth : img.current.clientWidth;
-    canvas.current.height =
-      props.height || props.natural ? img.current.naturalHeight : img.current.clientHeight;
-    container.current.style.width =
-      (props.width || props.natural ? img.current.naturalWidth : img.current.clientWidth) + 'px';
-    container.current.style.height =
-      (props.height || props.natural ? img.current.naturalHeight : img.current.clientHeight) + 'px';
+    canvas.current.width = props.natural
+      ? img.current.naturalWidth
+      : props.width || img.current.clientWidth;
+    canvas.current.height = props.natural
+      ? img.current.naturalHeight
+      : props.height || img.current.clientHeight;
+    container.current.style.width = `${
+      props.natural ? img.current.naturalWidth : props.width || img.current.clientWidth
+    }px`;
+    container.current.style.height = `${
+      props.natural ? img.current.naturalHeight : props.height || img.current.clientHeight
+    }px`;
 
     ctx.current = canvas.current.getContext('2d');
     ctx.current.fillStyle = props.fillColor;
@@ -162,7 +169,7 @@ const ImageMapper = props => {
 
   const renderPrefilledAreas = () => {
     map.areas.map(area => {
-      if (!area.preFillColor) return;
+      if (!area.preFillColor) return false;
       callingFn(
         area.shape,
         scaleCoords(area.coords),
@@ -170,6 +177,7 @@ const ImageMapper = props => {
         area.lineWidth || props.lineWidth,
         area.strokeColor || props.strokeColor
       );
+      return true;
     });
   };
 
@@ -187,9 +195,7 @@ const ImageMapper = props => {
         // Calculate centroid
         const n = scaledCoords.length / 2;
         const { y, x } = scaledCoords.reduce(
-          ({ y, x }, val, idx) => {
-            return !(idx % 2) ? { y, x: x + val / n } : { y: y + val / n, x };
-          },
+          ({ y, x }, val, idx) => (!(idx % 2) ? { y, x: x + val / n } : { y: y + val / n, x }),
           { y: 0, x: 0 }
         );
         return [x, y];
@@ -197,8 +203,8 @@ const ImageMapper = props => {
     }
   };
 
-  const renderAreas = () => {
-    return map.areas.map((area, index) => {
+  const renderAreas = () =>
+    map.areas.map((area, index) => {
       const scaledCoords = scaleCoords(area.coords);
       const center = computeCenter(area);
       const extendedArea = { ...area, scaledCoords, center };
@@ -217,14 +223,14 @@ const ImageMapper = props => {
         />
       );
     });
-  };
 
   return (
     <div id="img-mapper" style={styles(props).container} ref={container}>
       <img
+        role="presentation"
         className="img-mapper-img"
         style={styles().img}
-        src={props.src}
+        src={srcProp}
         useMap={`#${map.name}`}
         alt="map"
         ref={img}
@@ -246,10 +252,21 @@ ImageMapper.defaultProps = {
   lineWidth: 1,
   map: {
     areas: [],
-    name: 'image-map-' + Math.random(),
+    name: `image-map-${Math.random()}`,
   },
   strokeColor: 'rgba(0, 0, 0, 0.5)',
   natural: false,
+  height: 0,
+  imgWidth: 0,
+  width: 0,
+
+  onClick: null,
+  onMouseMove: null,
+  onImageClick: null,
+  onImageMouseMove: null,
+  onLoad: null,
+  onMouseEnter: null,
+  onMouseLeave: null,
 };
 
 ImageMapper.propTypes = {
