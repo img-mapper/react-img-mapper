@@ -4,7 +4,7 @@ import isEqual from 'react-fast-compare';
 import styles from './styles';
 
 const ImageMapper = props => {
-  const { map: mapProp, src: srcProp } = props;
+  const { map: mapProp, src: srcProp, rerenderProps } = props;
 
   const [map, setMap] = useState(JSON.parse(JSON.stringify(mapProp)));
   const [isRendered, setRendered] = useState(false);
@@ -256,6 +256,7 @@ ImageMapper.defaultProps = {
   height: 0,
   imgWidth: 0,
   width: 0,
+  rerenderProps: [],
 
   onClick: null,
   onMouseMove: null,
@@ -276,6 +277,7 @@ ImageMapper.propTypes = {
   strokeColor: PropTypes.string,
   width: PropTypes.number,
   natural: PropTypes.bool,
+  rerenderProps: PropTypes.array,
 
   onClick: PropTypes.func,
   onMouseMove: PropTypes.func,
@@ -308,9 +310,11 @@ export default React.memo(ImageMapper, (prevProps, nextProps) => {
     'height',
     'imgWidth',
     'lineWidth',
+    'map',
     'src',
     'strokeColor',
     'width',
+    ...nextProps.rerenderProps,
   ];
 
   const propChanged = watchedProps.some(prop => prevProps[prop] !== nextProps[prop]);
