@@ -8,6 +8,7 @@ const ImageMapper = props => {
 
   const [map, setMap] = useState(JSON.parse(JSON.stringify(mapProp)));
   const [isRendered, setRendered] = useState(false);
+  const [imgRef, setImgRef] = useState(false);
   const container = useRef(null);
   const img = useRef(null);
   const canvas = useRef(null);
@@ -94,11 +95,13 @@ const ImageMapper = props => {
 
   const getValues = (type, measure) => {
     if (type === 'width') {
+      if (props.responsive) return props.parentWidth;
       if (props.natural) return img.current.naturalWidth;
       if (props.width) return measure;
       return img.current.clientWidth;
     }
     if (type === 'height') {
+      if (props.responsive) return img.current.clientHeight;
       if (props.natural) return img.current.naturalHeight;
       if (props.height) return measure;
       return img.current.clientHeight;
@@ -112,9 +115,13 @@ const ImageMapper = props => {
     const imageWidth = getValues('width', imgWidth);
     const imageHeight = getValues('height', imgHeight);
 
-    if (props.width) img.current.width = imgWidth;
+    if (props.width || props.responsive) {
+      img.current.width = props.responsive ? imageWidth : imgWidth;
+    }
 
-    if (props.height) img.current.height = imgHeight;
+    if (props.height || props.responsive) {
+      img.current.height = props.responsive ? imageHeight : imgHeight;
+    }
 
     canvas.current.width = imageWidth;
     canvas.current.height = imageHeight;
@@ -132,6 +139,7 @@ const ImageMapper = props => {
       });
     }
 
+    setImgRef(img.current);
     renderPrefilledAreas();
   };
 
@@ -183,8 +191,11 @@ const ImageMapper = props => {
   };
 
   const scaleCoords = coords => {
-    const { imgWidth, width } = props;
+    const { imgWidth, width, responsive, parentWidth } = props;
     const scale = width && imgWidth && imgWidth > 0 ? width / imgWidth : 1;
+    if (responsive && parentWidth) {
+      return coords.map(coord => (coord * scale) / (imgRef.naturalWidth / parentWidth));
+    }
     return coords.map(coord => coord * scale);
   };
 
@@ -249,7 +260,7 @@ const ImageMapper = props => {
       <img
         role="presentation"
         className="img-mapper-img"
-        style={styles().img}
+        style={styles(props).img}
         src={srcProp}
         useMap={`#${map.name}`}
         alt="map"
@@ -280,6 +291,8 @@ ImageMapper.defaultProps = {
   imgWidth: 0,
   width: 0,
   rerenderProps: [],
+  parentWidth: 0,
+  responsive: false,
 
   onClick: null,
   onMouseMove: null,
@@ -301,6 +314,8 @@ ImageMapper.propTypes = {
   width: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
   natural: PropTypes.bool,
   rerenderProps: PropTypes.array,
+  parentWidth: PropTypes.number,
+  responsive: PropTypes.bool,
 
   onClick: PropTypes.func,
   onMouseMove: PropTypes.func,
@@ -333,6 +348,7 @@ export default React.memo(ImageMapper, (prevProps, nextProps) => {
     'height',
     'imgWidth',
     'lineWidth',
+    'map',
     'src',
     'strokeColor',
     'width',

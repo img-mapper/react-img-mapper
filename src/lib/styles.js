@@ -4,6 +4,18 @@ const absPos = {
   left: 0,
 };
 
+const imgNonResponsive = {
+  ...absPos,
+  zIndex: 1,
+  userSelect: 'none',
+};
+
+const imgResponsive = {
+  ...imgNonResponsive,
+  width: '100%',
+  height: 'auto',
+};
+
 const styles = props => ({
   container: {
     position: 'relative',
@@ -13,11 +25,7 @@ const styles = props => ({
     pointerEvents: 'none',
     zIndex: 2,
   },
-  img: {
-    ...absPos,
-    zIndex: 1,
-    userSelect: 'none',
-  },
+  img: props?.responsive ? imgResponsive : imgNonResponsive,
   map:
     (props?.onClick && {
       cursor: 'pointer',
