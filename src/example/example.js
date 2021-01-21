@@ -69,6 +69,7 @@ const Example = () => {
       lineWidth={1}
       strokeColor="black"
       parentWidth={parentRef.current.clientWidth}
+      stayHighlighted
       responsive
     />
     {hoveredArea && (
@@ -139,6 +140,7 @@ const Example = () => {
               lineWidth={1}
               strokeColor="black"
               parentWidth={parentRef.current.clientWidth}
+              stayHighlighted
               responsive
             />
           )}

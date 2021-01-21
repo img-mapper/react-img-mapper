@@ -7,6 +7,7 @@ const ImageMapper = props => {
   const { map: mapProp, src: srcProp, rerenderProps } = props;
 
   const [map, setMap] = useState(JSON.parse(JSON.stringify(mapProp)));
+  const [storedMap] = useState(map);
   const [isRendered, setRendered] = useState(false);
   const [imgRef, setImgRef] = useState(false);
   const container = useRef(null);
@@ -171,6 +172,14 @@ const ImageMapper = props => {
   const click = (area, index, event) => {
     if (props.onClick) {
       event.preventDefault();
+      if (props.stayHighlighted) {
+        const newArea = { ...area };
+        newArea.preFillColor = area.fillColor;
+        const updatedAreas = storedMap.areas.map(cur =>
+          cur[props.areaKeyName] === area[props.areaKeyName] ? newArea : cur
+        );
+        setMap(prev => ({ ...prev, areas: updatedAreas }));
+      }
       props.onClick(area, index, event);
     }
   };
@@ -242,7 +251,7 @@ const ImageMapper = props => {
 
       return (
         <area
-          key={area._id || index}
+          key={area[props.areaKeyName] || index.toString()}
           shape={area.shape}
           coords={scaledCoords.join(',')}
           onMouseEnter={event => hoverOn(extendedArea, index, event)}
@@ -290,6 +299,8 @@ ImageMapper.defaultProps = {
   height: 0,
   imgWidth: 0,
   width: 0,
+  areaKeyName: 'id',
+  stayHighlighted: false,
   rerenderProps: [],
   parentWidth: 0,
   responsive: false,
@@ -313,6 +324,8 @@ ImageMapper.propTypes = {
   strokeColor: PropTypes.string,
   width: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
   natural: PropTypes.bool,
+  areaKeyName: PropTypes.string,
+  stayHighlighted: PropTypes.bool,
   rerenderProps: PropTypes.array,
   parentWidth: PropTypes.number,
   responsive: PropTypes.bool,
