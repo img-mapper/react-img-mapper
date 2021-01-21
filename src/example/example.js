@@ -1,44 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ImageMapper from '../lib/ImageMapper';
+import URL from './assets/example.jpg';
+import areasJSON from './assets/example.json';
 import './example.css';
 
 const MAP = {
   name: 'my-map',
-  areas: [
-    {
-      name: '1',
-      shape: 'poly',
-      coords: [25, 33, 27, 300, 128, 240, 128, 94],
-      preFillColor: 'green',
-      fillColor: 'blue',
-    },
-    {
-      name: '2',
-      shape: 'poly',
-      coords: [219, 118, 220, 210, 283, 210, 284, 119],
-      preFillColor: 'pink',
-    },
-    {
-      name: '3',
-      shape: 'poly',
-      coords: [381, 241, 383, 94, 462, 53, 457, 282],
-      fillColor: 'yellow',
-    },
-    {
-      name: '4',
-      shape: 'poly',
-      coords: [245, 285, 290, 285, 274, 239, 249, 238],
-      preFillColor: 'red',
-    },
-    {
-      name: '5',
-      shape: 'circle',
-      coords: [170, 100, 25],
-    },
-  ],
+  areas: areasJSON,
 };
-
-const URL = 'https://c1.staticflickr.com/5/4052/4503898393_303cfbc9fd_b.jpg';
 
 const Example = () => {
   const [hoveredArea, setHoveredArea] = useState(null);
@@ -46,10 +15,13 @@ const Example = () => {
   const [moveMsg, setMoveMsg] = useState(null);
   const [codeDetails, setCodeDetails] = useState(null);
   const [stylingDetails, setStylingDetails] = useState(null);
+  const parentRef = useRef(null);
 
-  const load = () => {
+  useEffect(() => {
     setMsg('Interact with image !');
-  };
+  }, [parentRef.current]);
+
+  const load = () => {};
 
   const clicked = area => {
     setMsg(`You clicked on ${area.shape} at coords ${JSON.stringify(area.coords)} !`);
@@ -87,7 +59,6 @@ const Example = () => {
     <ImageMapper
       src={URL}
       map={MAP}
-      width={500}
       onLoad={load}
       onClick={area => clicked(area)}
       onMouseEnter={area => enterArea(area)}
@@ -95,8 +66,10 @@ const Example = () => {
       onMouseMove={(area, _, e) => moveOnArea(area, e)}
       onImageClick={e => clickedOutside(e)}
       onImageMouseMove={e => moveOnImage(e)}
-      lineWidth={4}
-      strokeColor="white"
+      lineWidth={1}
+      strokeColor="black"
+      parentWidth={parentRef.current.clientWidth}
+      responsive
     />
     {hoveredArea && (
       <span className="tooltip" style={{ ...getTipPosition(hoveredArea) }}>
@@ -107,17 +80,13 @@ const Example = () => {
   `;
 
   const secondBlock = `
-  URL = "https://c1.staticflickr.com/5/4052/4503898393_303cfbc9fd_b.jpg"
-  MAP = {
+  const URL = "https://raw.githubusercontent.com/NishargShah/react-img-mapper/master/src/example/assets/example.jpg";
+  const areasJSONLink = "https://raw.githubusercontent.com/NishargShah/react-img-mapper/master/src/example/assets/example.json";
+  
+  const MAP = {
     name: "my-map",
-    areas: [
-      { name: "1", shape: "poly", coords: [25,33,27,300,128,240,128,94], preFillColor: "green", fillColor: "blue"  },
-      { name: "2", shape: "poly", coords: [219,118,220,210,283,210,284,119], preFillColor: "pink"  },
-      { name: "3", shape: "poly", coords: [381,241,383,94,462,53,457,282], fillColor: "yellow"  },
-      { name: "4", shape: "poly", coords: [245,285,290,285,274,239,249,238], preFillColor: "red"  },
-      { name: "5", shape: "circle", coords: [170, 100, 25 ] },
-    ]
-  }
+    areas: areasJSON,
+  };
   `;
 
   const thirdBlock = `
@@ -142,7 +111,8 @@ const Example = () => {
   .tooltip {
       position: absolute;
       color: #fff;
-      padding: 10px;
+      padding: 5px;
+      font-size: 10px;
       background: rgba(0,0,0,0.8);
       transform: translate3d(-50%, -50%, 0);
       border-radius: 5px;
@@ -154,51 +124,54 @@ const Example = () => {
   return (
     <div className="grid">
       <div className="presenter">
-        <div style={{ position: 'relative' }}>
-          <ImageMapper
-            src={URL}
-            map={MAP}
-            width={500}
-            onLoad={load}
-            onClick={area => clicked(area)}
-            onMouseEnter={area => enterArea(area)}
-            onMouseLeave={area => leaveArea(area)}
-            onMouseMove={(area, _, e) => moveOnArea(area, e)}
-            onImageClick={e => clickedOutside(e)}
-            onImageMouseMove={e => moveOnImage(e)}
-            lineWidth={1}
-            strokeColor="black"
-          />
+        <div className="image_wrapper" ref={parentRef}>
+          {parentRef.current && (
+            <ImageMapper
+              src={URL}
+              map={MAP}
+              onLoad={load}
+              onClick={area => clicked(area)}
+              onMouseEnter={area => enterArea(area)}
+              onMouseLeave={area => leaveArea(area)}
+              onMouseMove={(area, _, e) => moveOnArea(area, e)}
+              onImageClick={e => clickedOutside(e)}
+              onImageMouseMove={e => moveOnImage(e)}
+              lineWidth={1}
+              strokeColor="black"
+              parentWidth={parentRef.current.clientWidth}
+              responsive
+            />
+          )}
           {hoveredArea && (
             <span className="tooltip" style={{ ...getTipPosition(hoveredArea) }}>
               {hoveredArea && hoveredArea.name}
             </span>
           )}
         </div>
-        <pre className="message">{msg || null}</pre>
-        <pre>{moveMsg || null}</pre>
+        <h1 className="message">
+          Fully Responsive Image With <br /> Auto Setting Coordinates
+        </h1>
+        <p className="message">{msg || null}</p>
+        <p className="message">{moveMsg || null}</p>
       </div>
-      <div className="source">
+      <div className="content_wrapper">
         <h2>Example with custom tooltips :</h2>
-        <p>(message logic is not present, to keep it clear)</p>
         <pre className="highlight">
           <code>{firstBlock}</code>
         </pre>
         <pre className="highlight">
           <code className="json">{secondBlock}</code>
         </pre>
-        Handler details : &nbsp;
-        <span role="none" onClick={() => setCodeDetails(prev => !prev)}>
-          {codeDetails ? '[-]' : '[+]'}
+        <span role="none" className="handler" onClick={() => setCodeDetails(prev => !prev)}>
+          Handler details : &nbsp; {codeDetails ? '[-]' : '[+]'}
         </span>
         <pre className="highlight">
           <code className="js" style={{ display: codeDetails ? 'block' : 'none' }}>
             {thirdBlock}
           </code>
         </pre>
-        Styling details : &nbsp;
-        <span role="none" onClick={() => setStylingDetails(prev => !prev)}>
-          {stylingDetails ? '[-]' : '[+]'}
+        <span role="none" className="handler" onClick={() => setStylingDetails(prev => !prev)}>
+          Styling details : &nbsp; {stylingDetails ? '[-]' : '[+]'}
         </span>
         <pre className="highlight">
           <code className="css" style={{ display: stylingDetails ? 'block' : 'none' }}>
