@@ -31,7 +31,6 @@ const ImageMapper = props => {
 
   const updateCacheMap = () => {
     setMap(JSON.parse(JSON.stringify(mapProp)));
-    initCanvas();
   };
 
   const callingFn = (shape, coords, fillColor, lineWidth, strokeColor) => {
@@ -86,28 +85,52 @@ const ImageMapper = props => {
     ctx.current.fillStyle = props.fillColor;
   };
 
-  const initCanvas = () => {
-    if (props.width) img.current.width = props.width;
-    if (props.height) img.current.height = props.height;
+  const getDimensions = type => {
+    if (typeof props[type] === 'function') {
+      return props[type](img.current);
+    }
+    return props[type];
+  };
 
-    canvas.current.width = props.natural
-      ? img.current.naturalWidth
-      : props.width || img.current.clientWidth;
-    canvas.current.height = props.natural
-      ? img.current.naturalHeight
-      : props.height || img.current.clientHeight;
-    container.current.style.width = `${
-      props.natural ? img.current.naturalWidth : props.width || img.current.clientWidth
-    }px`;
-    container.current.style.height = `${
-      props.natural ? img.current.naturalHeight : props.height || img.current.clientHeight
-    }px`;
+  const getValues = (type, measure) => {
+    if (type === 'width') {
+      if (props.natural) return img.current.naturalWidth;
+      if (props.width) return measure;
+      return img.current.clientWidth;
+    }
+    if (type === 'height') {
+      if (props.natural) return img.current.naturalHeight;
+      if (props.height) return measure;
+      return img.current.clientHeight;
+    }
+    return false;
+  };
+
+  const initCanvas = (firstLoad = false) => {
+    const imgWidth = getDimensions('width');
+    const imgHeight = getDimensions('height');
+    const imageWidth = getValues('width', imgWidth);
+    const imageHeight = getValues('height', imgHeight);
+
+    if (props.width) img.current.width = imgWidth;
+
+    if (props.height) img.current.height = imgHeight;
+
+    canvas.current.width = imageWidth;
+    canvas.current.height = imageHeight;
+    container.current.style.width = `${imageWidth}px`;
+    container.current.style.height = `${imageHeight}px`;
 
     ctx.current = canvas.current.getContext('2d');
     ctx.current.fillStyle = props.fillColor;
     //ctx.strokeStyle = props.strokeColor;
 
-    if (props.onLoad) props.onLoad();
+    if (props.onLoad && firstLoad) {
+      props.onLoad(img.current, {
+        width: imageWidth,
+        height: imageHeight,
+      });
+    }
 
     renderPrefilledAreas();
   };
@@ -231,7 +254,7 @@ const ImageMapper = props => {
         useMap={`#${map.name}`}
         alt="map"
         ref={img}
-        onLoad={initCanvas}
+        onLoad={() => initCanvas(true)}
         onClick={imageClick}
         onMouseMove={imageMouseMove}
       />
@@ -270,12 +293,12 @@ ImageMapper.defaultProps = {
 ImageMapper.propTypes = {
   active: PropTypes.bool,
   fillColor: PropTypes.string,
-  height: PropTypes.number,
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
   imgWidth: PropTypes.number,
   lineWidth: PropTypes.number,
   src: PropTypes.string.isRequired,
   strokeColor: PropTypes.string,
-  width: PropTypes.number,
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
   natural: PropTypes.bool,
   rerenderProps: PropTypes.array,
 
@@ -310,7 +333,6 @@ export default React.memo(ImageMapper, (prevProps, nextProps) => {
     'height',
     'imgWidth',
     'lineWidth',
-    'map',
     'src',
     'strokeColor',
     'width',
