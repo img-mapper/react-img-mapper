@@ -55,7 +55,6 @@ const ImageMapper = props => {
     ctx.current.strokeStyle = strokeColor;
     ctx.current.strokeRect(left, top, right - left, bot - top);
     ctx.current.fillRect(left, top, right - left, bot - top);
-    ctx.current.fillStyle = props.fillColor;
   };
 
   const drawCircle = (coords, fillColor, lineWidth, strokeColor) => {
@@ -67,7 +66,6 @@ const ImageMapper = props => {
     ctx.current.closePath();
     ctx.current.stroke();
     ctx.current.fill();
-    ctx.current.fillStyle = props.fillColor;
   };
 
   const drawPoly = (coords, fillColor, lineWidth, strokeColor) => {
@@ -84,7 +82,6 @@ const ImageMapper = props => {
     ctx.current.closePath();
     ctx.current.stroke();
     ctx.current.fill();
-    ctx.current.fillStyle = props.fillColor;
   };
 
   const getDimensions = type => {
@@ -94,18 +91,21 @@ const ImageMapper = props => {
     return props[type];
   };
 
-  const getValues = (type, measure) => {
+  const getValues = (type, measure, name = 'area') => {
+    const responsiveWidth = props.parentWidth;
+    const { naturalWidth, naturalHeight, clientWidth, clientHeight } = img.current;
+
     if (type === 'width') {
-      if (props.responsive) return props.parentWidth;
-      if (props.natural) return img.current.naturalWidth;
-      if (props.width) return measure;
-      return img.current.clientWidth;
+      if (props.responsive) return responsiveWidth;
+      if (props.natural) return naturalWidth;
+      if (props.width || name === 'image') return measure;
+      return clientWidth;
     }
     if (type === 'height') {
-      if (props.responsive) return img.current.clientHeight;
-      if (props.natural) return img.current.naturalHeight;
-      if (props.height) return measure;
-      return img.current.clientHeight;
+      if (props.responsive) return naturalHeight;
+      if (props.natural) return naturalHeight;
+      if (props.height || name === 'image') return measure;
+      return clientHeight;
     }
     return false;
   };
@@ -115,6 +115,14 @@ const ImageMapper = props => {
     const imgHeight = getDimensions('height');
     const imageWidth = getValues('width', imgWidth);
     const imageHeight = getValues('height', imgHeight);
+
+    if (props.width || props.responsive) {
+      img.current.width = getValues('width', imgWidth, 'image');
+    }
+
+    if (props.height || props.responsive) {
+      img.current.height = getValues('height', imgHeight, 'image');
+    }
 
     canvas.current.width = imageWidth;
     canvas.current.height = imageHeight;
@@ -143,7 +151,7 @@ const ImageMapper = props => {
       callingFn(
         shape,
         event.target.getAttribute('coords').split(','),
-        area.fillColor,
+        area.fillColor || props.fillColor,
         area.lineWidth || props.lineWidth,
         area.strokeColor || props.strokeColor
       );
@@ -162,16 +170,16 @@ const ImageMapper = props => {
   };
 
   const click = (area, index, event) => {
+    if (props.stayHighlighted) {
+      const newArea = { ...area };
+      newArea.preFillColor = area.fillColor || props.fillColor;
+      const updatedAreas = storedMap.areas.map(cur =>
+        cur[props.areaKeyName] === area[props.areaKeyName] ? newArea : cur
+      );
+      setMap(prev => ({ ...prev, areas: updatedAreas }));
+    }
     if (props.onClick) {
       event.preventDefault();
-      if (props.stayHighlighted) {
-        const newArea = { ...area };
-        newArea.preFillColor = area.fillColor;
-        const updatedAreas = storedMap.areas.map(cur =>
-          cur[props.areaKeyName] === area[props.areaKeyName] ? newArea : cur
-        );
-        setMap(prev => ({ ...prev, areas: updatedAreas }));
-      }
       props.onClick(area, index, event);
     }
   };
@@ -348,19 +356,23 @@ ImageMapper.propTypes = {
 
 export default React.memo(ImageMapper, (prevProps, nextProps) => {
   const watchedProps = [
+    'src',
     'active',
-    'fillColor',
+    'width',
     'height',
     'imgWidth',
-    'lineWidth',
-    'map',
-    'src',
+    'fillColor',
     'strokeColor',
-    'width',
+    'lineWidth',
+    'natural',
+    'areaKeyName',
+    'stayHighlighted',
+    'parentWidth',
+    'responsive',
     ...nextProps.rerenderProps,
   ];
 
   const propChanged = watchedProps.some(prop => prevProps[prop] !== nextProps[prop]);
 
-  return isEqual(prevProps.map, nextProps.map) || !propChanged;
+  return isEqual(prevProps.map, nextProps.map) && !propChanged;
 });
