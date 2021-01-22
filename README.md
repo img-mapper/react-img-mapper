@@ -1,7 +1,9 @@
 # React Img Mapper        
  React Component to highlight interactive zones in images        
         
-> This repository is based on react-image-mapper but with some enhancements ```        
+> This repository is based on react-image-mapper but with some enhancements 
+
+```        
 1. Decreased size of bundled        
 2. Added image highlight area stay feature        
 3. Added Natural Dimensions options      
@@ -11,16 +13,19 @@
 7. Promise to be maintained this repository        
 ```        
         
-## Installation ```  
+## Installation 
+
+```  
 npm install react-img-mapper --save        
 ```        
         
 ## Demo & Examples        
  Live demo: [demo](https://nishargshah.github.io/react-img-mapper)        
         
-To build the example locally, run:        
+To run the example locally        
         
 ```        
+git clone https://github.com/NishargShah/react-img-mapper.git
 npm install        
 npm start        
 ```        

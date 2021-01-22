@@ -116,14 +116,6 @@ const ImageMapper = props => {
     const imageWidth = getValues('width', imgWidth);
     const imageHeight = getValues('height', imgHeight);
 
-    if (props.width || props.responsive) {
-      img.current.width = props.responsive ? imageWidth : imgWidth;
-    }
-
-    if (props.height || props.responsive) {
-      img.current.height = props.responsive ? imageHeight : imgHeight;
-    }
-
     canvas.current.width = imageWidth;
     canvas.current.height = imageHeight;
     container.current.style.width = `${imageWidth}px`;
