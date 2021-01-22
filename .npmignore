@@ -2,6 +2,10 @@
 .storybook
 build
 public
-src/stories
+src
 storybook-static
+.eslintrc
 .eslintcache
+.eslintignore
+.prettierrc
+.babelrc
