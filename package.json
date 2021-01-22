@@ -1,6 +1,6 @@
 {
   "name": "react-img-mapper",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "React Component to highlight interactive zones in images",
   "keywords": [
     "react",
@@ -23,11 +23,13 @@
   "author": "Nisharg Shah",
   "main": "lib/ImageMapper.js",
   "scripts": {
-    "build": "react-scripts build",
+    "build": "build-storybook",
+    "compile": "babel src/lib/** -d lib",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "compile": "babel src/lib/** -d lib"
+    "deploy": "gh-pages -d storybook-static",
+    "lint": "eslint . --ext .js",
+    "lint-fix": "eslint . --ext .js --fix",
+    "start": "start-storybook -p 6006"
   },
   "browserslist": {
     "production": [
@@ -49,6 +51,10 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
+    "@storybook/addon-actions": "^6.1.15",
+    "@storybook/addon-essentials": "^6.1.15",
+    "@storybook/addon-links": "^6.1.15",
+    "@storybook/react": "^6.1.15",
     "babel-loader": "^8.1.0",
     "eslint": "^7.17.0",
     "eslint-config-airbnb": "^18.2.1",
@@ -61,12 +67,10 @@
     "gh-pages": "^3.1.0",
     "prettier": "^2.2.1",
     "react": "17.0.1",
-    "react-dom": "17.0.1",
-    "react-scripts": "4.0.1"
+    "react-dom": "17.0.1"
   },
   "peerDependencies": {
     "react": "16.x || 17.x",
-    "react-dom": "16.x || 17.x",
-    "react-scripts": "3.x || 4.x"
+    "react-dom": "16.x || 17.x"
   }
 }

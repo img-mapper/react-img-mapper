@@ -1,5 +1,7 @@
+.idea
+.storybook
 build
 public
-.idea
+src/stories
+storybook-static
 .eslintcache
-src/example

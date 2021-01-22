@@ -4,12 +4,12 @@
 > This repository is based on react-image-mapper but with some enhancements 
 
 ```        
-1. Decreased size of bundled        
-2. Added image highlight area stay feature        
-3. Added Natural Dimensions options      
-4. Added rerenderProps options      
-5. Added Image Reference in Width, Height and onLoad function to access image properties  
-6. Added responsive image mapper      
+1. Decreased size of bundled
+2. Awesome Documentation        
+3. Stay selected area highlighted area feature        
+4. New Properties: Natural Dimensions, RerenderProps       
+5. Image Reference in Width, Height and onLoad function to access image properties  
+6. Responsive image mapper      
 7. Promise to be maintained this repository        
 ```        
         

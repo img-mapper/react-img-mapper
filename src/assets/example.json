@@ -1,6 +1,11 @@
 [
   {
-    "id": "2cf1e95e-ff18-464d-9992-20fc10901e3d",
+    "id": "469f9800-c45a-483f-b13e-bd24f3fb79f4",
+    "title": "Hardwood",
+    "shape": "poly",
+    "name": "1",
+    "fillColor": "#eab54d4d",
+    "strokeColor": "black",
     "coords": [
       520.0646766169153,
       393.0348258706467,
@@ -13,9 +18,6 @@
       11.606965174129343,
       438.3084577114427
     ],
-    "name": "1",
-    "shape": "poly",
-    "fillColor": "#eab54d4d",
     "polygon": [
       [
         520.0646766169153,
@@ -40,7 +42,12 @@
     ]
   },
   {
-    "id": "d867a720-02bb-4ee8-9acc-7a8248f370ec",
+    "id": "1db62daa-22a4-4b02-b5c0-fffdcf77c66c",
+    "title": "Carpet",
+    "shape": "poly",
+    "name": "2",
+    "fillColor": "#eab54d4d",
+    "strokeColor": "black",
     "coords": [
       126.5323383084577,
       345.273631840796,
@@ -51,9 +58,6 @@
       85.23880597014923,
       378.6069651741293
     ],
-    "name": "2",
-    "shape": "poly",
-    "fillColor": "#eab54d4d",
     "polygon": [
       [
         126.5323383084577,
@@ -74,15 +78,22 @@
     ]
   },
   {
-    "id": "78946c88-73b0-428d-adf0-aaa8185f4343",
-    "coords": [],
-    "name": "3",
+    "id": "667d73b1-4583-4080-ab6b-5759f25440bb",
+    "title": "Materials",
     "shape": "poly",
+    "name": "3",
     "fillColor": "#eab54d4d",
+    "strokeColor": "black",
+    "coords": [],
     "polygon": []
   },
   {
-    "id": "2989f36e-1ca6-48f4-b4c8-7a5e297ed87b",
+    "id": "a87203cb-3916-48ea-856f-2bacab8b7eda",
+    "title": "Floor",
+    "shape": "poly",
+    "name": "4",
+    "fillColor": "#eab54d4d",
+    "strokeColor": "black",
     "coords": [
       130.0149253731343,
       341.2935323383084,
@@ -95,9 +106,6 @@
       11.606965174129343,
       438.3084577114427
     ],
-    "name": "4",
-    "shape": "poly",
-    "fillColor": "#eab54d4d",
     "polygon": [
       [
         130.0149253731343,
@@ -122,7 +130,12 @@
     ]
   },
   {
-    "id": "d736e4e3-7e84-46aa-ab85-ff251e3b16ff",
+    "id": "37ed1569-1e68-4816-9033-1a88c53b39df",
+    "title": "Electrical Fixture",
+    "shape": "poly",
+    "name": "5",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       521.0597014925372,
       335.820895522388,
@@ -133,9 +146,6 @@
       518.0746268656716,
       349.25373134328356
     ],
-    "name": "5",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         521.0597014925372,
@@ -156,7 +166,12 @@
     ]
   },
   {
-    "id": "6fec00b8-c4ec-4a33-9f49-7a391ff950ae",
+    "id": "ce471cbe-4103-45cc-899c-2be6497dc79a",
+    "title": "Electrical Fixture",
+    "shape": "poly",
+    "name": "6",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       531.5074626865671,
       342.2885572139303,
@@ -167,9 +182,6 @@
       530.5124378109452,
       355.72139303482584
     ],
-    "name": "6",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         531.5074626865671,
@@ -190,7 +202,12 @@
     ]
   },
   {
-    "id": "1d9eec11-a891-42f6-9bdd-bdec70f335e3",
+    "id": "5fde0edd-4e1c-4130-9ee5-4ec6dfd34f46",
+    "title": "Electrical Fixture",
+    "shape": "poly",
+    "name": "7",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       589.2189054726367,
       136.31840796019898,
@@ -201,9 +218,6 @@
       590.7114427860696,
       153.23383084577114
     ],
-    "name": "7",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         589.2189054726367,
@@ -224,7 +238,12 @@
     ]
   },
   {
-    "id": "aef4c148-3f90-4507-aff7-e3e5dfe07f8b",
+    "id": "976082e0-0653-4e5d-8094-cc351e482e72",
+    "title": "Electrical Fixture",
+    "shape": "poly",
+    "name": "8",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       606.6318407960198,
       130.8457711442786,
@@ -235,9 +254,6 @@
       606.1343283582089,
       155.72139303482587
     ],
-    "name": "8",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         606.6318407960198,
@@ -258,7 +274,12 @@
     ]
   },
   {
-    "id": "5dd39cb2-1c1a-43cc-b8df-796c98792337",
+    "id": "cc3c2799-ce62-4236-b4f6-6f4b50e7b666",
+    "title": "GWB",
+    "shape": "poly",
+    "name": "9",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       521.5621890547263,
       103.98009950248755,
@@ -269,9 +290,6 @@
       637.9751243781094,
       477.6119402985074
     ],
-    "name": "9",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         521.5621890547263,
@@ -292,7 +310,12 @@
     ]
   },
   {
-    "id": "3bf190ec-039d-4738-8159-dcec23cced34",
+    "id": "6c682813-8162-42eb-b3a7-c7296a009b5a",
+    "title": "Brick",
+    "shape": "poly",
+    "name": "10",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       465.8358208955224,
       137.81094527363183,
@@ -303,9 +326,6 @@
       464.3432835820895,
       350.7462686567164
     ],
-    "name": "10",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         465.8358208955224,
@@ -326,15 +346,22 @@
     ]
   },
   {
-    "id": "68702919-137f-4014-951c-21a36b853682",
-    "coords": [],
-    "name": "11",
+    "id": "1c9cabf2-4306-46cd-9423-63c7156cf4d4",
+    "title": "Materials",
     "shape": "poly",
+    "name": "11",
     "fillColor": "#00ff194c",
+    "strokeColor": "black",
+    "coords": [],
     "polygon": []
   },
   {
-    "id": "e8199576-9ecb-4cb2-acaa-e4567ef1f8be",
+    "id": "53c311f7-4e1c-4636-ac7e-b9cdec0d7ab7",
+    "title": "Right Wall",
+    "shape": "poly",
+    "name": "12",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       465.8358208955224,
       138.8059701492537,
@@ -345,9 +372,6 @@
       463.8457711442785,
       349.25373134328356
     ],
-    "name": "12",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         465.8358208955224,
@@ -368,7 +392,12 @@
     ]
   },
   {
-    "id": "5436c92a-6e10-4ff4-8257-5f0e43379e05",
+    "id": "21a3befd-c97b-476d-8e0c-7c98399988bf",
+    "title": "Window",
+    "shape": "poly",
+    "name": "13",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       211.10945273631836,
       161.6915422885572,
@@ -379,9 +408,6 @@
       207.62686567164178,
       288.5572139303482
     ],
-    "name": "13",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         211.10945273631836,
@@ -402,7 +428,12 @@
     ]
   },
   {
-    "id": "2d91033b-7c18-487a-9362-f51c7179e8af",
+    "id": "2f36ad1d-b934-4fb0-9486-7f429ef46a1b",
+    "title": "Front Wall",
+    "shape": "poly",
+    "name": "14",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       131.50746268656715,
       131.34328358208953,
@@ -413,9 +444,6 @@
       129.51741293532336,
       341.79104477611935
     ],
-    "name": "14",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         131.50746268656715,
@@ -436,7 +464,12 @@
     ]
   },
   {
-    "id": "1042a6fb-e41e-4922-b8bc-6aa7b4ac4c90",
+    "id": "f3653fb6-c1c5-4fe7-aec1-699d9da7bba1",
+    "title": "Microwave",
+    "shape": "poly",
+    "name": "15",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       120.06467661691539,
       193.5323383084577,
@@ -447,9 +480,6 @@
       118.07462686567163,
       233.33333333333331
     ],
-    "name": "15",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         120.06467661691539,
@@ -470,7 +500,12 @@
     ]
   },
   {
-    "id": "e1c69df9-af5f-4ac8-8cd7-b476c14a44a3",
+    "id": "eca521ca-11c6-4312-830b-3492829649df",
+    "title": "Stove",
+    "shape": "poly",
+    "name": "16",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       85.73631840796017,
       254.22885572139302,
@@ -487,9 +522,6 @@
       115.08955223880594,
       249.7512437810945
     ],
-    "name": "16",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         85.73631840796017,
@@ -522,7 +554,12 @@
     ]
   },
   {
-    "id": "7e3e5bd5-7022-4b09-b0e9-86381d1ce837",
+    "id": "e8da6027-7563-4a50-9b7b-9ffc1bb1b613",
+    "title": "Oven",
+    "shape": "poly",
+    "name": "17",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       145.4378109452736,
       288.0597014925373,
@@ -533,9 +570,6 @@
       142.45273631840794,
       371.6417910447761
     ],
-    "name": "17",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         145.4378109452736,
@@ -556,7 +590,12 @@
     ]
   },
   {
-    "id": "f6096099-a5f3-46b0-a1f7-94afbe8a28cf",
+    "id": "5248f935-10c8-4b16-8cff-21b66d2cb56f",
+    "title": "Countertop",
+    "shape": "poly",
+    "name": "18",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       70.31343283582089,
       287.56218905472633,
@@ -567,9 +606,6 @@
       77.77611940298505,
       303.4825870646766
     ],
-    "name": "18",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         70.31343283582089,
@@ -590,7 +626,12 @@
     ]
   },
   {
-    "id": "f3b61840-b445-42f3-8670-57ae04c60cd0",
+    "id": "5b40c828-ecb3-4633-b181-78e2832823b1",
+    "title": "Double Cabinet",
+    "shape": "poly",
+    "name": "19",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       108.62189054726366,
       298.5074626865671,
@@ -601,9 +642,6 @@
       106.13432835820893,
       390.54726368159197
     ],
-    "name": "19",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         108.62189054726366,
@@ -624,7 +662,12 @@
     ]
   },
   {
-    "id": "4493e795-8ec6-43e8-ac7d-4ac783a6ea77",
+    "id": "7810e113-49d2-4284-9e49-318af8378663",
+    "title": "Dishwasher",
+    "shape": "poly",
+    "name": "20",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       81.25870646766168,
       308.45771144278604,
@@ -635,9 +678,6 @@
       80.26368159203977,
       410.4477611940298
     ],
-    "name": "20",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         81.25870646766168,
@@ -658,7 +698,12 @@
     ]
   },
   {
-    "id": "914cfcb7-e89b-48e3-9a77-3b45a26daa47",
+    "id": "5998531a-25b3-4288-adbe-53c4470a369b",
+    "title": "Refrigerator",
+    "shape": "poly",
+    "name": "21",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       18.572139303482572,
       169.65174129353233,
@@ -669,9 +714,6 @@
       14.09452736318407,
       475.6218905472636
     ],
-    "name": "21",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         18.572139303482572,
@@ -692,7 +734,12 @@
     ]
   },
   {
-    "id": "40fec8f3-ae9b-49fa-9e04-d4fe246003c7",
+    "id": "9db9f57d-c15e-4d3a-abb7-faa7e69657c8",
+    "title": "Single Cabinet",
+    "shape": "poly",
+    "name": "22",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       140.46268656716416,
       142.28855721393032,
@@ -703,9 +750,6 @@
       138.9701492537313,
       232.3383084577114
     ],
-    "name": "22",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         140.46268656716416,
@@ -726,7 +770,12 @@
     ]
   },
   {
-    "id": "43fa8164-d664-4ced-9632-50bf336ba541",
+    "id": "d2c06088-49ce-404b-ab78-d865a336248d",
+    "title": "Double Cabinet",
+    "shape": "poly",
+    "name": "23",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       111.10945273631839,
       128.35820895522386,
@@ -737,9 +786,6 @@
       112.10447761194027,
       191.04477611940297
     ],
-    "name": "23",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         111.10945273631839,
@@ -760,7 +806,12 @@
     ]
   },
   {
-    "id": "884225ad-05be-42e7-b29a-121acc7bdf9b",
+    "id": "07feade7-e370-4384-bb96-c21f9eedb238",
+    "title": "Double Cabinet",
+    "shape": "poly",
+    "name": "24",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       72.80099502487562,
       108.45771144278606,
@@ -771,9 +822,6 @@
       74.79104477611938,
       234.82587064676613
     ],
-    "name": "24",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         72.80099502487562,
@@ -794,7 +842,12 @@
     ]
   },
   {
-    "id": "7ba2246b-8c35-4042-9c56-2c08b9814fbd",
+    "id": "db82b663-6c46-4a21-9ba6-fa6aa5bf84dc",
+    "title": "Double Cabinet",
+    "shape": "poly",
+    "name": "25",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       19.567164179104466,
       56.21890547263681,
@@ -805,9 +858,6 @@
       18.572139303482572,
       159.20398009950247
     ],
-    "name": "25",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         19.567164179104466,
@@ -828,7 +878,12 @@
     ]
   },
   {
-    "id": "ee8ca940-17ca-417b-a063-cfd09b26f9b4",
+    "id": "9258a68c-dc5d-4b08-bee1-720d8e8e3509",
+    "title": "Left Wall",
+    "shape": "poly",
+    "name": "26",
+    "fillColor": "#00ff194c",
+    "strokeColor": "black",
     "coords": [
       20.064676616915406,
       57.71144278606965,
@@ -839,9 +894,6 @@
       12.104477611940283,
       436.8159203980099
     ],
-    "name": "26",
-    "shape": "poly",
-    "fillColor": "#00ff194c",
     "polygon": [
       [
         20.064676616915406,
@@ -862,7 +914,12 @@
     ]
   },
   {
-    "id": "f23de723-960b-48af-be36-e79859215a68",
+    "id": "e30e9e21-0a03-4514-9473-887f23991361",
+    "title": "Vent",
+    "shape": "poly",
+    "name": "27",
+    "fillColor": "#ff000026",
+    "strokeColor": "black",
     "coords": [
       249.91542288557213,
       0,
@@ -873,9 +930,6 @@
       250.910447761194,
       13.930348258706466
     ],
-    "name": "27",
-    "shape": "poly",
-    "fillColor": "#ff000026",
     "polygon": [
       [
         249.91542288557213,
@@ -896,7 +950,12 @@
     ]
   },
   {
-    "id": "aced8693-45ca-4f9e-8876-58e19c4a485b",
+    "id": "f5a8d660-61df-4783-a631-8ea6758ee50d",
+    "title": "Vent",
+    "shape": "poly",
+    "name": "28",
+    "fillColor": "#ff000026",
+    "strokeColor": "black",
     "coords": [
       285.2388059701492,
       117.41293532338307,
@@ -907,9 +966,6 @@
       286.731343283582,
       128.35820895522386
     ],
-    "name": "28",
-    "shape": "poly",
-    "fillColor": "#ff000026",
     "polygon": [
       [
         285.2388059701492,
@@ -930,7 +986,12 @@
     ]
   },
   {
-    "id": "ece5e8b1-ff04-413c-935e-c33247512b52",
+    "id": "6721b73c-a4f7-486c-8d72-5d7e817db59a",
+    "title": "Light",
+    "shape": "poly",
+    "name": "29",
+    "fillColor": "#ff000026",
+    "strokeColor": "black",
     "coords": [
       266.83084577114425,
       93.5323383084577,
@@ -941,9 +1002,6 @@
       267.3283582089552,
       99.00497512437809
     ],
-    "name": "29",
-    "shape": "poly",
-    "fillColor": "#ff000026",
     "polygon": [
       [
         266.83084577114425,
@@ -964,7 +1022,12 @@
     ]
   },
   {
-    "id": "7c73630f-ce05-415b-a9d4-2bade6e7fc63",
+    "id": "6fe8c503-66f8-47be-bad8-5a39d170e538",
+    "title": "Recessed Light",
+    "shape": "poly",
+    "name": "30",
+    "fillColor": "#ff000026",
+    "strokeColor": "black",
     "coords": [
       206.1343283582089,
       103.48258706467661,
@@ -975,9 +1038,6 @@
       207.12935323383084,
       112.93532338308457
     ],
-    "name": "30",
-    "shape": "poly",
-    "fillColor": "#ff000026",
     "polygon": [
       [
         206.1343283582089,
@@ -998,7 +1058,12 @@
     ]
   },
   {
-    "id": "cc71afb3-ad61-4989-9c20-a06bdf915770",
+    "id": "b5ef36ad-484b-4605-a2ba-72b9f1e7114f",
+    "title": "Recessed Light",
+    "shape": "poly",
+    "name": "31",
+    "fillColor": "#ff000026",
+    "strokeColor": "black",
     "coords": [
       164.84079601990047,
       55.721393034825866,
@@ -1009,9 +1074,6 @@
       167.82587064676613,
       66.66666666666666
     ],
-    "name": "31",
-    "shape": "poly",
-    "fillColor": "#ff000026",
     "polygon": [
       [
         164.84079601990047,
@@ -1032,7 +1094,12 @@
     ]
   },
   {
-    "id": "39c9f651-1566-44ce-8087-3f50c2bdcc1f",
+    "id": "75449960-7fde-4907-a463-7bb5b146d70c",
+    "title": "Ceiling",
+    "shape": "poly",
+    "name": "32",
+    "fillColor": "#ff000026",
+    "strokeColor": "black",
     "coords": [
       19.567164179104466,
       52.73631840796019,
@@ -1047,9 +1114,6 @@
       131.50746268656715,
       130.34825870646765
     ],
-    "name": "32",
-    "shape": "poly",
-    "fillColor": "#ff000026",
     "polygon": [
       [
         19.567164179104466,
