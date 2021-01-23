@@ -7,15 +7,23 @@ import areasJSON from '../../assets/example.json';
 const DynamicMapper = props => {
   const MAP = {
     name: 'my-map',
-    areas: areasJSON,
+    areas: areasJSON.map(cur => {
+      const temp = { ...cur };
+      if (['Front Wall', 'Window'].includes(cur.title)) {
+        delete temp.fillColor;
+        delete temp.strokeColor;
+        return temp;
+      }
+      return temp;
+    }),
   };
 
   return <ImageMapper src={URL} map={MAP} {...props} />;
 };
 
 DynamicMapper.defaultProps = {
-  width: 0,
-  height: 0,
+  width: 640,
+  height: 480,
   lineWidth: 1,
   active: true,
   fillColor: 'rgba(255, 255, 255, 0.5)',
@@ -23,7 +31,7 @@ DynamicMapper.defaultProps = {
   natural: false,
   imgWidth: 0,
   stayHighlighted: false,
-  parentWidth: 0,
+  parentWidth: 640,
   responsive: false,
 };
 

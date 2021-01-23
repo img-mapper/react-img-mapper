@@ -1,6 +1,6 @@
 {
   "name": "react-img-mapper",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "React Component to highlight interactive zones in images",
   "keywords": [
     "react",
@@ -29,7 +29,8 @@
     "deploy": "gh-pages -d storybook-static",
     "lint": "eslint . --ext .js",
     "lint-fix": "eslint . --ext .js --fix",
-    "start": "start-storybook -p 6006"
+    "prepublishOnly": "npm run compile",
+    "start": "start-storybook -p 3000"
   },
   "browserslist": {
     "production": [
@@ -55,10 +56,13 @@
     "@storybook/addon-essentials": "^6.1.15",
     "@storybook/addon-links": "^6.1.15",
     "@storybook/react": "^6.1.15",
+    "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "eslint": "^7.17.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^7.1.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-plugin-flowtype": "^5.2.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.3.1",

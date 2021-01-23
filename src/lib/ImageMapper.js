@@ -203,7 +203,7 @@ const ImageMapper = props => {
     const { imgWidth, width, responsive, parentWidth } = props;
     const scale = width && imgWidth && imgWidth > 0 ? width / imgWidth : 1;
     if (responsive && parentWidth) {
-      return coords.map(coord => (coord * scale) / (imgRef.naturalWidth / parentWidth));
+      return coords.map(coord => coord / (imgRef.naturalWidth / parentWidth));
     }
     return coords.map(coord => coord * scale);
   };

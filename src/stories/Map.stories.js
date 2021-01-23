@@ -10,18 +10,25 @@ const Map = {
 };
 
 export const NonResponsiveDimensions = args => (
-  <Mapper width={args.width} height={args.height} natural={args.natural} />
+  <Mapper
+    width={args.width}
+    height={args.height}
+    imgWidth={args.imageWidth}
+    natural={args.natural}
+  />
 );
 
 NonResponsiveDimensions.args = {
   width: 640,
   height: 480,
+  imageWidth: 0,
   natural: false,
 };
 
 NonResponsiveDimensions.argTypes = {
   width: { control: 'number' },
   height: { control: 'number' },
+  imageWidth: { control: 'number' },
   natural: { control: 'boolean' },
 };
 
@@ -43,6 +50,7 @@ export const AllDimensions = args => (
   <Mapper
     width={args.width}
     height={args.height}
+    imgWidth={args.imageWidth}
     natural={args.natural}
     responsive={args.responsive}
     parentWidth={args.parentWidth}
@@ -52,6 +60,7 @@ export const AllDimensions = args => (
 AllDimensions.args = {
   width: 640,
   height: 480,
+  imageWidth: 0,
   natural: false,
   responsive: false,
   parentWidth: 640,
@@ -60,6 +69,7 @@ AllDimensions.args = {
 AllDimensions.argTypes = {
   width: { control: 'number' },
   height: { control: 'number' },
+  imageWidth: { control: 'number' },
   natural: { control: 'boolean' },
   responsive: { control: 'boolean' },
   parentWidth: { control: 'number' },
