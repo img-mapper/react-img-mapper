@@ -3,14 +3,14 @@
         
 > This repository is based on react-image-mapper but with some enhancements 
 
-```        
-1. Decreased size of bundled
-2. Awesome Documentation        
-3. Stay selected area highlighted area feature        
-4. New Properties: Natural Dimensions, RerenderProps       
-5. Image Reference in Width, Height and onLoad function to access image properties  
-6. Responsive image mapper      
-7. Promise to be maintained this repository        
+``` 
+1. Promise to be maintained this repository        
+2. Decreased size of bundled
+3. Awesome Documentation        
+4. Selected area will stay highlighted ( Single & Multiple ) with toggle and reset feature
+5. New Properties: Natural Dimensions, RerenderProps       
+6. Image Reference in Width, Height and onLoad function to access image properties  
+7. Responsive image mapper            
 ```        
         
 ## Installation 
@@ -47,10 +47,11 @@ import ImageMapper from 'react-img-mapper';
 ```        
         
 ### Properties        
- |Props|type|Description|default|        
+|Props|type|Description|default|        
 |---|---|---|---|        
 |**src**|*string*|Image source url| **required**|        
 |**map**|*string*|Mapping description| { name: generated, areas: [ ] }| 
+|**containerRef**|*ref*|help to reset selected highlighted area|null|  
 |**areaKeyName**|*string*|default unique key name ( **required** for `stayHighlighted` )|id|            
 |**fillColor**|*string*|Fill color of the highlighted zone|rgba(255, 255, 255, 0.5)|        
 |**strokeColor**|*string*|Border color of the highlighted zone|rgba(0, 0, 0, 0.5)|        
@@ -60,12 +61,14 @@ import ImageMapper from 'react-img-mapper';
 |**active**|*bool*|Enable/Disable highlighting|true|        
 |**imgWidth**|*number*|Original image width|0|        
 |**natural**|*bool*|Give the original dimensions ( height & width ) to canvas and image wrapper|false|        
-|**stayHighlighted**|*bool*|You will see the highlighted area after clicking on the perticular area|false|
+|**stayHighlighted**|*bool*|You can see the highlighted area after clicking on the particular area|false|
+|**stayMultiHighlighted**|*bool*|You can see the multiple highlighted area after clicking on the particular area|false|
+|**toggleHighlighted**|*bool*|You can toggle selected highlighted area|false|
 |**rerenderProps**|*array*|specify rerenderProps property, if you want to rerender your map with different property|[]|       
 |**responsive**|*bool*|responsive map in all resolution ( for enable it you need to specify parentWidth )|false|        
 |**parentWidth**|*number*|parent max width for responsive|0|   
         
-&nbsp;        
+### Properties Callback        
         
 |Props callbacks|Called on|signature|        
 |---|---|---|        
@@ -75,8 +78,22 @@ import ImageMapper from 'react-img-mapper';
 |**onMouseMove**|Moving mouse on a zone in image|(area: obj, index: num, event): void|        
 |**onClick**|Click on a zone in image|(area: obj, index: num, event): void|        
 |**onImageClick**|Click outside of a zone in image|(event): void|        
-|**onImageMouseMove**|Moving mouse on the image itself|(event): void|        
-        
+|**onImageMouseMove**|Moving mouse on the image itself|(event): void|      
+
+### Methods
+
+```
+Example:
+
+onMultiHighlightClear
+
+=> containerRef.current.clearHighlightedArea();
+```
+
+|Method|Description|       
+|---|---|
+|**clearHighlightedArea**|Clear all selected highlighted area from your map|
+       
 &nbsp;        
         
 A map is an object describing highlighted areas in the image.        

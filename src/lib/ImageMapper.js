@@ -4,12 +4,13 @@ import isEqual from 'react-fast-compare';
 import styles from './styles';
 
 const ImageMapper = props => {
-  const { map: mapProp, src: srcProp, rerenderProps } = props;
+  const { map: mapProp, src: srcProp, containerRef, rerenderProps } = props;
 
   const [map, setMap] = useState(JSON.parse(JSON.stringify(mapProp)));
   const [storedMap] = useState(map);
   const [isRendered, setRendered] = useState(false);
   const [imgRef, setImgRef] = useState(false);
+  const [isClearFnCalled, setClearFnCall] = useState(false);
   const container = useRef(null);
   const img = useRef(null);
   const canvas = useRef(null);
@@ -30,6 +31,24 @@ const ImageMapper = props => {
     updateCacheMap();
     setRendered(true);
   }, []);
+
+  useEffect(() => {
+    container.current.clearHighlightedArea = () => {
+      setMap(storedMap);
+      setClearFnCall(true);
+    };
+
+    if (containerRef) {
+      containerRef.current = container.current;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isClearFnCalled) {
+      setClearFnCall(false);
+      initCanvas();
+    }
+  }, [isClearFnCalled]);
 
   const updateCacheMap = () => {
     setMap(JSON.parse(JSON.stringify(mapProp)));
@@ -170,10 +189,15 @@ const ImageMapper = props => {
   };
 
   const click = (area, index, event) => {
-    if (props.stayHighlighted) {
+    if (props.stayHighlighted || props.stayMultiHighlighted || props.toggleHighlighted) {
       const newArea = { ...area };
-      newArea.preFillColor = area.fillColor || props.fillColor;
-      const updatedAreas = storedMap.areas.map(cur =>
+      const chosenArea = props.stayMultiHighlighted ? map : storedMap;
+      if (props.toggleHighlighted && newArea.preFillColor) {
+        delete newArea.preFillColor;
+      } else if (props.stayHighlighted || props.stayMultiHighlighted) {
+        newArea.preFillColor = area.fillColor || props.fillColor;
+      }
+      const updatedAreas = chosenArea.areas.map(cur =>
         cur[props.areaKeyName] === area[props.areaKeyName] ? newArea : cur
       );
       setMap(prev => ({ ...prev, areas: updatedAreas }));
@@ -287,6 +311,7 @@ const ImageMapper = props => {
 };
 
 ImageMapper.defaultProps = {
+  containerRef: null,
   active: true,
   fillColor: 'rgba(255, 255, 255, 0.5)',
   lineWidth: 1,
@@ -301,6 +326,8 @@ ImageMapper.defaultProps = {
   width: 0,
   areaKeyName: 'id',
   stayHighlighted: false,
+  stayMultiHighlighted: false,
+  toggleHighlighted: false,
   rerenderProps: [],
   parentWidth: 0,
   responsive: false,
@@ -315,6 +342,10 @@ ImageMapper.defaultProps = {
 };
 
 ImageMapper.propTypes = {
+  containerRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.elementType }),
+  ]),
   active: PropTypes.bool,
   fillColor: PropTypes.string,
   height: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
@@ -326,6 +357,8 @@ ImageMapper.propTypes = {
   natural: PropTypes.bool,
   areaKeyName: PropTypes.string,
   stayHighlighted: PropTypes.bool,
+  stayMultiHighlighted: PropTypes.bool,
+  toggleHighlighted: PropTypes.bool,
   rerenderProps: PropTypes.array,
   parentWidth: PropTypes.number,
   responsive: PropTypes.bool,
@@ -367,6 +400,8 @@ export default React.memo(ImageMapper, (prevProps, nextProps) => {
     'natural',
     'areaKeyName',
     'stayHighlighted',
+    'stayMultiHighlighted',
+    'toggleHighlighted',
     'parentWidth',
     'responsive',
     ...nextProps.rerenderProps,
