@@ -4,7 +4,25 @@ import isEqual from 'react-fast-compare';
 import styles from './styles';
 
 const ImageMapper = props => {
-  const { map: mapProp, src: srcProp, containerRef, rerenderProps } = props;
+  const {
+    containerRef,
+    active,
+    fillColor: fillColorProp,
+    lineWidth: lineWidthProp,
+    map: mapProp,
+    src: srcProp,
+    strokeColor: strokeColorProp,
+    natural,
+    height: heightProp,
+    width: widthProp,
+    areaKeyName,
+    stayHighlighted,
+    stayMultiHighlighted,
+    toggleHighlighted,
+    rerenderProps,
+    parentWidth,
+    responsive,
+  } = props;
 
   const [map, setMap] = useState(JSON.parse(JSON.stringify(mapProp)));
   const [storedMap] = useState(map);
@@ -23,6 +41,7 @@ const ImageMapper = props => {
     } else {
       updateCacheMap();
       initCanvas();
+      updateCanvas();
     }
   }, [props, isInitialMount]);
 
@@ -49,6 +68,10 @@ const ImageMapper = props => {
       initCanvas();
     }
   }, [isClearFnCalled]);
+
+  useEffect(() => {
+    if (responsive) initCanvas();
+  }, [parentWidth]);
 
   const updateCacheMap = () => {
     setMap(JSON.parse(JSON.stringify(mapProp)));
@@ -111,19 +134,18 @@ const ImageMapper = props => {
   };
 
   const getValues = (type, measure, name = 'area') => {
-    const responsiveWidth = props.parentWidth;
     const { naturalWidth, naturalHeight, clientWidth, clientHeight } = img.current;
 
     if (type === 'width') {
-      if (props.responsive) return responsiveWidth;
-      if (props.natural) return naturalWidth;
-      if (props.width || name === 'image') return measure;
+      if (responsive) return parentWidth;
+      if (natural) return naturalWidth;
+      if (widthProp || name === 'image') return measure;
       return clientWidth;
     }
     if (type === 'height') {
-      if (props.responsive) return naturalHeight;
-      if (props.natural) return naturalHeight;
-      if (props.height || name === 'image') return measure;
+      if (responsive) return clientHeight;
+      if (natural) return naturalHeight;
+      if (heightProp || name === 'image') return measure;
       return clientHeight;
     }
     return false;
@@ -135,11 +157,11 @@ const ImageMapper = props => {
     const imageWidth = getValues('width', imgWidth);
     const imageHeight = getValues('height', imgHeight);
 
-    if (props.width || props.responsive) {
+    if (widthProp || responsive) {
       img.current.width = getValues('width', imgWidth, 'image');
     }
 
-    if (props.height || props.responsive) {
+    if (heightProp || responsive) {
       img.current.height = getValues('height', imgHeight, 'image');
     }
 
@@ -149,7 +171,7 @@ const ImageMapper = props => {
     container.current.style.height = `${imageHeight}px`;
 
     ctx.current = canvas.current.getContext('2d');
-    ctx.current.fillStyle = props.fillColor;
+    ctx.current.fillStyle = fillColorProp;
     //ctx.strokeStyle = props.strokeColor;
 
     if (props.onLoad && firstLoad) {
@@ -164,15 +186,15 @@ const ImageMapper = props => {
   };
 
   const hoverOn = (area, index, event) => {
-    const shape = event.target.getAttribute('shape');
+    const { shape, scaledCoords, fillColor, lineWidth, strokeColor } = area;
 
-    if (props.active) {
+    if (active) {
       callingFn(
         shape,
-        event.target.getAttribute('coords').split(','),
-        area.fillColor || props.fillColor,
-        area.lineWidth || props.lineWidth,
-        area.strokeColor || props.strokeColor
+        scaledCoords,
+        fillColor || fillColorProp,
+        lineWidth || lineWidthProp,
+        strokeColor || strokeColorProp
       );
     }
 
@@ -180,7 +202,7 @@ const ImageMapper = props => {
   };
 
   const hoverOff = (area, index, event) => {
-    if (props.active) {
+    if (active) {
       ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
       renderPrefilledAreas();
     }
@@ -189,16 +211,16 @@ const ImageMapper = props => {
   };
 
   const click = (area, index, event) => {
-    if (props.stayHighlighted || props.stayMultiHighlighted || props.toggleHighlighted) {
+    if (stayHighlighted || stayMultiHighlighted || toggleHighlighted) {
       const newArea = { ...area };
-      const chosenArea = props.stayMultiHighlighted ? map : storedMap;
-      if (props.toggleHighlighted && newArea.preFillColor) {
+      const chosenArea = stayMultiHighlighted ? map : storedMap;
+      if (toggleHighlighted && newArea.preFillColor) {
         delete newArea.preFillColor;
-      } else if (props.stayHighlighted || props.stayMultiHighlighted) {
-        newArea.preFillColor = area.fillColor || props.fillColor;
+      } else if (stayHighlighted || stayMultiHighlighted) {
+        newArea.preFillColor = area.fillColor || fillColorProp;
       }
       const updatedAreas = chosenArea.areas.map(cur =>
-        cur[props.areaKeyName] === area[props.areaKeyName] ? newArea : cur
+        cur[areaKeyName] === area[areaKeyName] ? newArea : cur
       );
       setMap(prev => ({ ...prev, areas: updatedAreas }));
     }
@@ -224,7 +246,7 @@ const ImageMapper = props => {
   };
 
   const scaleCoords = coords => {
-    const { imgWidth, width, responsive, parentWidth } = props;
+    const { imgWidth, width } = props;
     const scale = width && imgWidth && imgWidth > 0 ? width / imgWidth : 1;
     if (responsive && parentWidth) {
       return coords.map(coord => coord / (imgRef.naturalWidth / parentWidth));
@@ -239,8 +261,8 @@ const ImageMapper = props => {
         area.shape,
         scaleCoords(area.coords),
         area.preFillColor,
-        area.lineWidth || props.lineWidth,
-        area.strokeColor || props.strokeColor
+        area.lineWidth || lineWidthProp,
+        area.strokeColor || strokeColorProp
       );
       return true;
     });
@@ -267,6 +289,18 @@ const ImageMapper = props => {
     }
   };
 
+  const updateCanvas = () => {
+    ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
+    mapProp.areas.map(cur => {
+      if (cur.preFillColor) {
+        const scaledCoords = scaleCoords(cur.coords);
+        hoverOn({ ...cur, scaledCoords });
+        return true;
+      }
+      return false;
+    });
+  };
+
   const renderAreas = () =>
     map.areas.map((area, index) => {
       const scaledCoords = scaleCoords(area.coords);
@@ -275,7 +309,7 @@ const ImageMapper = props => {
 
       return (
         <area
-          key={area[props.areaKeyName] || index.toString()}
+          key={area[areaKeyName] || index.toString()}
           shape={area.shape}
           coords={scaledCoords.join(',')}
           onMouseEnter={event => hoverOn(extendedArea, index, event)}
