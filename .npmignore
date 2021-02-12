@@ -1,11 +1,9 @@
+.github
 .idea
-.storybook
-build
 public
 src
-storybook-static
-.eslintrc
+.babelrc
 .eslintcache
 .eslintignore
+.eslintrc
 .prettierrc
-.babelrc

@@ -20,12 +20,12 @@ npm install react-img-mapper --save
 ```        
         
 ## Demo & Examples        
- Live demo: [demo](https://nishargshah.github.io/react-img-mapper)        
+ Live demo: [demo](https://react-img-mapper.github.io/react-img-mapper)        
         
 To run the example locally        
         
 ```        
-git clone https://github.com/NishargShah/react-img-mapper.git
+git clone https://github.com/react-img-mapper/docs.git
 npm install        
 npm start        
 ```        
@@ -36,11 +36,7 @@ If you want to change something and want to make a compiled file, you just need 
  ## Usage        
  Import the component as you normally do, and add it wherever you like in your JSX views as below:        
         
-```javascript        
-// ES5 require        
-var ImageMapper = require('react-img-mapper');        
-        
-// ES6 import        
+```javascript           
 import ImageMapper from 'react-img-mapper';        
         
 <ImageMapper src={IMAGE_URL} map={AREAS_MAP}/>        
