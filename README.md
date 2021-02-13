@@ -20,7 +20,7 @@ npm install react-img-mapper --save
 ```        
         
 ## Demo & Examples        
- Live demo: [demo](https://react-img-mapper.github.io/react-img-mapper)        
+ Live demo: [demo](https://img-mapper.github.io/react-docs)        
         
 To run the example locally        
         

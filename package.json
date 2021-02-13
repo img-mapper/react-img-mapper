@@ -11,13 +11,13 @@
     "img mapper",
     "image mapper"
   ],
-  "homepage": "https://react-img-mapper.github.io/react-img-mapper",
+  "homepage": "https://img-mapper.github.io/react-docs",
   "bugs": {
-    "url": "https://github.com/react-img-mapper/react-img-mapper/issues"
+    "url": "https://github.com/img-mapper/react-img-mapper/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/react-img-mapper/react-img-mapper.git"
+    "url": "https://github.com/img-mapper/react-img-mapper.git"
   },
   "license": "MIT",
   "author": "Nisharg Shah",
