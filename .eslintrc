@@ -1,55 +1,58 @@
 {
+  "root": true,
   "env": {
     "browser": true,
-    "es6": true
+    "es6": true,
+    "amd": true
   },
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2020,
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   },
   "extends": [
     "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
     "airbnb",
+    "airbnb/hooks",
     "prettier",
-    "prettier/react",
-    "react-app"
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
   ],
   "plugins": [
-    "prettier"
+    "prettier",
+    "@typescript-eslint",
+    "simple-import-sort"
   ],
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "paths": [
-          "src",
-          "node_modules"
-        ],
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".ts",
-          ".tsx"
-        ]
-      }
-    }
-  },
   "rules": {
     "prettier/prettier": "error",
-    "no-unused-vars": [
-      "warn",
-      {
-        "varsIgnorePattern": "rerenderProps"
-      }
-    ],
+    "no-unused-vars": "off",
     "no-console": "off",
     "global-require": "off",
     "spaced-comment": "off",
     "no-underscore-dangle": "off",
-    "no-use-before-define": [
+    "no-use-before-define": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-unused-vars": "error",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error",
+    "import/extensions": [
       "error",
+      "ignorePackages",
       {
-        "variables": false
+        "ts": "never",
+        "tsx": "never"
       }
     ],
     "no-unused-expressions": [
@@ -58,7 +61,15 @@
         "allowShortCircuit": true
       }
     ],
-    "react/jsx-filename-extension": "off",
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
+      }
+    ],
     "react/no-array-index-key": "off",
     "react/jsx-fragments": [
       "error",

@@ -5,12 +5,13 @@
 
 ``` 
 1. Promise to be maintained this repository        
-2. Decreased size of bundled
-3. Awesome Documentation        
-4. Selected area will stay highlighted ( Single & Multiple ) with toggle and reset feature
-5. New Properties: Natural Dimensions, RerenderProps       
-6. Image Reference in Width, Height and onLoad function to access image properties  
-7. Responsive image mapper            
+2. Typescript Support
+3. Decreased size of bundled
+4. Awesome Documentation        
+5. Selected area will stay highlighted ( Single & Multiple ) with toggle and reset feature
+6. New Properties: Natural Dimensions, RerenderProps       
+7. Image Reference in Width, Height and onLoad function to access image properties  
+8. Responsive image mapper            
 ```        
         
 ## Installation 

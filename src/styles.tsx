@@ -1,22 +1,32 @@
-const absPos = {
+import React from 'react';
+import { ImageMapperProps } from './types';
+
+const absPos: React.CSSProperties = {
   position: 'absolute',
   top: 0,
   left: 0,
 };
 
-const imgNonResponsive = {
+const imgNonResponsive: React.CSSProperties = {
   ...absPos,
   zIndex: 1,
   userSelect: 'none',
 };
 
-const imgResponsive = {
+const imgResponsive: React.CSSProperties = {
   ...imgNonResponsive,
   width: '100%',
   height: 'auto',
 };
 
-const styles = props => ({
+interface StylesProps {
+  container: React.CSSProperties;
+  canvas: React.CSSProperties;
+  img: React.CSSProperties;
+  map: React.CSSProperties;
+}
+
+const styles = (props?: Partial<ImageMapperProps>): StylesProps => ({
   container: {
     position: 'relative',
   },

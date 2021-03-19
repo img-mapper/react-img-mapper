@@ -1,9 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import isEqual from 'react-fast-compare';
 import styles from './styles';
+import {
+  rerenderPropsList,
+  ImageMapperProps,
+  ImageMapperDefaultProps,
+  Map,
+  Container,
+  MapAreas,
+} from './types';
 
-const ImageMapper = props => {
+const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   const {
     containerRef,
     active,
@@ -15,25 +22,25 @@ const ImageMapper = props => {
     natural,
     height: heightProp,
     width: widthProp,
+    imgWidth: imageWidthProp,
     areaKeyName,
     stayHighlighted,
     stayMultiHighlighted,
     toggleHighlighted,
-    rerenderProps,
     parentWidth,
     responsive,
   } = props;
 
-  const [map, setMap] = useState(JSON.parse(JSON.stringify(mapProp)));
-  const [storedMap] = useState(map);
-  const [isRendered, setRendered] = useState(false);
-  const [imgRef, setImgRef] = useState(false);
-  const [isClearFnCalled, setClearFnCall] = useState(false);
-  const container = useRef(null);
-  const img = useRef(null);
-  const canvas = useRef(null);
-  const ctx = useRef(null);
-  const isInitialMount = useRef(true);
+  const [map, setMap] = useState<Map>(JSON.parse(JSON.stringify(mapProp)));
+  const [storedMap] = useState<Map>(map);
+  const [isRendered, setRendered] = useState<boolean>(false);
+  const [imgRef, setImgRef] = useState<HTMLImageElement>(null);
+  const [isClearFnCalled, setClearFnCall] = useState<boolean>(false);
+  const container = useRef<Container>(null);
+  const img = useRef<HTMLImageElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const ctx = useRef<CanvasRenderingContext2D>(null);
+  const isInitialMount = useRef<boolean>(true);
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -185,7 +192,7 @@ const ImageMapper = props => {
     renderPrefilledAreas();
   };
 
-  const hoverOn = (area, index, event) => {
+  const hoverOn = (area, index?, event?) => {
     const { shape, scaledCoords, fillColor, lineWidth, strokeColor } = area;
 
     if (active) {
@@ -241,13 +248,15 @@ const ImageMapper = props => {
     if (props.onMouseMove) props.onMouseMove(area, index, event);
   };
 
-  const imageMouseMove = (area, index, event) => {
-    if (props.onImageMouseMove) props.onImageMouseMove(area, index, event);
+  const imageMouseMove = event => {
+    if (props.onImageMouseMove) props.onImageMouseMove(event);
   };
 
-  const scaleCoords = coords => {
-    const { imgWidth, width } = props;
-    const scale = width && imgWidth && imgWidth > 0 ? width / imgWidth : 1;
+  const scaleCoords = (coords: []): number[] => {
+    const scale =
+      widthProp && imageWidthProp && imageWidthProp > 0
+        ? (widthProp as number) / imageWidthProp
+        : 1;
     if (responsive && parentWidth) {
       return coords.map(coord => coord / (imgRef.naturalWidth / parentWidth));
     }
@@ -268,7 +277,7 @@ const ImageMapper = props => {
     });
   };
 
-  const computeCenter = area => {
+  const computeCenter = (area: MapAreas): [number, number] => {
     if (!area) return [0, 0];
 
     const scaledCoords = scaleCoords(area.coords);
@@ -344,102 +353,10 @@ const ImageMapper = props => {
   );
 };
 
-ImageMapper.defaultProps = {
-  containerRef: null,
-  active: true,
-  fillColor: 'rgba(255, 255, 255, 0.5)',
-  lineWidth: 1,
-  map: {
-    areas: [],
-    name: `image-map-${Math.random()}`,
-  },
-  strokeColor: 'rgba(0, 0, 0, 0.5)',
-  natural: false,
-  height: 0,
-  imgWidth: 0,
-  width: 0,
-  areaKeyName: 'id',
-  stayHighlighted: false,
-  stayMultiHighlighted: false,
-  toggleHighlighted: false,
-  rerenderProps: [],
-  parentWidth: 0,
-  responsive: false,
+ImageMapper.defaultProps = ImageMapperDefaultProps;
 
-  onClick: null,
-  onMouseMove: null,
-  onImageClick: null,
-  onImageMouseMove: null,
-  onLoad: null,
-  onMouseEnter: null,
-  onMouseLeave: null,
-};
-
-ImageMapper.propTypes = {
-  containerRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({ current: PropTypes.elementType }),
-  ]),
-  active: PropTypes.bool,
-  fillColor: PropTypes.string,
-  height: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
-  imgWidth: PropTypes.number,
-  lineWidth: PropTypes.number,
-  src: PropTypes.string.isRequired,
-  strokeColor: PropTypes.string,
-  width: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
-  natural: PropTypes.bool,
-  areaKeyName: PropTypes.string,
-  stayHighlighted: PropTypes.bool,
-  stayMultiHighlighted: PropTypes.bool,
-  toggleHighlighted: PropTypes.bool,
-  rerenderProps: PropTypes.array,
-  parentWidth: PropTypes.number,
-  responsive: PropTypes.bool,
-
-  onClick: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onImageClick: PropTypes.func,
-  onImageMouseMove: PropTypes.func,
-  onLoad: PropTypes.func,
-  onMouseEnter: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-
-  map: PropTypes.shape({
-    areas: PropTypes.arrayOf(
-      PropTypes.shape({
-        area: PropTypes.shape({
-          coords: PropTypes.arrayOf(PropTypes.number),
-          href: PropTypes.string,
-          shape: PropTypes.string,
-          preFillColor: PropTypes.string,
-          fillColor: PropTypes.string,
-        }),
-      })
-    ),
-    name: PropTypes.string,
-  }),
-};
-
-export default React.memo(ImageMapper, (prevProps, nextProps) => {
-  const watchedProps = [
-    'src',
-    'active',
-    'width',
-    'height',
-    'imgWidth',
-    'fillColor',
-    'strokeColor',
-    'lineWidth',
-    'natural',
-    'areaKeyName',
-    'stayHighlighted',
-    'stayMultiHighlighted',
-    'toggleHighlighted',
-    'parentWidth',
-    'responsive',
-    ...nextProps.rerenderProps,
-  ];
+export default React.memo<ImageMapperProps>(ImageMapper, (prevProps, nextProps) => {
+  const watchedProps = [...rerenderPropsList, ...nextProps.rerenderProps];
 
   const propChanged = watchedProps.some(prop => prevProps[prop] !== nextProps[prop]);
 

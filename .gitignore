@@ -6,6 +6,7 @@
 .pnp.js
 .idea
 package-lock.json
+yarn.lock
 /lib
 .eslintcache
 storybook-static
