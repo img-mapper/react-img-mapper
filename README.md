@@ -5,7 +5,7 @@
 
 ``` 
 1. Promise to be maintained this repository        
-2. Typescript Support
+2. Built in TypeScript
 3. Decreased size of bundled
 4. Awesome Documentation        
 5. Selected area will stay highlighted ( Single & Multiple ) with toggle and reset feature

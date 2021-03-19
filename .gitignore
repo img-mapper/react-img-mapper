@@ -7,7 +7,7 @@
 .idea
 package-lock.json
 yarn.lock
-/lib
+/dist
 .eslintcache
 storybook-static
 

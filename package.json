@@ -21,12 +21,13 @@
   },
   "license": "MIT",
   "author": "Nisharg Shah",
-  "main": "lib/ImageMapper.js",
+  "main": "dist/ImageMapper.jsx",
+  "types": "dist/ImageMapper.d.ts",
   "scripts": {
-    "compile": "babel src/** -d lib",
-    "lint": "eslint . --ext .js",
-    "lint-fix": "eslint . --ext .js --fix",
-    "prepublishOnly": "npm run compile"
+    "build": "tsc",
+    "lint": "eslint . --ext .tsx",
+    "lint-fix": "eslint . --ext .tsx --fix",
+    "prepublishOnly": "npm run build"
   },
   "husky": {
     "hooks": {
@@ -55,14 +56,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-react": "^7.12.10",
     "@types/node": "^14.14.31",
     "@types/react": "^17.0.2",
     "@typescript-eslint/eslint-plugin": "^4.15.2",
     "@typescript-eslint/parser": "^4.15.2",
     "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.1.0",
     "eslint": "^7.17.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^7.1.0",
