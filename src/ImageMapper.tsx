@@ -2,12 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import isEqual from 'react-fast-compare';
 import styles from './styles';
 import {
-  rerenderPropsList,
-  ImageMapperProps,
-  ImageMapperDefaultProps,
   Map,
   Container,
   MapAreas,
+  CustomArea,
+  ImageEvent,
+  AreaEvent,
+  rerenderPropsList,
+  ImageMapperProps,
+  ImageMapperDefaultProps,
 } from './types';
 
 const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
@@ -84,7 +87,13 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     setMap(JSON.parse(JSON.stringify(mapProp)));
   };
 
-  const callingFn = (shape, coords, fillColor, lineWidth, strokeColor) => {
+  const callingFn = (
+    shape: string,
+    coords: number[],
+    fillColor: string,
+    lineWidth: number,
+    strokeColor: string
+  ) => {
     if (shape === 'rect') {
       return drawRect(coords, fillColor, lineWidth, strokeColor);
     }
@@ -97,7 +106,12 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     return false;
   };
 
-  const drawRect = (coords, fillColor, lineWidth, strokeColor) => {
+  const drawRect = (
+    coords: number[],
+    fillColor: string,
+    lineWidth: number,
+    strokeColor: string
+  ) => {
     const [left, top, right, bot] = coords;
     ctx.current.fillStyle = fillColor;
     ctx.current.lineWidth = lineWidth;
@@ -106,7 +120,12 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     ctx.current.fillRect(left, top, right - left, bot - top);
   };
 
-  const drawCircle = (coords, fillColor, lineWidth, strokeColor) => {
+  const drawCircle = (
+    coords: number[],
+    fillColor: string,
+    lineWidth: number,
+    strokeColor: string
+  ) => {
     ctx.current.fillStyle = fillColor;
     ctx.current.beginPath();
     ctx.current.lineWidth = lineWidth;
@@ -117,30 +136,35 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     ctx.current.fill();
   };
 
-  const drawPoly = (coords, fillColor, lineWidth, strokeColor) => {
+  const drawPoly = (
+    coords: number[],
+    fillColor: string,
+    lineWidth: number,
+    strokeColor: string
+  ) => {
     const newCoords = coords.reduce((a, v, i, s) => (i % 2 ? a : [...a, s.slice(i, i + 2)]), []);
-    const first = newCoords.unshift();
-
+    // const first = newCoords.unshift();
     ctx.current.fillStyle = fillColor;
     ctx.current.beginPath();
     ctx.current.lineWidth = lineWidth;
     ctx.current.strokeStyle = strokeColor;
 
-    ctx.current.moveTo(first[0], first[1]);
+    // ctx.current.moveTo(first[0], first[1]);
     newCoords.forEach(c => ctx.current.lineTo(c[0], c[1]));
     ctx.current.closePath();
     ctx.current.stroke();
     ctx.current.fill();
   };
 
-  const getDimensions = type => {
+  const getDimensions = (type: 'width' | 'height'): number => {
     if (typeof props[type] === 'function') {
+      // @ts-ignore
       return props[type](img.current);
     }
-    return props[type];
+    return props[type] as number;
   };
 
-  const getValues = (type, measure, name = 'area') => {
+  const getValues = (type: string, measure: number, name = 'area') => {
     const { naturalWidth, naturalHeight, clientWidth, clientHeight } = img.current;
 
     if (type === 'width') {
@@ -155,7 +179,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
       if (heightProp || name === 'image') return measure;
       return clientHeight;
     }
-    return false;
+    return 0;
   };
 
   const initCanvas = (firstLoad = false) => {
@@ -192,7 +216,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     renderPrefilledAreas();
   };
 
-  const hoverOn = (area, index?, event?) => {
+  const hoverOn = (area: CustomArea, index?: number, event?: AreaEvent) => {
     const { shape, scaledCoords, fillColor, lineWidth, strokeColor } = area;
 
     if (active) {
@@ -208,7 +232,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     if (props.onMouseEnter) props.onMouseEnter(area, index, event);
   };
 
-  const hoverOff = (area, index, event) => {
+  const hoverOff = (area: CustomArea, index: number, event: AreaEvent) => {
     if (active) {
       ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
       renderPrefilledAreas();
@@ -217,7 +241,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     if (props.onMouseLeave) props.onMouseLeave(area, index, event);
   };
 
-  const click = (area, index, event) => {
+  const click = (area: CustomArea, index: number, event: AreaEvent) => {
     if (stayHighlighted || stayMultiHighlighted || toggleHighlighted) {
       const newArea = { ...area };
       const chosenArea = stayMultiHighlighted ? map : storedMap;
@@ -237,18 +261,18 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     }
   };
 
-  const imageClick = event => {
+  const imageClick = (event: ImageEvent) => {
     if (props.onImageClick) {
       event.preventDefault();
       props.onImageClick(event);
     }
   };
 
-  const mouseMove = (area, index, event) => {
+  const mouseMove = (area: CustomArea, index: number, event: AreaEvent) => {
     if (props.onMouseMove) props.onMouseMove(area, index, event);
   };
 
-  const imageMouseMove = event => {
+  const imageMouseMove = (event: ImageEvent) => {
     if (props.onImageMouseMove) props.onImageMouseMove(event);
   };
 
@@ -356,7 +380,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
 ImageMapper.defaultProps = ImageMapperDefaultProps;
 
 export default React.memo<ImageMapperProps>(ImageMapper, (prevProps, nextProps) => {
-  const watchedProps = [...rerenderPropsList, ...nextProps.rerenderProps];
+  const watchedProps = [...rerenderPropsList, ...nextProps.rerenderProps!];
 
   const propChanged = watchedProps.some(prop => prevProps[prop] !== nextProps[prop]);
 

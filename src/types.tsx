@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const rerenderPropsList: string[] = [
+export const rerenderPropsList = [
   'src',
   'active',
   'width',
@@ -16,13 +16,14 @@ export const rerenderPropsList: string[] = [
   'toggleHighlighted',
   'parentWidth',
   'responsive',
-];
+] as const;
 
 export interface Container extends HTMLDivElement {
   clearHighlightedArea: () => void;
 }
 
 export interface MapAreas {
+  id?: string;
   coords: [];
   href: string;
   shape: string;
@@ -37,18 +38,19 @@ export interface Map {
   areas: Array<MapAreas>;
 }
 
-interface CustomArea extends MapAreas {
-  scaledCords: number[];
-  center: [number, number];
+export interface CustomArea extends MapAreas {
+  scaledCoords: number[];
+  center?: [number, number];
 }
 
-type MyEvent = React.BaseSyntheticEvent<HTMLImageElement, HTMLImageElement, HTMLImageElement>;
+export type AreaEvent = React.MouseEvent<HTMLAreaElement, MouseEvent>;
+export type ImageEvent = React.MouseEvent<HTMLImageElement, MouseEvent>;
 
 export interface ImageMapperProps {
   src: string;
   map?: Map;
-  areaKeyName?: string;
-  containerRef?: { current: HTMLDivElement | null };
+  areaKeyName?: 'id';
+  containerRef?: { current: HTMLDivElement } | null;
   active?: boolean;
   fillColor?: string;
   strokeColor?: string;
@@ -64,16 +66,16 @@ export interface ImageMapperProps {
   responsive?: boolean;
   parentWidth?: number;
 
-  onImageClick?: (e: MyEvent) => void;
-  onImageMouseMove?: (e: MyEvent) => void;
-  onClick?: (area: CustomArea, index: number, e: MyEvent) => void;
-  onMouseMove?: (area: CustomArea, index: number, e: MyEvent) => void;
-  onMouseEnter?: (area: CustomArea, index: number, e: MyEvent) => void;
-  onMouseLeave?: (area: CustomArea, index: number, e: MyEvent) => void;
-  onLoad?: (e: HTMLImageElement, dimensions: { width: number; height: number }) => void;
+  onImageClick?: ((e: ImageEvent) => void) | null;
+  onImageMouseMove?: ((e: ImageEvent) => void) | null;
+  onClick?: ((area: CustomArea, index: number, e: AreaEvent) => void) | null;
+  onMouseMove?: ((area: CustomArea, index: number, e: AreaEvent) => void) | null;
+  onMouseEnter?: ((area: CustomArea, index: number, e: AreaEvent) => void) | null;
+  onMouseLeave?: ((area: CustomArea, index: number, e: AreaEvent) => void) | null;
+  onLoad?: ((e: HTMLImageElement, dimensions: { width: number; height: number }) => void) | null;
 }
 
-export const ImageMapperDefaultProps = {
+export const ImageMapperDefaultProps: Partial<ImageMapperProps> = {
   map: {
     areas: [],
     name: `image-map-${Math.random()}`,
