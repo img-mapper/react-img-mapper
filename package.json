@@ -1,6 +1,6 @@
 {
   "name": "react-img-mapper",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "React Component to highlight interactive zones in images",
   "keywords": [
     "react",
@@ -21,7 +21,7 @@
   },
   "license": "MIT",
   "author": "Nisharg Shah",
-  "main": "dist/ImageMapper.jsx",
+  "main": "dist/ImageMapper.js",
   "types": "dist/ImageMapper.d.ts",
   "scripts": {
     "build": "tsc",
