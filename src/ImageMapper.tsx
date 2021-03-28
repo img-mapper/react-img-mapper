@@ -92,15 +92,16 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     coords: number[],
     fillColor: string,
     lineWidth: number,
-    strokeColor: string
+    strokeColor: string,
+    isAreaActive: boolean
   ) => {
-    if (shape === 'rect') {
+    if (shape === 'rect' && isAreaActive) {
       return drawRect(coords, fillColor, lineWidth, strokeColor);
     }
-    if (shape === 'circle') {
+    if (shape === 'circle' && isAreaActive) {
       return drawCircle(coords, fillColor, lineWidth, strokeColor);
     }
-    if (shape === 'poly') {
+    if (shape === 'poly' && isAreaActive) {
       return drawPoly(coords, fillColor, lineWidth, strokeColor);
     }
     return false;
@@ -217,7 +218,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   };
 
   const hoverOn = (area: CustomArea, index?: number, event?: AreaEvent) => {
-    const { shape, scaledCoords, fillColor, lineWidth, strokeColor } = area;
+    const { shape, scaledCoords, fillColor, lineWidth, strokeColor, active: isAreaActive } = area;
 
     if (active) {
       callingFn(
@@ -225,7 +226,8 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
         scaledCoords,
         fillColor || fillColorProp,
         lineWidth || lineWidthProp,
-        strokeColor || strokeColorProp
+        strokeColor || strokeColorProp,
+        isAreaActive ?? true
       );
     }
 
@@ -295,7 +297,8 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
         scaleCoords(area.coords),
         area.preFillColor,
         area.lineWidth || lineWidthProp,
-        area.strokeColor || strokeColorProp
+        area.strokeColor || strokeColorProp,
+        area.active ?? true
       );
       return true;
     });
