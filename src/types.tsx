@@ -3,6 +3,7 @@ import React from 'react';
 export const rerenderPropsList = [
   'src',
   'active',
+  'disabled',
   'width',
   'height',
   'imgWidth',
