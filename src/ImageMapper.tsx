@@ -17,6 +17,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   const {
     containerRef,
     active,
+    disabled,
     fillColor: fillColorProp,
     lineWidth: lineWidthProp,
     map: mapProp,
@@ -343,6 +344,8 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
       const center = computeCenter(area);
       const extendedArea = { ...area, scaledCoords, center };
 
+      if (area.disabled) return null;
+
       return (
         <area
           key={area[areaKeyName] || index.toString()}
@@ -374,7 +377,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
       />
       <canvas className="img-mapper-canvas" ref={canvas} style={styles().canvas} />
       <map className="img-mapper-map" name={map.name} style={styles().map}>
-        {isRendered && renderAreas()}
+        {isRendered && !disabled && renderAreas()}
       </map>
     </div>
   );

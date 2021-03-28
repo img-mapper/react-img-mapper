@@ -44,7 +44,7 @@ import ImageMapper from 'react-img-mapper';
 ```        
         
 ### Properties        
-|Props|type|Description|default|        
+|Props|Type|Description|Default|        
 |---|---|---|---|        
 |**src**|*string*|Image source url| **required**|        
 |**map**|*string*|Mapping description| { name: generated, areas: [ ] }| 
@@ -55,7 +55,8 @@ import ImageMapper from 'react-img-mapper';
 |**lineWidth**|*number*|Border thickness of the highlighted zone|1|        
 |**width**|*number \| func*|Image width, in function you will get image reference object|0|        
 |**height**|*number \| func*|Image height, in function you will get image reference object|0|        
-|**active**|*bool*|Enable/Disable highlighting|true|        
+|**active**|*bool*|Enable/Disable highlighting|true|    
+|**disabled**|*bool*|Enable/Disable area listeners and highlighting|false|    
 |**imgWidth**|*number*|Original image width|0|        
 |**natural**|*bool*|Give the original dimensions ( height & width ) to canvas and image wrapper|false|        
 |**stayHighlighted**|*bool*|You can see the highlighted area after clicking on the particular area|false|
@@ -101,12 +102,18 @@ Its structure is similar to the HTML syntax of mapping:
   - **name**: (*string*) Name of the map, used to bind to the image.        
   - **areas**: (*array*) Array of **area objects** - **area**: (*object*) Shaped like below :        
         
-|Property| type|Description|        
-|---|:---:|---|        
-|**id**|*string*|Uniquely identify an area. An index in an array is used if this value is not provided. You can set it with `areaKeyName` property|        
-|**shape**|*string*|Either `rect`, `circle` or `poly`|        
-|**coords**|*array of number*|Coordinates delimiting the zone according to the specified shape: <ul><li>**rect**: `top-left-X`,`top-left-Y`,`bottom-right-X`,`bottom-right-Y`</li><li>**circle**: `center-X`,`center-Y`,`radius`</li><li>**poly**: Every point in the polygon path as `point-X`,`point-Y`,...</li></ul>|        
-|**href**|*string*|Target link for a click in the zone (note that if you provide an onClick prop, `href` will be prevented)|        
+|Property|Type|Description|Default|        
+|---|---|---|---|    
+|**id**|*string*|Uniquely identify an area. An index in an array is used if this value is not provided. You can set it with `areaKeyName` property|index|        
+|**shape**|*string*|Either `rect`, `circle` or `poly`|required|        
+|**coords**|*array of number*|Coordinates delimiting the zone according to the specified shape: <ul><li>**rect**: `top-left-X`,`top-left-Y`,`bottom-right-X`,`bottom-right-Y`</li><li>**circle**: `center-X`,`center-Y`,`radius`</li><li>**poly**: Every point in the polygon path as `point-X`,`point-Y`,...</li></ul>|required|
+|**active**|*string*|Enable/Disable highlighting|true|   
+|**disabled**|*string*|Enable/Disable area listeners and highlighting|false|  
+|**href**|*string*|Target link for a click in the zone (note that if you provide an onClick prop, `href` will be prevented)|undefined|   
+|**fillColor**|*string*|Fill color of the highlighted zone|rgba(255, 255, 255, 0.5)|  
+|**strokeColor**|*string*|Border color of the highlighted zone|rgba(0, 0, 0, 0.5)|  
+|**lineWidth**|*string*|Border thickness of the highlighted zone|1|  
+|**preFillColor**|*string*|Pre filled color of the highlighted zone|undefined|  
         
 &nbsp;        
         
