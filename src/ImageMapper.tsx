@@ -35,7 +35,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     responsive,
   } = props;
 
-  const [map, setMap] = useState<Map>(JSON.parse(JSON.stringify(mapProp)));
+  const [map, setMap] = useState<Map>(mapProp);
   const [storedMap] = useState<Map>(map);
   const [isRendered, setRendered] = useState<boolean>(false);
   const [imgRef, setImgRef] = useState<HTMLImageElement>(null);
@@ -84,9 +84,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     if (responsive) initCanvas();
   }, [parentWidth]);
 
-  const updateCacheMap = () => {
-    setMap(JSON.parse(JSON.stringify(mapProp)));
-  };
+  const updateCacheMap = () => setMap(mapProp);
 
   const callingFn = (
     shape: string,
@@ -290,8 +288,8 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     return coords.map(coord => coord * scale);
   };
 
-  const renderPrefilledAreas = () => {
-    map.areas.map(area => {
+  const renderPrefilledAreas = (mapObj: Map = map) => {
+    mapObj.areas.map(area => {
       if (!area.preFillColor) return false;
       callingFn(
         area.shape,
@@ -328,14 +326,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
 
   const updateCanvas = () => {
     ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
-    mapProp.areas.map(cur => {
-      if (cur.preFillColor) {
-        const scaledCoords = scaleCoords(cur.coords);
-        hoverOn({ ...cur, scaledCoords });
-        return true;
-      }
-      return false;
-    });
+    renderPrefilledAreas(mapProp);
   };
 
   const renderAreas = () =>
