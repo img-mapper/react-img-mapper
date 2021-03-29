@@ -299,7 +299,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
         area.preFillColor,
         area.lineWidth || lineWidthProp,
         area.strokeColor || strokeColorProp,
-        area.active ?? true
+        true
       );
       return true;
     });
