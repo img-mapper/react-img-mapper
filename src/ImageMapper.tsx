@@ -36,7 +36,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   } = props;
 
   const [map, setMap] = useState<Map>(mapProp);
-  const [storedMap] = useState<Map>(map);
+  const [storedMap, setStoredMap] = useState<Map>(map);
   const [isRendered, setRendered] = useState<boolean>(false);
   const [imgRef, setImgRef] = useState<HTMLImageElement>(null);
   const [isClearFnCalled, setClearFnCall] = useState<boolean>(false);
@@ -84,7 +84,10 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     if (responsive) initCanvas();
   }, [parentWidth]);
 
-  const updateCacheMap = () => setMap(mapProp);
+  const updateCacheMap = () => {
+    setMap(mapProp);
+    setStoredMap(mapProp);
+  };
 
   const callingFn = (
     shape: string,
@@ -243,7 +246,8 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   };
 
   const click = (area: CustomArea, index: number, event: AreaEvent) => {
-    if (stayHighlighted || stayMultiHighlighted || toggleHighlighted) {
+    const isAreaActive = area.active ?? true;
+    if (isAreaActive && (stayHighlighted || stayMultiHighlighted || toggleHighlighted)) {
       const newArea = { ...area };
       const chosenArea = stayMultiHighlighted ? map : storedMap;
       if (toggleHighlighted && newArea.preFillColor) {
