@@ -366,10 +366,10 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
           onMouseEnter={event => hoverOn(extendedArea, index, event)}
           onMouseLeave={event => hoverOff(extendedArea, index, event)}
           onMouseMove={event => mouseMove(extendedArea, index, event)}
-          onMouseDown={event =>mouseDown(extendedArea, index, event)}
-          onMouseUp={event =>mouseUp(extendedArea, index, event)}
-          onTouchStart={event =>touchStart(extendedArea, index, event)}
-          onTouchEnd={event =>touchEnd(extendedArea, index, event)}
+          onMouseDown={event => mouseDown(extendedArea, index, event)}
+          onMouseUp={event => mouseUp(extendedArea, index, event)}
+          onTouchStart={event => touchStart(extendedArea, index, event)}
+          onTouchEnd={event => touchEnd(extendedArea, index, event)}
           onClick={event => click(extendedArea, index, event)}
           href={area.href}
           alt="map"
