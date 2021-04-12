@@ -9,7 +9,7 @@ package-lock.json
 yarn.lock
 /dist
 .eslintcache
-storybook-static
+/.husky
 
 # testing
 /coverage
