@@ -46,9 +46,9 @@ export interface CustomArea extends MapAreas {
   center?: [number, number];
 }
 
+export type TouchEvent = React.TouchEvent<HTMLAreaElement>;
 export type AreaEvent = React.MouseEvent<HTMLAreaElement, MouseEvent>;
 export type ImageEvent = React.MouseEvent<HTMLImageElement, MouseEvent>;
-export type TouchEvent = React.TouchEvent<HTMLAreaElement>;
 
 export interface ImageMapperProps {
   src: string;
