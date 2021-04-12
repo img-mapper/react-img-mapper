@@ -8,6 +8,7 @@ import {
   CustomArea,
   ImageEvent,
   AreaEvent,
+  TouchEvent,
   rerenderPropsList,
   ImageMapperProps,
   ImageMapperDefaultProps,
@@ -277,6 +278,22 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     if (props.onMouseMove) props.onMouseMove(area, index, event);
   };
 
+  const mouseDown = (area: CustomArea, index: number, event: AreaEvent) => {
+    if (props.onMouseDown) props.onMouseDown(area, index, event);
+  };
+
+  const mouseUp = (area: CustomArea, index: number, event: AreaEvent) => {
+    if (props.onMouseUp) props.onMouseUp(area, index, event);
+  };
+
+  const touchStart = (area: CustomArea, index: number, event: TouchEvent) => {
+    if (props.onTouchStart) props.onTouchStart(area, index, event);
+  };
+
+  const touchEnd = (area: CustomArea, index: number, event: TouchEvent) => {
+    if (props.onTouchEnd) props.onTouchEnd(area, index, event);
+  };
+
   const imageMouseMove = (event: ImageEvent) => {
     if (props.onImageMouseMove) props.onImageMouseMove(event);
   };
@@ -349,6 +366,10 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
           onMouseEnter={event => hoverOn(extendedArea, index, event)}
           onMouseLeave={event => hoverOff(extendedArea, index, event)}
           onMouseMove={event => mouseMove(extendedArea, index, event)}
+          onMouseDown={event =>mouseDown(extendedArea, index, event)}
+          onMouseUp={event =>mouseUp(extendedArea, index, event)}
+          onTouchStart={event =>touchStart(extendedArea, index, event)}
+          onTouchEnd={event =>touchEnd(extendedArea, index, event)}
           onClick={event => click(extendedArea, index, event)}
           href={area.href}
           alt="map"
