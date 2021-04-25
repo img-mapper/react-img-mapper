@@ -46,6 +46,7 @@ export interface CustomArea extends MapAreas {
   center?: [number, number];
 }
 
+export type CTX = { current: CanvasRenderingContext2D } | null;
 export type TouchEvent = React.TouchEvent<HTMLAreaElement>;
 export type AreaEvent = React.MouseEvent<HTMLAreaElement, MouseEvent>;
 export type ImageEvent = React.MouseEvent<HTMLImageElement, MouseEvent>;
