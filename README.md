@@ -38,14 +38,14 @@ Live demo: [demo](https://img-mapper.github.io/react-docs)
 To run the example locally
 
 ```        
-git clone https://github.com/react-img-mapper/docs.git
+git clone https://github.com/img-mapper/react-docs.git
 npm install        
 npm start        
 ```        
 
 Then open [`localhost:3000`](http://localhost:3000) in a browser.
 
-If you want to change something and want to make a compiled file, you just need to run `npm run compile`
+If you want to change something and want to make a build file, you just need to run `npm run build`
 
 ## Usage
 
