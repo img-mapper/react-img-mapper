@@ -19,13 +19,13 @@ React Component to highlight interactive zones in images
 
 Package: [react-img-mapper](https://www.npmjs.com/package/react-img-mapper)
 
-* npm
+**NPM**
 
 ```  
 npm install react-img-mapper --save        
 ```  
 
-* yarn
+**Yarn**
 
 ```  
 yarn add react-img-mapper      
@@ -52,12 +52,24 @@ If you want to change something and want to make a compiled file, you just need 
 Import the component as you normally do, and add it wherever you like in your JSX views as below:
 
 ```javascript           
-import ImageMapper from 'react-img-mapper';        
-        
-<ImageMapper src={IMAGE_URL} map={AREAS_MAP}/>        
+import React from 'react';
+import ImageMapper from 'react-img-mapper';
+
+const Mapper = props => {
+  const URL = 'https://raw.githubusercontent.com/img-mapper/react-docs/master/src/assets/example.jpg';
+  const MAP = {
+    name: 'my-map',
+    // GET JSON FROM BELOW URL AS AN EXAMPLE
+    areas: 'https://raw.githubusercontent.com/img-mapper/react-docs/master/src/assets/example.json',
+  };
+  
+  return <ImageMapper src={URL} map={MAP} />
+}
+
+export default Mapper;
 ```        
 
-### Properties
+## Properties
 
 |Props|Type|Description|Default|        
 |---|---|---|---|        
@@ -81,7 +93,7 @@ import ImageMapper from 'react-img-mapper';
 |**responsive**|*bool*|responsive map in all resolution ( for enable it you need to specify parentWidth )|false|        
 |**parentWidth**|*number*|parent max width for responsive|0|   
 
-### Properties Callback
+## Properties Callback
 
 |Props callbacks|Called on|signature|        
 |---|---|---|        
@@ -97,21 +109,13 @@ import ImageMapper from 'react-img-mapper';
 |**onImageClick**|Click outside of a zone in image|(event): void|        
 |**onImageMouseMove**|Moving mouse on the image itself|(event): void|      
 
-### Methods
-
-```
-Example:
-
-onMultiHighlightClear
-
-=> containerRef.current.clearHighlightedArea();
-```
+## Methods
 
 |Method|Description|       
 |---|---|
 |**clearHighlightedArea**|Clear all selected highlighted area from your map|
 
-&nbsp;
+## Map Properties
 
 A map is an object describing highlighted areas in the image.
 
@@ -125,10 +129,7 @@ Its structure is similar to the HTML syntax of mapping:
 |---|---|---|---|    
 |**id**|*string*|Uniquely identify an area. An index in an array is used if this value is not provided. You can set it with `areaKeyName` property|index|        
 |**shape**|*string*|Either `rect`, `circle` or `poly`|required|        
-|**coords**|*array of number*|Coordinates delimiting the zone according to the specified shape: <ul><li>**
-
-rect**: `top-left-X`,`top-left-Y`,`bottom-right-X`,`bottom-right-Y`</li><li>**circle**: `center-X`,`center-Y`,`radius`</li><li>**
-poly**: Every point in the polygon path as `point-X`,`point-Y`,...</li></ul>|required| |**active**|*string*|Enable/Disable highlighting|true|   
+|**coords**|*array of number*|Coordinates delimiting the zone according to the specified shape: <ul><li>**rect**: `top-left-X`,`top-left-Y`,`bottom-right-X`,`bottom-right-Y`</li><li>**circle**: `center-X`,`center-Y`,`radius`</li><li>**poly**: Every point in the polygon path as `point-X`,`point-Y`,...</li></ul>|required| |**active**|*string*|Enable/Disable highlighting|true|   
 |**disabled**|*string*|Enable/Disable area listeners and highlighting|false|  
 |**href**|*string*|Target link for a click in the zone (note that if you provide an onClick prop, `href` will be prevented)|undefined|   
 |**fillColor**|*string*|Fill color of the highlighted zone|rgba(255, 255, 255, 0.5)|  
@@ -136,32 +137,12 @@ poly**: Every point in the polygon path as `point-X`,`point-Y`,...</li></ul>|req
 |**lineWidth**|*string*|Border thickness of the highlighted zone|1|  
 |**preFillColor**|*string*|Pre filled color of the highlighted zone|undefined|
 
-&nbsp;
-
 When received from an event handler, an area is extended with the following properties:
 
 |Property| type|Description|        
 |---|:---:|---|        
-|**scaledCoords**|*array of number*|Scaled coordinates (see [Dynamic Scaling](#dynamic-scaling) below)|        
+|**scaledCoords**|*array of number*|Scaled coordinates|        
 |**center**|*array of number*|Coordinates positioning the center or centroid of the area: `[X, Y]`|        
-
-## Dynamic scaling When a parent component updates the **
-
-width** prop on `<ImageMapper>`, the area coordinates also have to be scaled. This can be accomplished by specifying both the new **width** and a constant **imgWidth**. **
-imgWidth** is the width of the original image. `<ImageMapper>` will calculate the new coordinates for each area. For example:
-
-```javascript        
-/* assume that image is actually 1500px wide */        
-        
-// this will be a 1:1 scale, areas will be 3x bigger than they should be        
-<ImageMapper width={500} />        
-        
-// this will be the same 1:1 scale, same problem with areas being too big        
-<ImageMapper width={500} imgWidth={500} />        
-        
-// this will scale the areas to 1/3rd, they will now fit the 500px image on the screen        
-<ImageMapper width={500} imgWidth={1500} />        
-```        
 
 ## License
 
