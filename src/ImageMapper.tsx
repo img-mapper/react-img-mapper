@@ -48,7 +48,6 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   const [storedMap, setStoredMap] = useState<Map>(map);
   const [isRendered, setRendered] = useState<boolean>(false);
   const [imgRef, setImgRef] = useState<HTMLImageElement>(null);
-  const [isClearFnCalled, setClearFnCall] = useState<boolean>(false);
   const container = useRef<Container>(null);
   const img = useRef<HTMLImageElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -74,20 +73,13 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   useEffect(() => {
     container.current.clearHighlightedArea = () => {
       setMap(storedMap);
-      setClearFnCall(true);
+      initCanvas();
     };
 
     if (containerRef) {
       containerRef.current = container.current;
     }
   }, []);
-
-  useEffect(() => {
-    if (isClearFnCalled) {
-      setClearFnCall(false);
-      initCanvas();
-    }
-  }, [isClearFnCalled]);
 
   useEffect(() => {
     if (responsive) initCanvas();
