@@ -25,15 +25,15 @@ export interface Container extends HTMLDivElement {
 
 export interface MapAreas {
   id?: string;
-  shape: string;
-  coords: [];
-  active: boolean;
-  disabled: boolean;
-  href: string;
-  fillColor: string;
-  strokeColor: string;
-  lineWidth: number;
-  preFillColor: string;
+  shape: 'rect' | 'circle' | 'poly';
+  coords: number[];
+  active?: boolean;
+  disabled?: boolean;
+  href?: string;
+  fillColor?: string;
+  strokeColor?: string;
+  lineWidth?: number;
+  preFillColor?: string;
 }
 
 export interface Map {
