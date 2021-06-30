@@ -27,7 +27,8 @@
     "build": "tsc",
     "lint": "eslint . --ext .tsx",
     "lint-fix": "eslint . --ext .tsx --fix",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "prepare": "npm run build"
   },
   "husky": {
     "hooks": {
