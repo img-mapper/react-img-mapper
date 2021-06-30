@@ -23,6 +23,7 @@
   "author": "Nisharg Shah",
   "main": "dist/ImageMapper.js",
   "types": "dist/ImageMapper.d.ts",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --ext .tsx",
