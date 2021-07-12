@@ -23,11 +23,13 @@
   "author": "Nisharg Shah",
   "main": "dist/ImageMapper.js",
   "types": "dist/ImageMapper.d.ts",
+  "type": "commonjs",
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --ext .tsx",
     "lint-fix": "eslint . --ext .tsx --fix",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "prepare": "npm run build"
   },
   "husky": {
     "hooks": {

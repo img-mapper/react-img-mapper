@@ -198,7 +198,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     }
   };
 
-  const scaleCoords = (coords: []): number[] => {
+  const scaleCoords = (coords: number[]): number[] => {
     const scale =
       widthProp && imageWidthProp && imageWidthProp > 0
         ? (widthProp as number) / imageWidthProp
