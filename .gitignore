@@ -9,7 +9,6 @@ package-lock.json
 yarn.lock
 /dist
 .eslintcache
-/.husky
 
 # testing
 /coverage

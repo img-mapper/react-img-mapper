@@ -28,13 +28,9 @@
     "build": "tsc",
     "lint": "eslint . --ext .tsx",
     "lint-fix": "eslint . --ext .tsx --fix",
+    "pre-commit": "npx husky add .husky/pre-commit \"npx lint-staged\"",
     "prepublishOnly": "npm run build",
-    "prepare": "npm run build"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "prepare": "npm run build && husky install"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -57,30 +53,30 @@
     "react-fast-compare": "^3.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@types/node": "^14.14.31",
-    "@types/react": "^17.0.2",
-    "@typescript-eslint/eslint-plugin": "^4.15.2",
-    "@typescript-eslint/parser": "^4.15.2",
+    "@babel/core": "^7.15.0",
+    "@types/node": "^16.7.6",
+    "@types/react": "^17.0.19",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.29.3",
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.17.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^7.1.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-config-react-app": "^6.0.0",
     "eslint-import-resolver-typescript": "^2.4.0",
-    "eslint-plugin-flowtype": "^5.2.0",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-flowtype": "^5.9.1",
+    "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-react": "^7.25.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "husky": "^6.0.0",
-    "lint-staged": "^10.5.4",
-    "prettier": "^2.2.1",
-    "react": "17.0.1",
-    "react-dom": "17.0.1",
-    "typescript": "^4.2.2"
+    "husky": "^7.0.2",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.3.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "typescript": "^4.4.2"
   },
   "peerDependencies": {
     "react": "16.x || 17.x",
