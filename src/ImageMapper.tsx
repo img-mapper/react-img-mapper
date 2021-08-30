@@ -1,16 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import isEqual from 'react-fast-compare';
 import styles from './styles';
-import {
-  Map,
-  Container,
-  MapAreas,
-  CustomArea,
-  AreaEvent,
-  rerenderPropsList,
-  ImageMapperProps,
-  ImageMapperDefaultProps,
-} from './types';
+import { Map, Container, MapAreas, CustomArea, AreaEvent, ImageMapperProps } from './types';
+import { rerenderPropsList, ImageMapperDefaultProps } from './constants';
 import callingFn from './draw';
 import {
   mouseMove,
@@ -21,6 +13,8 @@ import {
   touchStart,
   touchEnd,
 } from './events';
+
+export * from './types';
 
 const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   const {
