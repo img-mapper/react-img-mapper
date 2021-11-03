@@ -41,6 +41,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   const [map, setMap] = useState<Map>(mapProp);
   const [storedMap, setStoredMap] = useState<Map>(map);
   const [isRendered, setRendered] = useState<boolean>(false);
+  const [isImageLoaded, setImageLoaded] = useState<boolean>(false);
   const [imgRef, setImgRef] = useState<HTMLImageElement>(null);
   const container = useRef<Container>(null);
   const img = useRef<HTMLImageElement>(null);
@@ -54,9 +55,11 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     } else {
       updateCacheMap();
       initCanvas();
-      updateCanvas();
+      if (isImageLoaded) {
+        updateCanvas();
+      }
     }
-  }, [props, isInitialMount]);
+  }, [props, isInitialMount, isImageLoaded]);
 
   useEffect(() => {
     ctx.current = canvas.current.getContext('2d');
@@ -111,6 +114,9 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   };
 
   const initCanvas = (firstLoad = false) => {
+    if (!firstLoad && !isImageLoaded) {
+      return;
+    }
     const imgWidth = getDimensions('width');
     const imgHeight = getDimensions('height');
     const imageWidth = getValues('width', imgWidth);
@@ -141,7 +147,12 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     }
 
     setImgRef(img.current);
-    renderPrefilledAreas();
+    if (firstLoad) {
+      setImageLoaded(true);
+    }
+    if (isImageLoaded) {
+      renderPrefilledAreas();
+    }
   };
 
   const hoverOn = (area: CustomArea, index?: number, event?: AreaEvent) => {
@@ -288,7 +299,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
       />
       <canvas className="img-mapper-canvas" ref={canvas} style={styles().canvas} />
       <map className="img-mapper-map" name={map.name} style={styles().map}>
-        {isRendered && !disabled && renderAreas()}
+        {isRendered && !disabled && isImageLoaded && renderAreas()}
       </map>
     </div>
   );
