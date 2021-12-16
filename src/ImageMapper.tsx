@@ -36,6 +36,10 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     toggleHighlighted,
     parentWidth,
     responsive,
+    onLoad,
+    onMouseEnter,
+    onMouseLeave,
+    onClick,
   } = props;
 
   const [map, setMap] = useState<Map>(mapProp);
@@ -85,11 +89,13 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   };
 
   const getDimensions = (type: 'width' | 'height'): number => {
-    if (typeof props[type] === 'function') {
+    const { [type]: dimension } = props;
+
+    if (typeof dimension === 'function') {
       // @ts-ignore
-      return props[type](img.current);
+      return dimension(img.current);
     }
-    return props[type] as number;
+    return dimension as number;
   };
 
   const getValues = (type: string, measure: number, name = 'area') => {
@@ -134,8 +140,8 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     ctx.current = canvas.current.getContext('2d');
     ctx.current.fillStyle = fillColorProp;
 
-    if (props.onLoad && imgRef) {
-      props.onLoad(img.current, {
+    if (onLoad && imgRef) {
+      onLoad(img.current, {
         width: imageWidth,
         height: imageHeight,
       });
@@ -160,7 +166,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
       );
     }
 
-    if (props.onMouseEnter) props.onMouseEnter(area, index, event);
+    if (onMouseEnter) onMouseEnter(area, index, event);
   };
 
   const hoverOff = (area: CustomArea, index: number, event: AreaEvent) => {
@@ -169,27 +175,31 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
       renderPrefilledAreas();
     }
 
-    if (props.onMouseLeave) props.onMouseLeave(area, index, event);
+    if (onMouseLeave) onMouseLeave(area, index, event);
   };
 
   const click = (area: CustomArea, index: number, event: AreaEvent) => {
     const isAreaActive = area.active ?? true;
+
     if (isAreaActive && (stayHighlighted || stayMultiHighlighted || toggleHighlighted)) {
       const newArea = { ...area };
       const chosenArea = stayMultiHighlighted ? map : storedMap;
+
       if (toggleHighlighted && newArea.preFillColor) {
         delete newArea.preFillColor;
       } else if (stayHighlighted || stayMultiHighlighted) {
         newArea.preFillColor = area.fillColor || fillColorProp;
       }
+
       const updatedAreas = chosenArea.areas.map(cur =>
         cur[areaKeyName] === area[areaKeyName] ? newArea : cur
       );
       setMap(prev => ({ ...prev, areas: updatedAreas }));
     }
-    if (props.onClick) {
+
+    if (onClick) {
       event.preventDefault();
-      props.onClick(area, index, event);
+      onClick(area, index, event);
     }
   };
 
