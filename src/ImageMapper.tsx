@@ -54,9 +54,9 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     } else {
       updateCacheMap();
       initCanvas();
-      updateCanvas();
+      if (imgRef) updateCanvas();
     }
-  }, [props, isInitialMount]);
+  }, [props, isInitialMount, imgRef]);
 
   useEffect(() => {
     ctx.current = canvas.current.getContext('2d');
@@ -73,7 +73,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     if (containerRef) {
       containerRef.current = container.current;
     }
-  }, []);
+  }, [imgRef]);
 
   useEffect(() => {
     if (responsive) initCanvas();
@@ -111,6 +111,8 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   };
 
   const initCanvas = (firstLoad = false) => {
+    if (!firstLoad && !imgRef) return;
+
     const imgWidth = getDimensions('width');
     const imgHeight = getDimensions('height');
     const imageWidth = getValues('width', imgWidth);
@@ -131,9 +133,8 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
 
     ctx.current = canvas.current.getContext('2d');
     ctx.current.fillStyle = fillColorProp;
-    //ctx.strokeStyle = props.strokeColor;
 
-    if (props.onLoad && firstLoad) {
+    if (props.onLoad && imgRef) {
       props.onLoad(img.current, {
         width: imageWidth,
         height: imageHeight,
@@ -141,7 +142,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     }
 
     setImgRef(img.current);
-    renderPrefilledAreas();
+    if (imgRef) renderPrefilledAreas();
   };
 
   const hoverOn = (area: CustomArea, index?: number, event?: AreaEvent) => {
@@ -277,7 +278,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
       <img
         role="presentation"
         className="img-mapper-img"
-        style={styles(props).img}
+        style={{ ...styles(props).img, ...(!imgRef ? { display: 'none' } : {}) }}
         src={srcProp}
         useMap={`#${map.name}`}
         alt="map"
@@ -288,7 +289,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
       />
       <canvas className="img-mapper-canvas" ref={canvas} style={styles().canvas} />
       <map className="img-mapper-map" name={map.name} style={styles().map}>
-        {isRendered && !disabled && renderAreas()}
+        {isRendered && !disabled && imgRef && renderAreas()}
       </map>
     </div>
   );
