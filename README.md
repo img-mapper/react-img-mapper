@@ -13,7 +13,7 @@ React Component to highlight interactive zones in images
 6. New Properties: Natural Dimensions, RerenderProps       
 7. Image Reference in Width, Height and onLoad function to access image properties  
 8. Responsive Image Mapper   
-9. Compatible with Next.js        
+9. Compatible with Next.js version ≤ 9.0.0
 ```        
 
 ## Installation
