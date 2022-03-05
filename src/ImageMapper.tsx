@@ -53,6 +53,13 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   const isInitialMount = useRef<boolean>(true);
 
   useEffect(() => {
+    initCanvas(true);
+    ctx.current = canvas.current.getContext('2d');
+    updateCacheMap();
+    setRendered(true);
+  }, []);
+
+  useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
     } else {
@@ -61,12 +68,6 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
       if (imgRef) updateCanvas();
     }
   }, [props, isInitialMount, imgRef]);
-
-  useEffect(() => {
-    ctx.current = canvas.current.getContext('2d');
-    updateCacheMap();
-    setRendered(true);
-  }, []);
 
   useEffect(() => {
     container.current.clearHighlightedArea = () => {
@@ -293,7 +294,6 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
         useMap={`#${map.name}`}
         alt="map"
         ref={img}
-        onLoad={() => initCanvas(true)}
         onClick={event => imageClick(event, props)}
         onMouseMove={event => imageMouseMove(event, props)}
       />
