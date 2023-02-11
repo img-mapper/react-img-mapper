@@ -267,6 +267,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
 
       return (
         <area
+          {...(area.preFillColor ? { className: 'img-mapper-area-highlighted' } : {})}
           key={area[areaKeyName] || index.toString()}
           shape={area.shape}
           coords={scaledCoords.join(',')}
