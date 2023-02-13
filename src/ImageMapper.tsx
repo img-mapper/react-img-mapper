@@ -45,6 +45,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   const [map, setMap] = useState<Map>(mapProp);
   const [storedMap, setStoredMap] = useState<Map>(map);
   const [isRendered, setRendered] = useState<boolean>(false);
+  const [renderCount, setRenderCount] = useState<number>(1);
   const [imgRef, setImgRef] = useState<HTMLImageElement>(null);
   const container = useRef<Container>(null);
   const img = useRef<HTMLImageElement>(null);
@@ -53,11 +54,18 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   const isInitialMount = useRef<boolean>(true);
 
   useEffect(() => {
-    initCanvas(true);
-    ctx.current = canvas.current.getContext('2d');
-    updateCacheMap();
-    setRendered(true);
-  }, []);
+    if (!isRendered && renderCount) {
+      if (img.current && img.current.complete) {
+        initCanvas(true);
+        ctx.current = canvas.current.getContext('2d');
+        updateCacheMap();
+        setRendered(true);
+        setRenderCount(0);
+      } else {
+        setRenderCount(prev => prev + 1);
+      }
+    }
+  }, [img, isRendered, renderCount]);
 
   useEffect(() => {
     if (isInitialMount.current) {
