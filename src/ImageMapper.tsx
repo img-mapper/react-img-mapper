@@ -189,7 +189,13 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
       const chosenArea = stayMultiHighlighted ? map : storedMap;
 
       if (toggleHighlighted && newArea.preFillColor) {
-        delete newArea.preFillColor;
+        const isPreFillColorFromJSON = storedMap.areas.find(
+          c => c[areaKeyName] === area[areaKeyName]
+        );
+
+        if (isPreFillColorFromJSON && !isPreFillColorFromJSON.preFillColor) {
+          delete newArea.preFillColor;
+        }
       } else if (stayHighlighted || stayMultiHighlighted) {
         newArea.preFillColor = area.fillColor || fillColorProp;
       }
