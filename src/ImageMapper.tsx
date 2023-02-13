@@ -152,27 +152,29 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     if (imgRef) renderPrefilledAreas();
   };
 
-  const hoverOn = (area: CustomArea, index?: number, event?: AreaEvent) => {
-    const { shape, scaledCoords, fillColor, lineWidth, strokeColor, active: isAreaActive } = area;
+  const highlightArea = (area: CustomArea) =>
+    callingFn(
+      area.shape,
+      area.scaledCoords,
+      area.fillColor || fillColorProp,
+      area.lineWidth || lineWidthProp,
+      area.strokeColor || strokeColorProp,
+      area.active ?? true,
+      ctx
+    );
 
-    if (active) {
-      callingFn(
-        shape,
-        scaledCoords,
-        fillColor || fillColorProp,
-        lineWidth || lineWidthProp,
-        strokeColor || strokeColorProp,
-        isAreaActive ?? true,
-        ctx
-      );
-    }
+  const clearCanvas = () =>
+    ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
+
+  const hoverOn = (area: CustomArea, index?: number, event?: AreaEvent) => {
+    if (active) highlightArea(area);
 
     if (onMouseEnter) onMouseEnter(area, index, event);
   };
 
   const hoverOff = (area: CustomArea, index: number, event: AreaEvent) => {
     if (active) {
-      ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
+      clearCanvas();
       renderPrefilledAreas();
     }
 
@@ -196,6 +198,11 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
         cur[areaKeyName] === area[areaKeyName] ? newArea : cur
       );
       setMap(prev => ({ ...prev, areas: updatedAreas }));
+
+      if (!stayMultiHighlighted) {
+        updateCanvas();
+        highlightArea(area);
+      }
     }
 
     if (onClick) {
@@ -216,7 +223,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   };
 
   const renderPrefilledAreas = (mapObj: Map = map) => {
-    mapObj.areas.map(area => {
+    mapObj.areas.forEach(area => {
       if (!area.preFillColor) return false;
       callingFn(
         area.shape,
@@ -253,7 +260,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   };
 
   const updateCanvas = () => {
-    ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
+    clearCanvas();
     renderPrefilledAreas(mapProp);
   };
 
