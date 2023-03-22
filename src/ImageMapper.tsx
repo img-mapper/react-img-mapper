@@ -147,6 +147,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     container.current.style.height = `${imageHeight}px`;
 
     ctx.current = canvas.current.getContext('2d');
+    ctx.current.translate(0.5, 0.5);
     ctx.current.fillStyle = fillColorProp;
 
     if (onLoad && imgRef) {
@@ -233,7 +234,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     if (responsive && parentWidth) {
       return coords.map(coord => coord / (imgRef.naturalWidth / parentWidth));
     }
-    return coords.map(coord => coord * scale);
+    return coords.map((coord) => Math.floor(coord * scale));
   };
 
   const renderPrefilledAreas = (mapObj: Map = map) => {
