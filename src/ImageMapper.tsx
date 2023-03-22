@@ -141,12 +141,17 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
       img.current.height = getValues('height', imgHeight, 'image');
     }
 
-    canvas.current.width = imageWidth;
-    canvas.current.height = imageHeight;
+    const ratio = window.devicePixelRatio;
+
+    canvas.current.width = imageWidth * ratio;
+    canvas.current.height = imageHeight * ratio;
+    canvas.current.style.width = `${imageWidth}px`;
+    canvas.current.style.height = `${imageHeight}px`;
     container.current.style.width = `${imageWidth}px`;
     container.current.style.height = `${imageHeight}px`;
 
     ctx.current = canvas.current.getContext('2d');
+    ctx.current.scale(ratio, ratio);
     ctx.current.translate(0.5, 0.5);
     ctx.current.fillStyle = fillColorProp;
 
