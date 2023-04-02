@@ -45,27 +45,31 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   const [map, setMap] = useState<Map>(mapProp);
   const [storedMap, setStoredMap] = useState<Map>(map);
   const [isRendered, setRendered] = useState<boolean>(false);
-  const [renderCount, setRenderCount] = useState<number>(1);
   const [imgRef, setImgRef] = useState<HTMLImageElement>(null);
   const container = useRef<Container>(null);
   const img = useRef<HTMLImageElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const ctx = useRef<CanvasRenderingContext2D>(null);
   const isInitialMount = useRef<boolean>(true);
+  const interval = useRef<number>(0);
 
   useEffect(() => {
-    if (!isRendered && renderCount) {
-      if (img.current && img.current.complete) {
-        initCanvas(true);
-        ctx.current = canvas.current.getContext('2d');
-        updateCacheMap();
-        setRendered(true);
-        setRenderCount(0);
-      } else {
-        setRenderCount(prev => prev + 1);
-      }
+    if (!isRendered) {
+      interval.current = window.setInterval(() => {
+        if (img.current?.complete) setRendered(true);
+      }, 500);
+    } else {
+      clearInterval(interval.current);
     }
-  }, [img, isRendered, renderCount]);
+  }, [isRendered]);
+
+  useEffect(() => {
+    if (isRendered && canvas.current) {
+      initCanvas(true);
+      ctx.current = canvas.current.getContext('2d');
+      updateCacheMap();
+    }
+  }, [isRendered]);
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -307,19 +311,19 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     });
 
   return (
-    <div id="img-mapper" style={styles(props).container} ref={container}>
+    <div ref={container} id="img-mapper" style={styles(props).container}>
       <img
+        ref={img}
         role="presentation"
         className="img-mapper-img"
         style={{ ...styles(props).img, ...(!imgRef ? { display: 'none' } : {}) }}
         src={srcProp}
         useMap={`#${map.name}`}
         alt="map"
-        ref={img}
         onClick={event => imageClick(event, props)}
         onMouseMove={event => imageMouseMove(event, props)}
       />
-      <canvas className="img-mapper-canvas" ref={canvas} style={styles().canvas} />
+      <canvas ref={canvas} className="img-mapper-canvas" style={styles().canvas} />
       <map className="img-mapper-map" name={map.name} style={styles().map}>
         {isRendered && !disabled && imgRef && renderAreas()}
       </map>
