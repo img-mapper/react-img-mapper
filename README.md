@@ -41,7 +41,7 @@ To run the example locally
 ```        
 git clone https://github.com/img-mapper/react-docs.git
 npm install        
-npm start        
+npm run dev        
 ```        
 
 Then open [`localhost:3000`](http://localhost:3000) in a browser.
@@ -63,7 +63,7 @@ const Mapper = props => {
     // GET JSON FROM BELOW URL AS AN EXAMPLE
     areas: 'https://raw.githubusercontent.com/img-mapper/react-docs/master/src/assets/example.json',
   };
-  
+
   return <ImageMapper src={URL} map={MAP} />
 }
 
@@ -76,7 +76,6 @@ export default Mapper;
 |---|------------------|------------------------------------------------------------------------------------------|--------------------------|        
 |**src**| *string*         | Image source url                                                                         | **required**             |        
 |**map**| *object*         | Mapping object                                                                           | **required**                 | 
-|**containerRef**| *ref*            | help to reset selected highlighted area                                                  | null                     |  
 |**areaKeyName**| *string*         | default unique key name ( **required** for `stayHighlighted` )                           | id                       |            
 |**fillColor**| *string*         | Fill color of the highlighted zone                                                       | rgba(255, 255, 255, 0.5) |        
 |**strokeColor**| *string*         | Border color of the highlighted zone                                                     | rgba(0, 0, 0, 0.5)       |        

@@ -1,9 +1,11 @@
 import type { rerenderPropsList } from '@/constants';
 import type { CSSProperties, MouseEvent, TouchEvent as ReactTouchEvent } from 'react';
 
-export interface Container extends HTMLDivElement {
+export interface RefExtraProperties {
   clearHighlightedArea: () => void;
 }
+
+export type RefProperties = RefExtraProperties & HTMLDivElement;
 
 export interface MapArea {
   id?: string;
@@ -49,7 +51,6 @@ export interface ImageMapperProps {
   src: string;
   map: Map;
   areaKeyName?: 'id';
-  containerRef?: { current: HTMLDivElement } | null;
   active?: boolean;
   disabled?: boolean;
   fillColor?: string;
