@@ -1,4 +1,4 @@
-import type { AreaEvent, CustomArea, ImageEvent, ImageMapperProps, TouchEvent } from '@/types';
+import type { Area, AreaEvent, ImageEvent, ImageMapperProps, TouchEvent } from '@/types';
 
 export const imageMouseMove = (
   event: ImageEvent,
@@ -18,7 +18,7 @@ export const imageClick = (
 };
 
 export const mouseMove = (
-  area: CustomArea,
+  area: Area,
   index: number,
   event: AreaEvent,
   { onMouseMove }: Pick<ImageMapperProps, 'onMouseMove'>
@@ -27,7 +27,7 @@ export const mouseMove = (
 };
 
 export const mouseDown = (
-  area: CustomArea,
+  area: Area,
   index: number,
   event: AreaEvent,
   { onMouseDown }: Pick<ImageMapperProps, 'onMouseDown'>
@@ -36,7 +36,7 @@ export const mouseDown = (
 };
 
 export const mouseUp = (
-  area: CustomArea,
+  area: Area,
   index: number,
   event: AreaEvent,
   { onMouseUp }: Pick<ImageMapperProps, 'onMouseUp'>
@@ -45,7 +45,7 @@ export const mouseUp = (
 };
 
 export const touchStart = (
-  area: CustomArea,
+  area: Area,
   index: number,
   event: TouchEvent,
   { onTouchStart }: Pick<ImageMapperProps, 'onTouchStart'>
@@ -54,7 +54,7 @@ export const touchStart = (
 };
 
 export const touchEnd = (
-  area: CustomArea,
+  area: Area,
   index: number,
   event: TouchEvent,
   { onTouchEnd }: Pick<ImageMapperProps, 'onTouchEnd'>
