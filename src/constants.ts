@@ -21,7 +21,6 @@ export const rerenderPropsList = [
 
 export const ImageMapperDefaultProps: Omit<ImageMapperProps, 'src' | 'map'> = {
   areaKeyName: 'id',
-  containerRef: null,
   active: true,
   disabled: false,
   fillColor: 'rgba(255, 255, 255, 0.5)',

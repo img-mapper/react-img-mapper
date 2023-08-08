@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import isEqual from 'react-fast-compare';
 
@@ -15,13 +15,12 @@ import {
 } from '@/events';
 import styles from '@/styles';
 
-import type { Area, AreaEvent, Container, ImageMapperProps, Map, MapArea } from '@/types';
+import type { Area, AreaEvent, ImageMapperProps, Map, MapArea, RefProperties } from '@/types';
 
 export * from '@/types';
 
-const ImageMapper = (props: Required<ImageMapperProps>) => {
+const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props, ref) => {
   const {
-    containerRef,
     active,
     disabled,
     fillColor: fillColorProp,
@@ -56,7 +55,7 @@ const ImageMapper = (props: Required<ImageMapperProps>) => {
   const [storedMap, setStoredMap] = useState<Map>(map);
   const [isRendered, setRendered] = useState<boolean>(false);
   const [imgRef, setImgRef] = useState<HTMLImageElement>(null);
-  const container = useRef<Container>(null);
+  const innerRef = useRef<RefProperties>(null);
   const img = useRef<HTMLImageElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const ctx = useRef<CanvasRenderingContext2D>(null);
@@ -148,8 +147,8 @@ const ImageMapper = (props: Required<ImageMapperProps>) => {
 
     canvas.current.width = imageWidth;
     canvas.current.height = imageHeight;
-    container.current.style.width = `${imageWidth}px`;
-    container.current.style.height = `${imageHeight}px`;
+    innerRef.current.style.width = `${imageWidth}px`;
+    innerRef.current.style.height = `${imageHeight}px`;
 
     ctx.current = canvas.current.getContext('2d');
     ctx.current.fillStyle = fillColorProp;
@@ -255,16 +254,17 @@ const ImageMapper = (props: Required<ImageMapperProps>) => {
     }
   }, [props, isInitialMount, imgRef]);
 
-  useEffect(() => {
-    container.current.clearHighlightedArea = () => {
-      setMap(storedMap);
-      initCanvas();
-    };
-
-    if (containerRef) {
-      containerRef.current = container.current;
-    }
-  }, [imgRef]);
+  useImperativeHandle(
+    ref,
+    () => {
+      innerRef.current.clearHighlightedArea = () => {
+        setMap(storedMap);
+        initCanvas();
+      };
+      return innerRef.current;
+    },
+    [imgRef]
+  );
 
   useEffect(() => {
     if (responsive) initCanvas();
@@ -320,7 +320,7 @@ const ImageMapper = (props: Required<ImageMapperProps>) => {
     });
 
   return (
-    <div ref={container} id="img-mapper" style={styles.container}>
+    <div ref={innerRef} id="img-mapper" style={styles.container}>
       <img
         ref={img}
         role="presentation"
@@ -338,11 +338,17 @@ const ImageMapper = (props: Required<ImageMapperProps>) => {
       </map>
     </div>
   );
-};
+});
 
-const ImageMapperRequired = (props: ImageMapperProps) => <ImageMapper {...generateProps(props)} />;
+ImageMapper.displayName = 'ImageMapperForwarded';
 
-export default memo<ImageMapperProps>(ImageMapperRequired, (prevProps, nextProps) => {
+const ImageMapperRequired = forwardRef<RefProperties, ImageMapperProps>((props, ref) => (
+  <ImageMapper ref={ref} {...generateProps(props)} />
+));
+
+ImageMapperRequired.displayName = 'ImageMapperRequiredForwarded';
+
+export default memo(ImageMapperRequired, (prevProps, nextProps) => {
   const watchedProps = [...rerenderPropsList, ...nextProps.rerenderProps!];
 
   const propChanged = watchedProps.some(prop => prevProps[prop] !== nextProps[prop]);
