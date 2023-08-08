@@ -40,6 +40,13 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     onMouseEnter,
     onMouseLeave,
     onClick,
+    onImageClick,
+    onImageMouseMove,
+    onTouchStart,
+    onTouchEnd,
+    onMouseUp,
+    onMouseDown,
+    onMouseMove,
   } = props;
 
   const [map, setMap] = useState<Map>(mapProp);
@@ -298,11 +305,11 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
           coords={scaledCoords.join(',')}
           onMouseEnter={event => hoverOn(extendedArea, index, event)}
           onMouseLeave={event => hoverOff(extendedArea, index, event)}
-          onMouseMove={event => mouseMove(extendedArea, index, event, props)}
-          onMouseDown={event => mouseDown(extendedArea, index, event, props)}
-          onMouseUp={event => mouseUp(extendedArea, index, event, props)}
-          onTouchStart={event => touchStart(extendedArea, index, event, props)}
-          onTouchEnd={event => touchEnd(extendedArea, index, event, props)}
+          onMouseMove={event => mouseMove(extendedArea, index, event, { onMouseMove })}
+          onMouseDown={event => mouseDown(extendedArea, index, event, { onMouseDown })}
+          onMouseUp={event => mouseUp(extendedArea, index, event, { onMouseUp })}
+          onTouchStart={event => touchStart(extendedArea, index, event, { onTouchStart })}
+          onTouchEnd={event => touchEnd(extendedArea, index, event, { onTouchEnd })}
           onClick={event => click(extendedArea, index, event)}
           href={area.href}
           alt="map"
@@ -311,20 +318,20 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     });
 
   return (
-    <div ref={container} id="img-mapper" style={styles(props).container}>
+    <div ref={container} id="img-mapper" style={styles.container}>
       <img
         ref={img}
         role="presentation"
         className="img-mapper-img"
-        style={{ ...styles(props).img, ...(!imgRef ? { display: 'none' } : {}) }}
+        style={{ ...styles.img(responsive), ...(!imgRef ? { display: 'none' } : null) }}
         src={srcProp}
         useMap={`#${map.name}`}
         alt="map"
-        onClick={event => imageClick(event, props)}
-        onMouseMove={event => imageMouseMove(event, props)}
+        onClick={event => imageClick(event, { onImageClick })}
+        onMouseMove={event => imageMouseMove(event, { onImageMouseMove })}
       />
-      <canvas ref={canvas} className="img-mapper-canvas" style={styles().canvas} />
-      <map className="img-mapper-map" name={map.name} style={styles().map}>
+      <canvas ref={canvas} className="img-mapper-canvas" style={styles.canvas} />
+      <map className="img-mapper-map" name={map.name} style={styles.map(onClick)}>
         {isRendered && !disabled && imgRef && renderAreas()}
       </map>
     </div>

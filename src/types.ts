@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 export interface Container extends HTMLDivElement {
   clearHighlightedArea: () => void;
@@ -64,4 +64,11 @@ export interface ImageMapperProps {
   onMouseEnter?: ((area: CustomArea, index: number, e: AreaEvent) => void) | null;
   onMouseLeave?: ((area: CustomArea, index: number, e: AreaEvent) => void) | null;
   onLoad?: ((e: HTMLImageElement, dimensions: { width: number; height: number }) => void) | null;
+}
+
+export interface StylesProps {
+  container: CSSProperties;
+  canvas: CSSProperties;
+  img: (responsive: ImageMapperProps['responsive']) => CSSProperties;
+  map: (onClick: ImageMapperProps['onClick']) => CSSProperties | undefined;
 }

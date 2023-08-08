@@ -19,7 +19,7 @@ export const rerenderPropsList = [
   'responsive',
 ] as const;
 
-export const ImageMapperDefaultProps: Partial<ImageMapperProps> = {
+export const ImageMapperDefaultProps: Omit<ImageMapperProps, 'src'> = {
   map: {
     areas: [],
     name: `image-map-${Math.random()}`,
