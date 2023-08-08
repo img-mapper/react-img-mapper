@@ -1,4 +1,4 @@
-import { ImageMapperProps, CustomArea, AreaEvent, TouchEvent, ImageEvent } from './types';
+import type { AreaEvent, CustomArea, ImageEvent, ImageMapperProps, TouchEvent } from '@/types';
 
 export const imageMouseMove = (
   event: ImageEvent,

@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import type { CSSProperties, MouseEvent, TouchEvent as ReactTouchEvent } from 'react';
 
 export interface Container extends HTMLDivElement {
   clearHighlightedArea: () => void;
@@ -28,9 +28,9 @@ export interface CustomArea extends MapAreas {
 }
 
 export type CTX = { current: CanvasRenderingContext2D } | null;
-export type TouchEvent = React.TouchEvent<HTMLAreaElement>;
-export type AreaEvent = React.MouseEvent<HTMLAreaElement, MouseEvent>;
-export type ImageEvent = React.MouseEvent<HTMLImageElement, MouseEvent>;
+export type TouchEvent = ReactTouchEvent<HTMLAreaElement>;
+export type AreaEvent = MouseEvent<HTMLAreaElement>;
+export type ImageEvent = MouseEvent<HTMLImageElement>;
 
 export interface ImageMapperProps {
   src: string;
@@ -43,8 +43,8 @@ export interface ImageMapperProps {
   strokeColor?: string;
   lineWidth?: number;
   imgWidth?: number;
-  width?: number | ((e: React.MouseEvent<HTMLImageElement>) => void);
-  height?: number | ((e: React.MouseEvent<HTMLImageElement>) => void);
+  width?: number | ((e: MouseEvent<HTMLImageElement>) => void);
+  height?: number | ((e: MouseEvent<HTMLImageElement>) => void);
   natural?: boolean;
   stayHighlighted?: boolean;
   stayMultiHighlighted?: boolean;

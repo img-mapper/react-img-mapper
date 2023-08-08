@@ -1,20 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
-import isEqual from 'react-fast-compare';
-import styles from './styles';
-import { Map, Container, MapAreas, CustomArea, AreaEvent, ImageMapperProps } from './types';
-import { rerenderPropsList, ImageMapperDefaultProps } from './constants';
-import callingFn from './draw';
-import {
-  mouseMove,
-  imageMouseMove,
-  imageClick,
-  mouseDown,
-  mouseUp,
-  touchStart,
-  touchEnd,
-} from './events';
+import React, { useEffect, useRef, useState } from 'react';
 
-export * from './types';
+import isEqual from 'react-fast-compare';
+
+import { ImageMapperDefaultProps, rerenderPropsList } from '@/constants';
+import callingFn from '@/draw';
+import {
+  imageClick,
+  imageMouseMove,
+  mouseDown,
+  mouseMove,
+  mouseUp,
+  touchEnd,
+  touchStart,
+} from '@/events';
+import styles from '@/styles';
+
+import type { AreaEvent, Container, CustomArea, ImageMapperProps, Map, MapAreas } from '@/types';
+
+export * from '@/types';
 
 const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   const {
@@ -112,7 +115,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     const { [type]: dimension } = props;
 
     if (typeof dimension === 'function') {
-      // @ts-ignore
+      // @ts-expect-error
       return dimension(img.current);
     }
     return dimension as number;

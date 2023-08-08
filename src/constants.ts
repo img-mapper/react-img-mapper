@@ -1,4 +1,4 @@
-import { ImageMapperProps } from './types';
+import type { ImageMapperProps } from '@/types';
 
 export const rerenderPropsList = [
   'src',

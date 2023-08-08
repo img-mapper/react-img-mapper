@@ -16,7 +16,13 @@
     "isolatedModules": true,
     "jsx": "react",
     "declaration": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "baseUrl": "src",
+    "paths": {
+      "@/*": [
+        "*"
+      ]
+    }
   },
   "include": [
     "**/*.ts",
