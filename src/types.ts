@@ -1,3 +1,4 @@
+import type { rerenderPropsList } from '@/constants';
 import type { CSSProperties, MouseEvent, TouchEvent as ReactTouchEvent } from 'react';
 
 export interface Container extends HTMLDivElement {
@@ -33,6 +34,10 @@ export type AreaEvent = MouseEvent<HTMLAreaElement>;
 export type ImageEvent = MouseEvent<HTMLImageElement>;
 
 export type Dimension = number | ((event: HTMLImageElement) => number);
+export type RerenderProps = (keyof Omit<
+  ImageMapperProps,
+  'rerenderProps' | (typeof rerenderPropsList)[number]
+>)[];
 
 export type ImageEventHandler = ((event: ImageEvent) => void) | null;
 export type EventHandler<T = AreaEvent> = ((area: Area, index: number, e: T) => void) | null;
@@ -57,7 +62,7 @@ export interface ImageMapperProps {
   stayHighlighted?: boolean;
   stayMultiHighlighted?: boolean;
   toggleHighlighted?: boolean;
-  rerenderProps?: (keyof ImageMapperProps)[];
+  rerenderProps?: RerenderProps;
   responsive?: boolean;
   parentWidth?: number;
 

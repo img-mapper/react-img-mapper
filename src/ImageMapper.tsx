@@ -2,7 +2,7 @@ import React, { memo, useEffect, useRef, useState } from 'react';
 
 import isEqual from 'react-fast-compare';
 
-import { ImageMapperDefaultProps, rerenderPropsList } from '@/constants';
+import { generateProps, rerenderPropsList } from '@/constants';
 import callingFn from '@/draw';
 import {
   imageClick,
@@ -16,11 +16,10 @@ import {
 import styles from '@/styles';
 
 import type { Area, AreaEvent, Container, ImageMapperProps, Map, MapArea } from '@/types';
-import type { FC } from 'react';
 
 export * from '@/types';
 
-const ImageMapper: FC<ImageMapperProps> = (props: ImageMapperProps) => {
+const ImageMapper = (props: Required<ImageMapperProps>) => {
   const {
     containerRef,
     active,
@@ -341,9 +340,9 @@ const ImageMapper: FC<ImageMapperProps> = (props: ImageMapperProps) => {
   );
 };
 
-ImageMapper.defaultProps = ImageMapperDefaultProps;
+const ImageMapperRequired = (props: ImageMapperProps) => <ImageMapper {...generateProps(props)} />;
 
-export default memo<ImageMapperProps>(ImageMapper, (prevProps, nextProps) => {
+export default memo<ImageMapperProps>(ImageMapperRequired, (prevProps, nextProps) => {
   const watchedProps = [...rerenderPropsList, ...nextProps.rerenderProps!];
 
   const propChanged = watchedProps.some(prop => prevProps[prop] !== nextProps[prop]);
