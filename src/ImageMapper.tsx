@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 
 import isEqual from 'react-fast-compare';
 
@@ -15,11 +15,12 @@ import {
 } from '@/events';
 import styles from '@/styles';
 
-import type { AreaEvent, Container, CustomArea, ImageMapperProps, Map, MapAreas } from '@/types';
+import type { Area, AreaEvent, Container, ImageMapperProps, Map, MapArea } from '@/types';
+import type { FC } from 'react';
 
 export * from '@/types';
 
-const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
+const ImageMapper: FC<ImageMapperProps> = (props: ImageMapperProps) => {
   const {
     containerRef,
     active,
@@ -165,7 +166,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     if (imgRef) renderPrefilledAreas();
   };
 
-  const highlightArea = (area: CustomArea) =>
+  const highlightArea = (area: Area) =>
     callingFn(
       area.shape,
       area.scaledCoords,
@@ -176,13 +177,13 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
       ctx
     );
 
-  const hoverOn = (area: CustomArea, index?: number, event?: AreaEvent) => {
+  const hoverOn = (area: Area, index?: number, event?: AreaEvent) => {
     if (active) highlightArea(area);
 
     if (onMouseEnter) onMouseEnter(area, index, event);
   };
 
-  const hoverOff = (area: CustomArea, index: number, event: AreaEvent) => {
+  const hoverOff = (area: Area, index: number, event: AreaEvent) => {
     if (active) {
       clearCanvas();
       renderPrefilledAreas();
@@ -191,7 +192,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     if (onMouseLeave) onMouseLeave(area, index, event);
   };
 
-  const click = (area: CustomArea, index: number, event: AreaEvent) => {
+  const click = (area: Area, index: number, event: AreaEvent) => {
     const isAreaActive = area.active ?? true;
 
     if (isAreaActive && (stayHighlighted || stayMultiHighlighted || toggleHighlighted)) {
@@ -270,7 +271,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
     if (responsive) initCanvas();
   }, [parentWidth]);
 
-  const computeCenter = (area: MapAreas): [number, number] => {
+  const computeCenter = (area: MapArea): [number, number] => {
     if (!area) return [0, 0];
 
     const scaledCoords = scaleCoords(area.coords);
@@ -342,7 +343,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
 
 ImageMapper.defaultProps = ImageMapperDefaultProps;
 
-export default React.memo<ImageMapperProps>(ImageMapper, (prevProps, nextProps) => {
+export default memo<ImageMapperProps>(ImageMapper, (prevProps, nextProps) => {
   const watchedProps = [...rerenderPropsList, ...nextProps.rerenderProps!];
 
   const propChanged = watchedProps.some(prop => prevProps[prop] !== nextProps[prop]);
