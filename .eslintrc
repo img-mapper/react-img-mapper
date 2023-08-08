@@ -1,20 +1,26 @@
 {
+  "parser": "@typescript-eslint/parser",
   "root": true,
   "env": {
     "browser": true,
     "es6": true,
-    "amd": true,
-    "jest": true
+    "amd": true
   },
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./tsconfig.json",
-    "ecmaVersion": 2020,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
+    "project": "./tsconfig.json"
   },
+  "extends": [
+    "eslint:recommended",
+    "airbnb",
+    "airbnb/hooks",
+    "airbnb-typescript",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "prettier"
+  ],
+  "plugins": ["@typescript-eslint", "prettier", "import"],
   "settings": {
     "react": {
       "version": "detect"
@@ -23,21 +29,7 @@
       "typescript": {}
     }
   },
-  "extends": [
-    "eslint:recommended",
-    "airbnb",
-    "airbnb/hooks",
-    "airbnb-typescript",
-    "plugin:import/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:jsx-a11y/recommended",
-    "prettier"
-  ],
-  "plugins": ["@typescript-eslint", "prettier", "import"],
   "rules": {
-    "prettier/prettier": "error",
     "no-console": "off",
     "no-underscore-dangle": "off",
     "no-void": "off",
@@ -53,23 +45,6 @@
     "no-throw-literal": "off",
     "no-use-before-define": "off",
     "no-useless-constructor": "off",
-    "no-unused-vars": "error",
-    "no-restricted-imports": [
-      "error",
-      {
-        "patterns": ["./*", "../*"]
-      }
-    ],
-    "no-restricted-syntax": [
-      "error",
-      "ForStatement",
-      "ForInStatement",
-      "ForOfStatement",
-      "ContinueStatement",
-      "DoWhileStatement",
-      "WhileStatement",
-      "WithStatement"
-    ],
     "sort-imports": [
       "error",
       {
@@ -105,6 +80,24 @@
       }
     ],
     "import/no-unresolved": "error",
+    "prettier/prettier": "error",
+    "no-unused-vars": "warn",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["./*", "../*"]
+      }
+    ],
+    "no-restricted-syntax": [
+      "error",
+      "ForStatement",
+      "ForInStatement",
+      "ForOfStatement",
+      "ContinueStatement",
+      "DoWhileStatement",
+      "WhileStatement",
+      "WithStatement"
+    ],
     "@typescript-eslint/lines-between-class-members": [
       "error",
       "always",
@@ -149,6 +142,7 @@
       }
     ],
     "@typescript-eslint/no-unnecessary-type-arguments": "warn",
+    "@typescript-eslint/no-use-before-define": "error",
     "@typescript-eslint/no-useless-constructor": "error",
     "@typescript-eslint/no-useless-empty-export": "error",
     "@typescript-eslint/prefer-enum-initializers": "error",
@@ -162,11 +156,20 @@
     "@typescript-eslint/promise-function-async": "error",
     "@typescript-eslint/require-array-sort-compare": "error",
     "@typescript-eslint/unified-signatures": "error",
-    "@typescript-eslint/no-non-null-assertion": "error",
-    "@typescript-eslint/explicit-function-return-type": ["error", {
-      "allowConciseArrowFunctionExpressionsStartingWithVoid": true
-    }],
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": "arrow-function"
+      }
+    ],
+    "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
-    "import/no-extraneous-dependencies": "off"
+    "react/jsx-fragments": ["error", "element"],
+    "react/require-default-props": [
+      "error",
+      {
+        "functions": "defaultArguments"
+      }
+    ]
   }
 }

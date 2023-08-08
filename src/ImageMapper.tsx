@@ -1,16 +1,8 @@
-import React, {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import isEqual from 'react-fast-compare';
 
-import { imageMapperDefaultProps, rerenderPropsList } from '@/constants';
+import { ImageMapperDefaultProps, rerenderPropsList } from '@/constants';
 import callingFn from '@/draw';
 import {
   imageClick,
@@ -23,215 +15,174 @@ import {
 } from '@/events';
 import styles from '@/styles';
 
-import type { Area, EventFC, ImageMapperProps, Map, MapArea, RefProperties } from '@/types';
-import type { ReactNode } from 'react';
+import type { AreaEvent, Container, CustomArea, ImageMapperProps, Map, MapAreas } from '@/types';
 
-export type * from '@/types';
+export * from '@/types';
 
-const ImageMapper = forwardRef<RefProperties, ImageMapperProps>((props, ref) => {
+const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
   const {
-    DAreaKeyName,
-    DActive,
-    DDisabled,
-    DFillColor,
-    DStrokeColor,
-    DLineWidth,
-    DImgWidth,
-    DWidth,
-    DHeight,
-    DNatural,
-    DStayHighlighted,
-    DStayMultiHighlighted,
-    DToggleHighlighted,
-    DResponsive,
-    DParentWidth,
-
-    DOnClick,
-    DOnMouseEnter,
-    DOnMouseLeave,
-    DOnLoad,
-  } = imageMapperDefaultProps;
-
-  const {
-    src: srcProp,
+    containerRef,
+    active,
+    disabled,
+    fillColor: fillColorProp,
+    lineWidth: lineWidthProp,
     map: mapProp,
-    areaKeyName = DAreaKeyName,
-    active = DActive,
-    disabled = DDisabled,
-    fillColor: fillColorProp = DFillColor,
-    strokeColor: strokeColorProp = DStrokeColor,
-    lineWidth: lineWidthProp = DLineWidth,
-    imgWidth: imageWidthProp = DImgWidth,
-    width: widthProp = DWidth,
-    height: heightProp = DHeight,
-    natural = DNatural,
-    stayHighlighted = DStayHighlighted,
-    stayMultiHighlighted = DStayMultiHighlighted,
-    toggleHighlighted = DToggleHighlighted,
-    parentWidth = DParentWidth,
-    responsive = DResponsive,
-
-    onClick = DOnClick,
-    onMouseEnter = DOnMouseEnter,
-    onMouseLeave = DOnMouseLeave,
-    onLoad = DOnLoad,
+    src: srcProp,
+    strokeColor: strokeColorProp,
+    natural,
+    height: heightProp,
+    width: widthProp,
+    imgWidth: imageWidthProp,
+    areaKeyName,
+    stayHighlighted,
+    stayMultiHighlighted,
+    toggleHighlighted,
+    parentWidth,
+    responsive,
+    onLoad,
+    onMouseEnter,
+    onMouseLeave,
+    onClick,
+    onImageClick,
+    onImageMouseMove,
+    onTouchStart,
+    onTouchEnd,
+    onMouseUp,
+    onMouseDown,
+    onMouseMove,
   } = props;
 
   const [map, setMap] = useState<Map>(mapProp);
   const [storedMap, setStoredMap] = useState<Map>(map);
   const [isRendered, setRendered] = useState<boolean>(false);
-  const [imgRef, setImgRef] = useState<HTMLImageElement | null>(null);
-  const container = useRef<HTMLDivElement | null>(null);
-  const img = useRef<HTMLImageElement | null>(null);
-  const canvas = useRef<HTMLCanvasElement | null>(null);
-  const ctx = useRef<CanvasRenderingContext2D | null>(null);
+  const [imgRef, setImgRef] = useState<HTMLImageElement>(null);
+  const container = useRef<Container>(null);
+  const img = useRef<HTMLImageElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const ctx = useRef<CanvasRenderingContext2D>(null);
   const isInitialMount = useRef<boolean>(true);
   const interval = useRef<number>(0);
 
-  const scaleCoords = useCallback(
-    (coords: number[]): number[] => {
-      const scale =
-        widthProp && imageWidthProp && imageWidthProp > 0
-          ? (widthProp as number) / imageWidthProp
-          : 1;
+  const scaleCoords = (coords: number[]): number[] => {
+    const scale =
+      widthProp && imageWidthProp && imageWidthProp > 0
+        ? (widthProp as number) / imageWidthProp
+        : 1;
+    if (responsive && parentWidth) {
+      return coords.map(coord => coord / (imgRef.naturalWidth / parentWidth));
+    }
+    return coords.map(coord => coord * scale);
+  };
 
-      return coords.map(coord =>
-        responsive && parentWidth && imgRef
-          ? coord / (imgRef.naturalWidth / parentWidth)
-          : coord * scale
+  const renderPrefilledAreas = (mapObj: Map = map) => {
+    mapObj.areas.forEach(area => {
+      if (!area.preFillColor) return false;
+      callingFn(
+        area.shape,
+        scaleCoords(area.coords),
+        area.preFillColor,
+        area.lineWidth || lineWidthProp,
+        area.strokeColor || strokeColorProp,
+        true,
+        ctx
       );
-    },
-    [imageWidthProp, imgRef, parentWidth, responsive, widthProp]
-  );
+      return true;
+    });
+  };
 
-  const renderPrefilledAreas = useCallback(
-    (mapObj: Map = map): boolean[] =>
-      mapObj.areas.map(area => {
-        if (!area.preFillColor) return false;
+  const clearCanvas = () =>
+    ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
 
-        callingFn(
-          area.shape,
-          scaleCoords(area.coords),
-          area.preFillColor,
-          area.lineWidth ?? lineWidthProp,
-          area.strokeColor ?? strokeColorProp,
-          true,
-          ctx.current
-        );
-        return true;
-      }),
-    [lineWidthProp, map, scaleCoords, strokeColorProp]
-  );
+  const updateCanvas = () => {
+    clearCanvas();
+    renderPrefilledAreas(mapProp);
+  };
 
-  const getDimensions = useCallback(
-    (type: 'width' | 'height'): number => {
-      const dimension = type === 'width' ? widthProp : heightProp;
+  const updateCacheMap = () => {
+    setMap(mapProp);
+    setStoredMap(mapProp);
+  };
 
-      if (img.current && typeof dimension === 'function') {
-        return dimension(img.current);
-      }
-      return dimension as number;
-    },
-    [widthProp, heightProp]
-  );
+  const getDimensions = (type: 'width' | 'height'): number => {
+    const { [type]: dimension } = props;
 
-  const getValues = useCallback(
-    (type: string, measure: number, name = 'area'): number => {
-      if (!img.current) return 0;
+    if (typeof dimension === 'function') {
+      return dimension(img.current);
+    }
+    return dimension as number;
+  };
 
-      const { naturalWidth, naturalHeight, clientWidth, clientHeight } = img.current;
+  const getValues = (type: string, measure: number, name = 'area') => {
+    const { naturalWidth, naturalHeight, clientWidth, clientHeight } = img.current;
 
-      if (type === 'width') {
-        if (responsive) return parentWidth;
-        if (natural) return naturalWidth;
-        if (widthProp || name === 'image') return measure;
-        return clientWidth;
-      }
-      if (type === 'height') {
-        if (responsive) return clientHeight;
-        if (natural) return naturalHeight;
-        if (heightProp || name === 'image') return measure;
-        return clientHeight;
-      }
-      return 0;
-    },
-    [heightProp, natural, parentWidth, responsive, widthProp]
-  );
+    if (type === 'width') {
+      if (responsive) return parentWidth;
+      if (natural) return naturalWidth;
+      if (widthProp || name === 'image') return measure;
+      return clientWidth;
+    }
+    if (type === 'height') {
+      if (responsive) return clientHeight;
+      if (natural) return naturalHeight;
+      if (heightProp || name === 'image') return measure;
+      return clientHeight;
+    }
+    return 0;
+  };
 
-  const initCanvas = useCallback(
-    (firstLoad = false): void => {
-      if (!firstLoad && !imgRef) return;
-      if (!img.current || !canvas.current || !container.current) return;
+  const initCanvas = (firstLoad = false) => {
+    if (!firstLoad && !imgRef) return;
 
-      const imgWidth = getDimensions('width');
-      const imgHeight = getDimensions('height');
-      const imageWidth = getValues('width', imgWidth);
-      const imageHeight = getValues('height', imgHeight);
+    const imgWidth = getDimensions('width');
+    const imgHeight = getDimensions('height');
+    const imageWidth = getValues('width', imgWidth);
+    const imageHeight = getValues('height', imgHeight);
 
-      if (widthProp || responsive) {
-        img.current.width = getValues('width', imgWidth, 'image');
-      }
+    if (widthProp || responsive) {
+      img.current.width = getValues('width', imgWidth, 'image');
+    }
 
-      if (heightProp || responsive) {
-        img.current.height = getValues('height', imgHeight, 'image');
-      }
+    if (heightProp || responsive) {
+      img.current.height = getValues('height', imgHeight, 'image');
+    }
 
-      canvas.current.width = imageWidth;
-      canvas.current.height = imageHeight;
-      container.current.style.width = `${imageWidth}px`;
-      container.current.style.height = `${imageHeight}px`;
+    canvas.current.width = imageWidth;
+    canvas.current.height = imageHeight;
+    container.current.style.width = `${imageWidth}px`;
+    container.current.style.height = `${imageHeight}px`;
 
-      ctx.current = canvas.current.getContext('2d') as CanvasRenderingContext2D;
-      ctx.current.fillStyle = fillColorProp;
+    ctx.current = canvas.current.getContext('2d');
+    ctx.current.fillStyle = fillColorProp;
 
-      if (onLoad && imgRef) {
-        onLoad(img.current, { width: imageWidth, height: imageHeight });
-      }
+    if (onLoad && imgRef) {
+      onLoad(img.current, {
+        width: imageWidth,
+        height: imageHeight,
+      });
+    }
 
-      setImgRef(img.current);
-      if (imgRef) renderPrefilledAreas();
-    },
-    [
-      fillColorProp,
-      getDimensions,
-      getValues,
-      heightProp,
-      imgRef,
-      onLoad,
-      renderPrefilledAreas,
-      responsive,
-      widthProp,
-    ]
-  );
+    setImgRef(img.current);
+    if (imgRef) renderPrefilledAreas();
+  };
 
-  const highlightArea = (area: Area): boolean =>
+  const highlightArea = (area: CustomArea) =>
     callingFn(
       area.shape,
       area.scaledCoords,
-      area.fillColor ?? fillColorProp,
-      area.lineWidth ?? lineWidthProp,
-      area.strokeColor ?? strokeColorProp,
+      area.fillColor || fillColorProp,
+      area.lineWidth || lineWidthProp,
+      area.strokeColor || strokeColorProp,
       area.active ?? true,
-      ctx.current
+      ctx
     );
 
-  const clearCanvas = (): void => {
-    if (!ctx.current || !canvas.current) return;
-
-    ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
-  };
-
-  const updateCanvas = useCallback((): void => {
-    clearCanvas();
-    renderPrefilledAreas(mapProp);
-  }, [mapProp, renderPrefilledAreas]);
-
-  const hoverOn: EventFC = ({ area, index, event }) => {
+  const hoverOn = (area: CustomArea, index?: number, event?: AreaEvent) => {
     if (active) highlightArea(area);
+
     if (onMouseEnter) onMouseEnter(area, index, event);
   };
 
-  const hoverOff: EventFC = ({ area, index, event }) => {
+  const hoverOff = (area: CustomArea, index: number, event: AreaEvent) => {
     if (active) {
       clearCanvas();
       renderPrefilledAreas();
@@ -240,7 +191,7 @@ const ImageMapper = forwardRef<RefProperties, ImageMapperProps>((props, ref) => 
     if (onMouseLeave) onMouseLeave(area, index, event);
   };
 
-  const click: EventFC = ({ area, index, event }) => {
+  const click = (area: CustomArea, index: number, event: AreaEvent) => {
     const isAreaActive = area.active ?? true;
 
     if (isAreaActive && (stayHighlighted || stayMultiHighlighted || toggleHighlighted)) {
@@ -256,7 +207,7 @@ const ImageMapper = forwardRef<RefProperties, ImageMapperProps>((props, ref) => 
           delete newArea.preFillColor;
         }
       } else if (stayHighlighted || stayMultiHighlighted) {
-        newArea.preFillColor = area.fillColor ?? fillColorProp;
+        newArea.preFillColor = area.fillColor || fillColorProp;
       }
 
       const updatedAreas = chosenArea.areas.map(cur =>
@@ -276,7 +227,50 @@ const ImageMapper = forwardRef<RefProperties, ImageMapperProps>((props, ref) => 
     }
   };
 
-  const computeCenter = (area: MapArea): [number, number] => {
+  useEffect(() => {
+    if (!isRendered) {
+      interval.current = window.setInterval(() => {
+        if (img.current?.complete) setRendered(true);
+      }, 500);
+    } else {
+      clearInterval(interval.current);
+    }
+  }, [isRendered]);
+
+  useEffect(() => {
+    if (isRendered && canvas.current) {
+      initCanvas(true);
+      ctx.current = canvas.current.getContext('2d');
+      updateCacheMap();
+    }
+  }, [isRendered]);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      updateCacheMap();
+      initCanvas();
+      if (imgRef) updateCanvas();
+    }
+  }, [props, isInitialMount, imgRef]);
+
+  useEffect(() => {
+    container.current.clearHighlightedArea = () => {
+      setMap(storedMap);
+      initCanvas();
+    };
+
+    if (containerRef) {
+      containerRef.current = container.current;
+    }
+  }, [imgRef]);
+
+  useEffect(() => {
+    if (responsive) initCanvas();
+  }, [parentWidth]);
+
+  const computeCenter = (area: MapAreas): [number, number] => {
     if (!area) return [0, 0];
 
     const scaledCoords = scaleCoords(area.coords);
@@ -297,107 +291,60 @@ const ImageMapper = forwardRef<RefProperties, ImageMapperProps>((props, ref) => 
     }
   };
 
-  const updateCacheMap = useCallback(() => {
-    setMap(mapProp);
-    setStoredMap(mapProp);
-  }, [mapProp]);
-
-  useEffect(() => {
-    if (!isRendered) {
-      interval.current = window.setInterval(() => {
-        if (img.current?.complete) {
-          setRendered(true);
-        }
-      }, 500);
-    } else {
-      clearInterval(interval.current);
-    }
-  }, [isRendered]);
-
-  useEffect(() => {
-    if (isRendered && canvas.current) {
-      initCanvas(true);
-      ctx.current = canvas.current.getContext('2d');
-      updateCacheMap();
-    }
-  }, [isRendered, updateCacheMap]);
-
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-    } else {
-      updateCacheMap();
-      initCanvas();
-      if (imgRef) updateCanvas();
-    }
-  }, [isInitialMount, imgRef, updateCacheMap]);
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      clearHighlightedArea: (): void => {
-        setMap(storedMap);
-        updateCanvas();
-      },
-    }),
-    [storedMap, updateCanvas]
-  );
-
-  const renderAreas = (): ReactNode =>
-    map.areas.map((mapArea, index) => {
-      const scaledCoords = scaleCoords(mapArea.coords);
-      const center = computeCenter(mapArea);
-      const area = { ...mapArea, scaledCoords, center };
+  const renderAreas = () =>
+    map.areas.map((area, index) => {
+      const scaledCoords = scaleCoords(area.coords);
+      const center = computeCenter(area);
+      const extendedArea = { ...area, scaledCoords, center };
 
       if (area.disabled) return null;
 
       return (
         <area
           {...(area.preFillColor ? { className: 'img-mapper-area-highlighted' } : {})}
-          key={area[areaKeyName] ?? index.toString()}
+          key={area[areaKeyName] || index.toString()}
           shape={area.shape}
           coords={scaledCoords.join(',')}
-          onMouseEnter={event => void hoverOn({ area, index, event })}
-          onMouseLeave={event => void hoverOff({ area, index, event })}
-          onMouseMove={event => void mouseMove({ area, index, event }, props)}
-          onMouseDown={event => void mouseDown({ area, index, event }, props)}
-          onMouseUp={event => void mouseUp({ area, index, event }, props)}
-          onTouchStart={event => void touchStart({ area, index, event }, props)}
-          onTouchEnd={event => void touchEnd({ area, index, event }, props)}
-          onClick={event => void click({ area, index, event })}
+          onMouseEnter={event => hoverOn(extendedArea, index, event)}
+          onMouseLeave={event => hoverOff(extendedArea, index, event)}
+          onMouseMove={event => mouseMove(extendedArea, index, event, { onMouseMove })}
+          onMouseDown={event => mouseDown(extendedArea, index, event, { onMouseDown })}
+          onMouseUp={event => mouseUp(extendedArea, index, event, { onMouseUp })}
+          onTouchStart={event => touchStart(extendedArea, index, event, { onTouchStart })}
+          onTouchEnd={event => touchEnd(extendedArea, index, event, { onTouchEnd })}
+          onClick={event => click(extendedArea, index, event)}
           href={area.href}
           alt="map"
         />
       );
     });
 
-  const cssStyles = styles({ responsive });
-
   return (
-    <div ref={container} id="img-mapper" style={cssStyles.container}>
+    <div ref={container} id="img-mapper" style={styles.container}>
       <img
         ref={img}
         role="presentation"
         className="img-mapper-img"
-        style={{ ...cssStyles.img, ...(!imgRef ? { display: 'none' } : {}) }}
+        style={{ ...styles.img(responsive), ...(!imgRef ? { display: 'none' } : null) }}
         src={srcProp}
         useMap={`#${map.name}`}
         alt="map"
-        onClick={event => void imageClick({ event }, props)}
-        onMouseMove={event => void imageMouseMove({ event }, props)}
+        onClick={event => imageClick(event, { onImageClick })}
+        onMouseMove={event => imageMouseMove(event, { onImageMouseMove })}
       />
-      <canvas ref={canvas} className="img-mapper-canvas" style={cssStyles.canvas} />
-      <map className="img-mapper-map" name={map.name}>
+      <canvas ref={canvas} className="img-mapper-canvas" style={styles.canvas} />
+      <map className="img-mapper-map" name={map.name} style={styles.map(onClick)}>
         {isRendered && !disabled && imgRef && renderAreas()}
       </map>
     </div>
   );
-});
+};
 
-ImageMapper.displayName = 'ImageMapper';
+ImageMapper.defaultProps = ImageMapperDefaultProps;
 
-export default memo(ImageMapper, (prevProps, nextProps) => {
-  const watchedProps = [...rerenderPropsList, ...(nextProps.rerenderProps ?? [])];
+export default React.memo<ImageMapperProps>(ImageMapper, (prevProps, nextProps) => {
+  const watchedProps = [...rerenderPropsList, ...nextProps.rerenderProps!];
+
   const propChanged = watchedProps.some(prop => prevProps[prop] !== nextProps[prop]);
 
   return isEqual(prevProps.map, nextProps.map) && !propChanged;

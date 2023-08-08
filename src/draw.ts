@@ -1,16 +1,18 @@
+import type { CTX } from '@/types';
+
 const drawRect = (
   coords: number[],
   fillColor: string,
   lineWidth: number,
   strokeColor: string,
-  ctx: CanvasRenderingContext2D
-): void => {
+  ctx: CTX
+) => {
   const [left, top, right, bot] = coords;
-  ctx.fillStyle = fillColor;
-  ctx.lineWidth = lineWidth;
-  ctx.strokeStyle = strokeColor;
-  ctx.strokeRect(left, top, right - left, bot - top);
-  ctx.fillRect(left, top, right - left, bot - top);
+  ctx.current.fillStyle = fillColor;
+  ctx.current.lineWidth = lineWidth;
+  ctx.current.strokeStyle = strokeColor;
+  ctx.current.strokeRect(left, top, right - left, bot - top);
+  ctx.current.fillRect(left, top, right - left, bot - top);
 };
 
 const drawCircle = (
@@ -18,16 +20,16 @@ const drawCircle = (
   fillColor: string,
   lineWidth: number,
   strokeColor: string,
-  ctx: CanvasRenderingContext2D
-): void => {
-  ctx.fillStyle = fillColor;
-  ctx.beginPath();
-  ctx.lineWidth = lineWidth;
-  ctx.strokeStyle = strokeColor;
-  ctx.arc(coords[0], coords[1], coords[2], 0, 2 * Math.PI);
-  ctx.closePath();
-  ctx.stroke();
-  ctx.fill();
+  ctx: CTX
+) => {
+  ctx.current.fillStyle = fillColor;
+  ctx.current.beginPath();
+  ctx.current.lineWidth = lineWidth;
+  ctx.current.strokeStyle = strokeColor;
+  ctx.current.arc(coords[0], coords[1], coords[2], 0, 2 * Math.PI);
+  ctx.current.closePath();
+  ctx.current.stroke();
+  ctx.current.fill();
 };
 
 const drawPoly = (
@@ -35,20 +37,20 @@ const drawPoly = (
   fillColor: string,
   lineWidth: number,
   strokeColor: string,
-  ctx: CanvasRenderingContext2D
-): void => {
-  const newCoords = Array.from({ length: coords.length / 2 }, (_, i) =>
-    coords.slice(i * 2, (i + 1) * 2)
-  ) as [number, number][];
-  ctx.fillStyle = fillColor;
-  ctx.beginPath();
-  ctx.lineWidth = lineWidth;
-  ctx.strokeStyle = strokeColor;
+  ctx: CTX
+) => {
+  const newCoords = coords.reduce((a, v, i, s) => (i % 2 ? a : [...a, s.slice(i, i + 2)]), []);
+  // const first = newCoords.unshift();
+  ctx.current.fillStyle = fillColor;
+  ctx.current.beginPath();
+  ctx.current.lineWidth = lineWidth;
+  ctx.current.strokeStyle = strokeColor;
 
-  newCoords.forEach(c => ctx.lineTo(c[0], c[1]));
-  ctx.closePath();
-  ctx.stroke();
-  ctx.fill();
+  // ctx.current.moveTo(first[0], first[1]);
+  newCoords.forEach(c => ctx.current.lineTo(c[0], c[1]));
+  ctx.current.closePath();
+  ctx.current.stroke();
+  ctx.current.fill();
 };
 
 const callingFn = (
@@ -58,27 +60,17 @@ const callingFn = (
   lineWidth: number,
   strokeColor: string,
   isAreaActive: boolean,
-  ctx: CanvasRenderingContext2D | null
-): boolean => {
-  if (isAreaActive && ctx) {
-    if (shape === 'rect') {
-      drawRect(coords, fillColor, lineWidth, strokeColor, ctx);
-      return true;
-    }
-
-    if (shape === 'circle') {
-      drawCircle(coords, fillColor, lineWidth, strokeColor, ctx);
-      return true;
-    }
-
-    if (shape === 'poly') {
-      drawPoly(coords, fillColor, lineWidth, strokeColor, ctx);
-      return true;
-    }
-
-    return false;
+  ctx: CTX
+): void | boolean => {
+  if (shape === 'rect' && isAreaActive) {
+    return void drawRect(coords, fillColor, lineWidth, strokeColor, ctx);
   }
-
+  if (shape === 'circle' && isAreaActive) {
+    return void drawCircle(coords, fillColor, lineWidth, strokeColor, ctx);
+  }
+  if (shape === 'poly' && isAreaActive) {
+    return void drawPoly(coords, fillColor, lineWidth, strokeColor, ctx);
+  }
   return false;
 };
 

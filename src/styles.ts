@@ -1,11 +1,5 @@
-import type { ImageMapperProps } from '@/types';
+import type { StylesProps } from '@/types';
 import type { CSSProperties } from 'react';
-
-interface StylesProps {
-  container: CSSProperties;
-  canvas: CSSProperties;
-  img: CSSProperties;
-}
 
 const absPos: CSSProperties = {
   position: 'absolute',
@@ -25,7 +19,7 @@ const imgResponsive: CSSProperties = {
   height: 'auto',
 };
 
-const styles = ({ responsive }: Pick<ImageMapperProps, 'responsive'>): StylesProps => ({
+const styles: StylesProps = {
   container: {
     position: 'relative',
   },
@@ -34,7 +28,8 @@ const styles = ({ responsive }: Pick<ImageMapperProps, 'responsive'>): StylesPro
     pointerEvents: 'none',
     zIndex: 2,
   },
-  img: responsive ? imgResponsive : imgNonResponsive,
-});
+  img: responsive => (responsive ? imgResponsive : imgNonResponsive),
+  map: onClick => (onClick ? { cursor: 'pointer' } : undefined),
+};
 
 export default styles;

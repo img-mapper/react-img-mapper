@@ -1,6 +1,6 @@
 {
   "name": "react-img-mapper",
-  "version": "1.5.0",
+  "version": "1.5.2",
   "description": "React Component to highlight interactive zones in images",
   "keywords": [
     "react",
@@ -21,10 +21,10 @@
   },
   "license": "MIT",
   "author": "Nisharg Shah",
+  "type": "commonjs",
   "main": "dist/ImageMapper.js",
   "types": "dist/ImageMapper.d.ts",
   "scripts": {
-    "dev": "vite --port 3000",
     "build": "tsc",
     "lint": "eslint . --ext .tsx",
     "lint-fix": "eslint . --ext .tsx --fix",
@@ -49,34 +49,33 @@
     ]
   },
   "dependencies": {
-    "react-fast-compare": "^3.2.1"
+    "react-fast-compare": "^3.2.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.3",
-    "@types/node": "^18.15.10",
-    "@types/react": "^18.0.29",
-    "@types/react-dom": "^18.0.11",
-    "@typescript-eslint/eslint-plugin": "^5.56.0",
-    "@typescript-eslint/parser": "^5.56.0",
-    "@vitejs/plugin-react": "^3.1.0",
-    "eslint": "^8.36.0",
+    "@babel/core": "^7.22.10",
+    "@types/node": "^20.4.8",
+    "@types/react": "^18.2.19",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^8.46.0",
     "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-airbnb-typescript": "^17.0.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-import-resolver-typescript": "^3.5.3",
-    "eslint-plugin-import": "^2.27.5",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-flowtype": "^8.0.3",
+    "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.33.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.0",
-    "prettier": "^2.8.7",
+    "lint-staged": "^13.2.3",
+    "prettier": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.2.1",
-    "vite-tsconfig-paths": "^4.0.7"
+    "typescript": "^5.1.6"
   },
   "peerDependencies": {
     "react": "16.x || 17.x || 18.x",
