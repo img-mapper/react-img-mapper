@@ -43,8 +43,8 @@ export interface ImageMapperProps {
   strokeColor?: string;
   lineWidth?: number;
   imgWidth?: number;
-  width?: number | ((e: MouseEvent<HTMLImageElement>) => void);
-  height?: number | ((e: MouseEvent<HTMLImageElement>) => void);
+  width?: number | ((e: HTMLImageElement) => number);
+  height?: number | ((e: HTMLImageElement) => number);
   natural?: boolean;
   stayHighlighted?: boolean;
   stayMultiHighlighted?: boolean;
