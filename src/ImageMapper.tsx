@@ -295,6 +295,7 @@ const ImageMapper: React.FC<ImageMapperProps> = (props: ImageMapperProps) => {
           {...(area.preFillColor ? { className: 'img-mapper-area-highlighted' } : {})}
           key={area[areaKeyName] || index.toString()}
           shape={area.shape}
+          {...area.target?{target:area.target}:{}}
           coords={scaledCoords.join(',')}
           onMouseEnter={event => hoverOn(extendedArea, index, event)}
           onMouseLeave={event => hoverOff(extendedArea, index, event)}

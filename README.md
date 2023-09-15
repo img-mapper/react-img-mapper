@@ -133,6 +133,7 @@ Its structure is similar to the HTML syntax of mapping:
 |**coords**|*array of number*|Coordinates delimiting the zone according to the specified shape: <ul><li>**rect**: `top-left-X`,`top-left-Y`,`bottom-right-X`,`bottom-right-Y`</li><li>**circle**: `center-X`,`center-Y`,`radius`</li><li>**poly**: Every point in the polygon path as `point-X`,`point-Y`,...</li></ul>|required| |**active**|*string*|Enable/Disable highlighting|true|   
 |**disabled**|*string*|Enable/Disable area listeners and highlighting|false|  
 |**href**|*string*|Target link for a click in the zone (note that if you provide an onClick prop, `href` will be prevented)|undefined|   
+|**target**|*string*|_blank|_self|undefined|   
 |**fillColor**|*string*|Fill color of the highlighted zone|rgba(255, 255, 255, 0.5)|  
 |**strokeColor**|*string*|Border color of the highlighted zone|rgba(0, 0, 0, 0.5)|  
 |**lineWidth**|*string*|Border thickness of the highlighted zone|1|  
