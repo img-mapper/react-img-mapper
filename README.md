@@ -81,18 +81,18 @@ export default Mapper;
 |**fillColor**|*string*|Fill color of the highlighted zone|rgba(255, 255, 255, 0.5)|        
 |**strokeColor**|*string*|Border color of the highlighted zone|rgba(0, 0, 0, 0.5)|        
 |**lineWidth**|*number*|Border thickness of the highlighted zone|1|        
-|**width**|*number \| func*|Image width, in function you will get image reference object|0|        
-|**height**|*number \| func*|Image height, in function you will get image reference object|0|        
+|**width**|*number \| func*|Image width in pixels, in function you will get image reference object|0|        
+|**height**|*number \| func*|Image height in pixels, in function you will get image reference object|0|        
 |**active**|*bool*|Enable/Disable highlighting|true|    
 |**disabled**|*bool*|Enable/Disable area listeners and highlighting|false|    
-|**imgWidth**|*number*|Original image width|0|        
+|**imgWidth**|*number*|Original image width in pixels|0|        
 |**natural**|*bool*|Give the original dimensions ( height & width ) to canvas and image wrapper|false|        
 |**stayHighlighted**|*bool*|You can see the highlighted area after clicking on the particular area|false|
 |**stayMultiHighlighted**|*bool*|You can see the multiple highlighted area after clicking on the particular area|false|
 |**toggleHighlighted**|*bool*|You can toggle selected highlighted area|false|
 |**rerenderProps**|*array*|specify rerenderProps property, if you want to rerender your map with different property|[]|       
 |**responsive**|*bool*|responsive map in all resolution ( for enable it you need to specify parentWidth )|false|        
-|**parentWidth**|*number*|parent max width for responsive|0|   
+|**parentWidth**|*number*|parent max width in pixels for responsive|0|   
 
 ## Properties Callback
 
