@@ -1,13 +1,19 @@
-import { ImageMapperProps, CustomArea, AreaEvent, TouchEvent, ImageEvent } from './types';
+import type { AreaEvent, CustomArea, ImageEvent, ImageMapperProps, TouchEvent } from '@/types';
 
-export const imageMouseMove = (event: ImageEvent, props: ImageMapperProps): void => {
-  if (props.onImageMouseMove) props.onImageMouseMove(event);
+export const imageMouseMove = (
+  event: ImageEvent,
+  { onImageMouseMove }: Pick<ImageMapperProps, 'onImageMouseMove'>
+): void => {
+  if (onImageMouseMove) onImageMouseMove(event);
 };
 
-export const imageClick = (event: ImageEvent, props: ImageMapperProps): void => {
-  if (props.onImageClick) {
+export const imageClick = (
+  event: ImageEvent,
+  { onImageClick }: Pick<ImageMapperProps, 'onImageClick'>
+): void => {
+  if (onImageClick) {
     event.preventDefault();
-    props.onImageClick(event);
+    onImageClick(event);
   }
 };
 
@@ -15,43 +21,43 @@ export const mouseMove = (
   area: CustomArea,
   index: number,
   event: AreaEvent,
-  props: ImageMapperProps
+  { onMouseMove }: Pick<ImageMapperProps, 'onMouseMove'>
 ): void => {
-  if (props.onMouseMove) props.onMouseMove(area, index, event);
+  if (onMouseMove) onMouseMove(area, index, event);
 };
 
 export const mouseDown = (
   area: CustomArea,
   index: number,
   event: AreaEvent,
-  props: ImageMapperProps
+  { onMouseDown }: Pick<ImageMapperProps, 'onMouseDown'>
 ): void => {
-  if (props.onMouseDown) props.onMouseDown(area, index, event);
+  if (onMouseDown) onMouseDown(area, index, event);
 };
 
 export const mouseUp = (
   area: CustomArea,
   index: number,
   event: AreaEvent,
-  props: ImageMapperProps
+  { onMouseUp }: Pick<ImageMapperProps, 'onMouseUp'>
 ): void => {
-  if (props.onMouseUp) props.onMouseUp(area, index, event);
+  if (onMouseUp) onMouseUp(area, index, event);
 };
 
 export const touchStart = (
   area: CustomArea,
   index: number,
   event: TouchEvent,
-  props: ImageMapperProps
+  { onTouchStart }: Pick<ImageMapperProps, 'onTouchStart'>
 ): void => {
-  if (props.onTouchStart) props.onTouchStart(area, index, event);
+  if (onTouchStart) onTouchStart(area, index, event);
 };
 
 export const touchEnd = (
   area: CustomArea,
   index: number,
   event: TouchEvent,
-  props: ImageMapperProps
+  { onTouchEnd }: Pick<ImageMapperProps, 'onTouchEnd'>
 ): void => {
-  if (props.onTouchEnd) props.onTouchEnd(area, index, event);
+  if (onTouchEnd) onTouchEnd(area, index, event);
 };

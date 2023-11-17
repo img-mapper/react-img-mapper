@@ -1,4 +1,4 @@
-import { CTX } from './types';
+import type { CTX } from '@/types';
 
 const drawRect = (
   coords: number[],
@@ -63,13 +63,13 @@ const callingFn = (
   ctx: CTX
 ): void | boolean => {
   if (shape === 'rect' && isAreaActive) {
-    return drawRect(coords, fillColor, lineWidth, strokeColor, ctx);
+    return void drawRect(coords, fillColor, lineWidth, strokeColor, ctx);
   }
   if (shape === 'circle' && isAreaActive) {
-    return drawCircle(coords, fillColor, lineWidth, strokeColor, ctx);
+    return void drawCircle(coords, fillColor, lineWidth, strokeColor, ctx);
   }
   if (shape === 'poly' && isAreaActive) {
-    return drawPoly(coords, fillColor, lineWidth, strokeColor, ctx);
+    return void drawPoly(coords, fillColor, lineWidth, strokeColor, ctx);
   }
   return false;
 };
