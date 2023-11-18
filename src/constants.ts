@@ -19,13 +19,8 @@ export const rerenderPropsList = [
   'responsive',
 ] as const;
 
-export const ImageMapperDefaultProps: Omit<ImageMapperProps, 'src'> = {
-  map: {
-    areas: [],
-    name: `image-map-${Math.random()}`,
-  },
+export const ImageMapperDefaultProps: Omit<ImageMapperProps, 'src' | 'map'> = {
   areaKeyName: 'id',
-  containerRef: null,
   active: true,
   disabled: false,
   fillColor: 'rgba(255, 255, 255, 0.5)',
@@ -54,3 +49,15 @@ export const ImageMapperDefaultProps: Omit<ImageMapperProps, 'src'> = {
   onMouseLeave: null,
   onLoad: null,
 };
+
+export const generateProps = <T extends ImageMapperProps>(props: T): Required<T> =>
+  Object.entries(ImageMapperDefaultProps).reduce(
+    (acc, val) => {
+      const [key, value] = val as [keyof T, typeof val];
+
+      // @ts-expect-error acc key error
+      acc[key] = props[key] ?? value;
+      return acc;
+    },
+    { src: props.src, map: props.map }
+  ) as Required<T>;
