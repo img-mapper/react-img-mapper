@@ -61,15 +61,18 @@ const callingFn = (
   strokeColor: string,
   isAreaActive: boolean,
   ctx: CTX
-): void | boolean => {
+): boolean => {
   if (shape === 'rect' && isAreaActive) {
-    return void drawRect(coords, fillColor, lineWidth, strokeColor, ctx);
+    drawRect(coords, fillColor, lineWidth, strokeColor, ctx);
+    return true;
   }
   if (shape === 'circle' && isAreaActive) {
-    return void drawCircle(coords, fillColor, lineWidth, strokeColor, ctx);
+    drawCircle(coords, fillColor, lineWidth, strokeColor, ctx);
+    return true;
   }
   if (shape === 'poly' && isAreaActive) {
-    return void drawPoly(coords, fillColor, lineWidth, strokeColor, ctx);
+    drawPoly(coords, fillColor, lineWidth, strokeColor, ctx);
+    return true;
   }
   return false;
 };
