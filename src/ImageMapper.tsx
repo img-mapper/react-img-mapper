@@ -54,18 +54,17 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   const [map, setMap] = useState<Map>(mapProp);
   const [storedMap, setStoredMap] = useState<Map>(map);
   const [isRendered, setRendered] = useState<boolean>(false);
-  const [imgRef, setImgRef] = useState<HTMLImageElement | null>(null);
   const innerRef = useRef<RefProperties | null>(null);
   const img = useRef<HTMLImageElement | null>(null);
   const canvas = useRef<HTMLCanvasElement | null>(null);
   const ctx = useRef<CanvasRenderingContext2D | null>(null);
-  const isInitialMount = useRef<boolean>(true);
   const interval = useRef<number>(0);
+  const prevParentWidth = useRef<number>(parentWidth ?? 0);
 
   const scaleCoords = (coords: number[]): number[] =>
     coords.map(coord => {
-      if (responsive && parentWidth && imgRef) {
-        return coord / (imgRef.naturalWidth / parentWidth);
+      if (responsive && parentWidth && img.current) {
+        return coord / (img.current.naturalWidth / parentWidth);
       }
 
       const scale = widthProp && imageWidthProp > 0 ? widthProp / imageWidthProp : 1;
@@ -131,9 +130,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     return 0;
   };
 
-  const initCanvas = (firstLoad = false) => {
-    if (!firstLoad && !imgRef) return;
-
+  const initCanvas = () => {
     const imgWidth = getDimensions('width');
     const imgHeight = getDimensions('height');
     const imageWidth = getValues('width', imgWidth);
@@ -155,15 +152,14 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     ctx.current = canvas.current.getContext('2d');
     ctx.current.fillStyle = fillColorProp;
 
-    if (onLoad && imgRef) {
+    if (onLoad) {
       onLoad(img.current, {
         width: imageWidth,
         height: imageHeight,
       });
     }
 
-    setImgRef(img.current);
-    if (imgRef) renderPrefilledAreas();
+    renderPrefilledAreas();
   };
 
   const highlightArea = (area: Area) =>
@@ -241,25 +237,28 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
 
   useEffect(() => {
     if (isRendered && canvas.current) {
-      initCanvas(true);
+      initCanvas();
       ctx.current = canvas.current.getContext('2d');
       updateCacheMap();
     }
   }, [isRendered]);
 
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-    } else {
+    if (isRendered) {
       updateCacheMap();
       initCanvas();
-      if (imgRef) updateCanvas();
+      updateCanvas();
     }
-  }, [props, isInitialMount, imgRef]);
+  }, [isRendered, props]);
 
   useEffect(() => {
-    if (responsive) initCanvas();
-  }, [parentWidth]);
+    if (responsive && parentWidth) {
+      if (prevParentWidth.current !== parentWidth) {
+        initCanvas();
+        prevParentWidth.current = parentWidth;
+      }
+    }
+  }, [responsive, parentWidth]);
 
   useImperativeHandle(
     ref,
@@ -270,7 +269,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
       };
       return innerRef.current;
     },
-    [imgRef]
+    []
   );
 
   const computeCenter = (area: MapArea): [number, number] => {
@@ -328,7 +327,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
         ref={img}
         role="presentation"
         className="img-mapper-img"
-        style={{ ...styles.img(responsive), ...(!imgRef ? { display: 'none' } : null) }}
+        style={{ ...styles.img(responsive), ...(!isRendered ? { display: 'none' } : null) }}
         src={srcProp}
         useMap={`#${map.name}`}
         alt="map"
@@ -337,7 +336,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
       />
       <canvas ref={canvas} className="img-mapper-canvas" style={styles.canvas} />
       <map className="img-mapper-map" name={map.name} style={styles.map(onClick)}>
-        {isRendered && !disabled && imgRef && renderAreas()}
+        {isRendered && !disabled && renderAreas()}
       </map>
     </div>
   );
