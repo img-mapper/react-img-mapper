@@ -1,13 +1,13 @@
 import type { CTX } from '@/types';
 
 const drawRect = (
-  coords: number[],
+  scaledCoords: number[],
   fillColor: string,
   lineWidth: number,
   strokeColor: string,
   ctx: CTX
 ) => {
-  const [left, top, right, bot] = coords;
+  const [left, top, right, bot] = scaledCoords;
   ctx.current.fillStyle = fillColor;
   ctx.current.lineWidth = lineWidth;
   ctx.current.strokeStyle = strokeColor;
@@ -16,7 +16,7 @@ const drawRect = (
 };
 
 const drawCircle = (
-  coords: number[],
+  scaledCoords: number[],
   fillColor: string,
   lineWidth: number,
   strokeColor: string,
@@ -26,20 +26,23 @@ const drawCircle = (
   ctx.current.beginPath();
   ctx.current.lineWidth = lineWidth;
   ctx.current.strokeStyle = strokeColor;
-  ctx.current.arc(coords[0], coords[1], coords[2], 0, 2 * Math.PI);
+  ctx.current.arc(scaledCoords[0], scaledCoords[1], scaledCoords[2], 0, 2 * Math.PI);
   ctx.current.closePath();
   ctx.current.stroke();
   ctx.current.fill();
 };
 
 const drawPoly = (
-  coords: number[],
+  scaledCoords: number[],
   fillColor: string,
   lineWidth: number,
   strokeColor: string,
   ctx: CTX
 ) => {
-  const newCoords = coords.reduce((a, v, i, s) => (i % 2 ? a : [...a, s.slice(i, i + 2)]), []);
+  const newCoords = scaledCoords.reduce(
+    (a, v, i, s) => (i % 2 ? a : [...a, s.slice(i, i + 2)]),
+    []
+  );
   // const first = newCoords.unshift();
   ctx.current.fillStyle = fillColor;
   ctx.current.beginPath();
@@ -55,23 +58,22 @@ const drawPoly = (
 
 const callingFn = (
   shape: string,
-  coords: number[],
+  scaledCoords: number[],
   fillColor: string,
   lineWidth: number,
   strokeColor: string,
-  isAreaActive: boolean,
   ctx: CTX
-): boolean => {
-  if (shape === 'rect' && isAreaActive) {
-    drawRect(coords, fillColor, lineWidth, strokeColor, ctx);
+): void | boolean => {
+  if (shape === 'rect') {
+    drawRect(scaledCoords, fillColor, lineWidth, strokeColor, ctx);
     return true;
   }
-  if (shape === 'circle' && isAreaActive) {
-    drawCircle(coords, fillColor, lineWidth, strokeColor, ctx);
+  if (shape === 'circle') {
+    drawCircle(scaledCoords, fillColor, lineWidth, strokeColor, ctx);
     return true;
   }
-  if (shape === 'poly' && isAreaActive) {
-    drawPoly(coords, fillColor, lineWidth, strokeColor, ctx);
+  if (shape === 'poly') {
+    drawPoly(scaledCoords, fillColor, lineWidth, strokeColor, ctx);
     return true;
   }
   return false;

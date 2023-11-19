@@ -15,7 +15,16 @@ import {
 } from '@/events';
 import styles from '@/styles';
 
-import type { Area, AreaEvent, ImageMapperProps, Map, MapArea, RefProperties } from '@/types';
+import type {
+  Area,
+  AreaEvent,
+  Dimension,
+  ImageMapperProps,
+  Map,
+  MapArea,
+  RefProperties,
+  WidthHeight,
+} from '@/types';
 
 export * from '@/types';
 
@@ -29,9 +38,9 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     src: srcProp,
     strokeColor: strokeColorProp,
     natural,
-    height: heightProp,
-    width: widthProp,
-    imgWidth: imageWidthProp,
+    height,
+    width,
+    imgWidth,
     areaKeyName,
     stayHighlighted,
     stayMultiHighlighted,
@@ -61,13 +70,36 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   const interval = useRef<number>(0);
   const prevParentWidth = useRef<number>(parentWidth ?? 0);
 
-  const scaleCoords = (coords: number[]): number[] =>
+  useEffect(() => {
+    if (!isRendered) {
+      interval.current = window.setInterval(() => {
+        if (img.current?.complete) {
+          setRendered(true);
+          console.log({ img: img.current });
+        }
+      }, 500);
+    } else {
+      clearInterval(interval.current);
+    }
+  }, [isRendered]);
+
+  const getPropDimension = (): WidthHeight => {
+    const getDimension = (dimension: Dimension): number => {
+      if (!img.current) return 0;
+      return typeof dimension === 'function' ? dimension(img.current) : dimension;
+    };
+
+    return { width: getDimension(width), height: getDimension(height) };
+  };
+
+  const scaleCoords = (coords: MapArea['coords']): number[] =>
     coords.map(coord => {
       if (responsive && parentWidth && img.current) {
         return coord / (img.current.naturalWidth / parentWidth);
       }
 
-      const scale = widthProp && imageWidthProp > 0 ? widthProp / imageWidthProp : 1;
+      const { width: imageWidth } = getPropDimension();
+      const scale = imageWidth && imgWidth > 0 ? imageWidth / imgWidth : 1;
       return coord * scale;
     });
 
@@ -81,7 +113,6 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
         area.preFillColor,
         area.lineWidth ?? lineWidthProp,
         area.strokeColor ?? strokeColorProp,
-        true,
         ctx
       );
     });
@@ -93,85 +124,21 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
   };
 
-  const updateCanvas = () => {
+  const updateCanvas = (mapObj: Map): void => {
     clearCanvas();
-    renderPrefilledAreas(mapProp);
+    renderPrefilledAreas(mapObj);
   };
 
-  const updateCacheMap = () => {
+  const updateMap = () => {
     setMap(mapProp);
     setStoredMap(mapProp);
   };
 
-  const getDimensions = (type: 'width' | 'height'): number => {
-    const { [type]: dimension } = props;
+  const highlightArea = (area: Area): void => {
+    if (area.active) return;
 
-    if (typeof dimension === 'function') {
-      return dimension(img.current);
-    }
-    return dimension as number;
+    callingFn(area.shape, area.scaledCoords, area.fillColor, area.lineWidth, area.strokeColor, ctx);
   };
-
-  const getValues = (type: string, measure: number, name = 'area') => {
-    const { naturalWidth, naturalHeight, clientWidth, clientHeight } = img.current;
-
-    if (type === 'width') {
-      if (responsive) return parentWidth;
-      if (natural) return naturalWidth;
-      if (widthProp || name === 'image') return measure;
-      return clientWidth;
-    }
-    if (type === 'height') {
-      if (responsive) return clientHeight;
-      if (natural) return naturalHeight;
-      if (heightProp || name === 'image') return measure;
-      return clientHeight;
-    }
-    return 0;
-  };
-
-  const initCanvas = () => {
-    const imgWidth = getDimensions('width');
-    const imgHeight = getDimensions('height');
-    const imageWidth = getValues('width', imgWidth);
-    const imageHeight = getValues('height', imgHeight);
-
-    if (widthProp || responsive) {
-      img.current.width = getValues('width', imgWidth, 'image');
-    }
-
-    if (heightProp || responsive) {
-      img.current.height = getValues('height', imgHeight, 'image');
-    }
-
-    canvas.current.width = imageWidth;
-    canvas.current.height = imageHeight;
-    innerRef.current.style.width = `${imageWidth}px`;
-    innerRef.current.style.height = `${imageHeight}px`;
-
-    ctx.current = canvas.current.getContext('2d');
-    ctx.current.fillStyle = fillColorProp;
-
-    if (onLoad) {
-      onLoad(img.current, {
-        width: imageWidth,
-        height: imageHeight,
-      });
-    }
-
-    renderPrefilledAreas();
-  };
-
-  const highlightArea = (area: Area) =>
-    callingFn(
-      area.shape,
-      area.scaledCoords,
-      area.fillColor ?? fillColorProp,
-      area.lineWidth ?? lineWidthProp,
-      area.strokeColor ?? strokeColorProp,
-      area.active ?? true,
-      ctx
-    );
 
   const hoverOn = (area: Area, index: number, event: AreaEvent) => {
     if (active) highlightArea(area);
@@ -180,10 +147,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   };
 
   const hoverOff = (area: Area, index: number, event: AreaEvent) => {
-    if (active) {
-      clearCanvas();
-      renderPrefilledAreas();
-    }
+    if (active) updateCanvas(map);
 
     if (onMouseLeave) onMouseLeave(area, index, event);
   };
@@ -191,7 +155,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   const click = (area: Area, index: number, event: AreaEvent) => {
     const isAreaActive = area.active ?? true;
 
-    if (isAreaActive && (stayHighlighted || stayMultiHighlighted || toggleHighlighted)) {
+    if (active && isAreaActive && (stayHighlighted || stayMultiHighlighted || toggleHighlighted)) {
       const newArea = { ...area };
       const chosenArea = stayMultiHighlighted ? map : storedMap;
 
@@ -214,7 +178,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
       setMap(prev => ({ ...prev, areas: updatedAreas }));
 
       if (!stayMultiHighlighted) {
-        updateCanvas();
+        updateCanvas(mapProp);
         highlightArea(area);
       }
     }
@@ -225,29 +189,69 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     }
   };
 
-  useEffect(() => {
-    if (!isRendered) {
-      interval.current = window.setInterval(() => {
-        if (img.current?.complete) setRendered(true);
-      }, 500);
-    } else {
-      clearInterval(interval.current);
-    }
-  }, [isRendered]);
+  const getDimensions = (): WidthHeight => {
+    const getValues = (type: 'width' | 'height'): number => {
+      const { width: imageWidth, height: imageHeight } = getPropDimension();
+
+      if (img.current) {
+        const { naturalWidth, naturalHeight, clientWidth, clientHeight } = img.current;
+
+        if (type === 'width') {
+          if (responsive) return parentWidth;
+          if (natural) return naturalWidth;
+          if (imageWidth) return imageWidth;
+          return clientWidth;
+        }
+
+        if (type === 'height') {
+          if (responsive) return clientHeight;
+          if (natural) return naturalHeight;
+          if (imageHeight) return imageHeight;
+          return clientHeight;
+        }
+      }
+
+      return 0;
+    };
+
+    return { width: getValues('width'), height: getValues('height') };
+  };
+
+  const initCanvas = () => {
+    const { width: imageWidth, height: imageHeight } = getDimensions();
+
+    if (!(img.current && canvas.current && innerRef.current && ctx.current)) return;
+
+    img.current.width = imageWidth;
+    img.current.height = imageHeight;
+
+    canvas.current.width = imageWidth;
+    canvas.current.height = imageHeight;
+
+    innerRef.current.style.width = `${imageWidth}px`;
+    innerRef.current.style.height = `${imageHeight}px`;
+
+    // ctx.current = canvas.current.getContext('2d');
+    ctx.current.fillStyle = fillColorProp;
+
+    renderPrefilledAreas();
+
+    if (onLoad) onLoad(img.current, { width: imageWidth, height: imageHeight });
+  };
 
   useEffect(() => {
     if (isRendered && canvas.current) {
       initCanvas();
       ctx.current = canvas.current.getContext('2d');
-      updateCacheMap();
+      updateMap();
     }
   }, [isRendered]);
 
   useEffect(() => {
     if (isRendered) {
-      updateCacheMap();
+      updateMap();
       initCanvas();
-      updateCanvas();
+      updateCanvas(mapProp);
     }
   }, [isRendered, props]);
 
@@ -272,7 +276,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     []
   );
 
-  const computeCenter = (area: MapArea): [number, number] => {
+  const computeCenter = (area: MapArea): Area['center'] => {
     if (!area) return [0, 0];
 
     const scaledCoords = scaleCoords(area.coords);
@@ -297,7 +301,15 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     map.areas.map((area, index) => {
       const scaledCoords = scaleCoords(area.coords);
       const center = computeCenter(area);
-      const extendedArea = { ...area, scaledCoords, center };
+      const extendedArea = {
+        ...area,
+        scaledCoords,
+        center,
+        active: area.active ?? true,
+        fillColor: area.fillColor ?? fillColorProp,
+        lineWidth: area.lineWidth ?? lineWidthProp,
+        strokeColor: area.strokeColor ?? strokeColorProp,
+      };
 
       if (area.disabled) return null;
 

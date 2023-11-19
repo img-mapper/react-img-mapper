@@ -1,6 +1,9 @@
 import type { rerenderPropsList } from '@/constants';
 import type { CSSProperties, MouseEvent, TouchEvent as ReactTouchEvent } from 'react';
 
+// eslint-disable-next-line @typescript-eslint/no-type-alias
+type NoUndefinedField<T> = { [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>> };
+
 export interface RefExtraProperties {
   clearHighlightedArea: () => void;
 }
@@ -20,14 +23,23 @@ export interface MapArea {
   preFillColor?: string;
 }
 
+type RequiredMapArea = 'active' | 'fillColor' | 'lineWidth' | 'strokeColor';
+
 export interface Map {
   name: string;
   areas: MapArea[];
 }
 
-export interface Area extends MapArea {
+export interface Area
+  extends Omit<MapArea, RequiredMapArea>,
+    Pick<NoUndefinedField<MapArea>, RequiredMapArea> {
   scaledCoords: number[];
-  center?: [number, number];
+  center: [number, number];
+}
+
+export interface WidthHeight {
+  width: number;
+  height: number;
 }
 
 export type CTX = { current: CanvasRenderingContext2D } | null;
@@ -43,9 +55,7 @@ export type RerenderProps = (keyof Omit<
 
 export type ImageEventHandler = ((event: ImageEvent) => void) | null;
 export type EventHandler<T = AreaEvent> = ((area: Area, index: number, e: T) => void) | null;
-export type LoadEventHandler =
-  | ((event: HTMLImageElement, dimensions: { width: number; height: number }) => void)
-  | null;
+export type LoadEventHandler = ((event: HTMLImageElement, dimensions: WidthHeight) => void) | null;
 
 export interface ImageMapperProps {
   src: string;
