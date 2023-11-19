@@ -1,15 +1,33 @@
-.github
+# dependencies
+node_modules
+
+# misc
+.DS_Store
+
+# debug
+*.log
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# package lock files
+yarn.lock
+package-lock.json
+
+# editor folders
 .idea
-public
+.vscode
+
+# ignored folders
+.github
+.husky
 src
-.babelrc
-.eslintcache
-.eslintignore
-.eslintrc
-.prettierrc
-yarn-error.log
-/.husky
-SECURITY.md
-CODE_OF_CONDUCT.md
-CONTRIBUTING.md
+
+# ignored files
+.*.js
+*.md
 tsconfig.json

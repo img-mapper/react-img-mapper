@@ -26,56 +26,44 @@
   "types": "dist/ImageMapper.d.ts",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint . --ext .tsx",
-    "lint-fix": "eslint . --ext .tsx --fix",
+    "lint": "eslint . --ignore-path .gitignore",
+    "lint:fix": "yarn lint --fix",
+    "prepare": "husky install",
     "prepublishOnly": "npm run build",
-    "prepare": "npm run build && husky install"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "prettier": "prettier \"**/*.{js,jsx,ts,tsx,css,scss,json}\"",
+    "prettier:check": "yarn prettier --check",
+    "prettier:fix": "yarn prettier --write",
+    "script:lint": "bash -e ./scripts/lint.sh",
+    "ts": "tsc --noEmit --skipLibCheck -p tsconfig.json"
   },
   "dependencies": {
     "react-fast-compare": "^3.2.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.10",
-    "@types/node": "^20.4.8",
-    "@types/react": "^18.2.19",
-    "@typescript-eslint/eslint-plugin": "^6.3.0",
-    "@typescript-eslint/parser": "^6.3.0",
+    "@babel/core": "^7.23.3",
+    "@types/node": "^18.18.10",
+    "@types/react": "^18.2.37",
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^8.46.0",
+    "eslint": "^8.54.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-react-app": "^7.0.1",
-    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-flowtype": "^8.0.3",
-    "eslint-plugin-import": "^2.28.0",
-    "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-prettier": "^5.0.0",
-    "eslint-plugin-react": "^7.33.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.3",
-    "prettier": "^3.0.1",
+    "lint-staged": "^15.1.0",
+    "prettier": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
     "react": "16.x || 17.x || 18.x",
