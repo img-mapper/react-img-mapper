@@ -4,13 +4,14 @@ import JSON from '@/example/area.json';
 import ImageMapper from '@/ImageMapper';
 
 import type { MapArea, RefProperties } from '@/ImageMapper';
+import type { FC } from 'react';
 
 const URL = 'https://raw.githubusercontent.com/img-mapper/react-docs/master/src/assets/example.jpg';
 
 // const JSON =
 //   'https://raw.githubusercontent.com/img-mapper/react-docs/master/src/assets/example.json';
 
-const Example: React.FC = () => {
+const Example: FC = () => {
   const [areas, setAreas] = useState<MapArea[]>(JSON);
   const [parentWidth, setParentWidth] = useState<number>(500);
   const ref = useRef<RefProperties>(null);
