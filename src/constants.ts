@@ -12,14 +12,11 @@ export const rerenderPropsList = [
   'lineWidth',
   'natural',
   'areaKeyName',
-  'stayHighlighted',
-  'stayMultiHighlighted',
-  'toggleHighlighted',
   'parentWidth',
   'responsive',
 ] as const;
 
-export const ImageMapperDefaultProps: Omit<ImageMapperProps, 'src' | 'map'> = {
+export const ImageMapperDefaultProps: Omit<ImageMapperProps, 'src' | 'map' | 'onChange'> = {
   areaKeyName: 'id',
   active: true,
   disabled: false,
@@ -30,9 +27,7 @@ export const ImageMapperDefaultProps: Omit<ImageMapperProps, 'src' | 'map'> = {
   width: 0,
   height: 0,
   natural: false,
-  stayHighlighted: false,
-  stayMultiHighlighted: false,
-  toggleHighlighted: false,
+  highlighted: null,
   rerenderProps: [],
   responsive: false,
   parentWidth: 0,
@@ -59,5 +54,5 @@ export const generateProps = <T extends ImageMapperProps>(props: T): Required<T>
       acc[key] = props[key] ?? value;
       return acc;
     },
-    { src: props.src, map: props.map }
+    { src: props.src, map: props.map, onChange: props.onChange }
   ) as Required<T>;

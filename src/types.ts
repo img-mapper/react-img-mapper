@@ -55,6 +55,13 @@ export type DrawChosenShape = (area: Pick<Area, DrawArea>, ctx: CTX) => boolean;
 export type DrawShape = (area: Pick<Area, 'shape' | DrawArea>, ctx: CTX<null>) => boolean;
 export type GetShape = (shape: Area['shape']) => DrawChosenShape | false;
 
+export interface HighlightedOptions {
+  isMulti?: boolean;
+  toggle?: boolean;
+}
+
+export type Highlighted = HighlightedOptions | null;
+
 export interface WidthHeight {
   width: number;
   height: number;
@@ -71,8 +78,27 @@ export type RerenderProps = (keyof Omit<
 >)[];
 
 export type ImageEventHandler = ((event: ImageEvent) => void) | null;
-export type EventHandler<T = AreaEvent> = ((area: Area, index: number, e: T) => void) | null;
+export type EventHandler<T = AreaEvent, A = MapArea> =
+  | ((area: A, index: number, e: T) => void)
+  | null;
 export type LoadEventHandler = ((event: HTMLImageElement, dimensions: WidthHeight) => void) | null;
+export type ChangeEventHandler = (selectedArea: MapArea, areas: MapArea[]) => void;
+
+export interface EventListenerParam<E> {
+  area: MapArea;
+  index: number;
+  event: E;
+}
+
+export type EventListener<T extends keyof ImageMapperProps, E = AreaEvent> = (
+  params: EventListenerParam<E>,
+  props: Pick<ImageMapperProps, T>
+) => void;
+
+export type ImageEventListener<T extends keyof ImageMapperProps> = (
+  event: ImageEvent,
+  props: Pick<ImageMapperProps, T>
+) => void;
 
 export interface ImageMapperProps {
   src: string;
@@ -87,13 +113,12 @@ export interface ImageMapperProps {
   width?: Dimension;
   height?: Dimension;
   natural?: boolean;
-  stayHighlighted?: boolean;
-  stayMultiHighlighted?: boolean;
-  toggleHighlighted?: boolean;
+  highlighted: Highlighted;
   rerenderProps?: RerenderProps;
   responsive?: boolean;
   parentWidth?: number;
 
+  onChange: ChangeEventHandler;
   onImageClick?: ImageEventHandler;
   onImageMouseMove?: ImageEventHandler;
   onClick?: EventHandler;
