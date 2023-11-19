@@ -23,7 +23,7 @@ export interface RefProperties {
 
 export interface MapArea {
   id: string;
-  shape: 'rect' | 'circle' | 'poly';
+  shape: string;
   coords: number[];
   active?: boolean;
   disabled?: boolean;
