@@ -3,7 +3,7 @@ import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useSta
 import isEqual from 'react-fast-compare';
 
 import { generateProps, rerenderPropsList } from '@/constants';
-import callingFn from '@/draw';
+import drawShape from '@/draw';
 import {
   imageClick,
   imageMouseMove,
@@ -107,12 +107,14 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     mapObj.areas.forEach(area => {
       if (!area.preFillColor) return false;
 
-      return callingFn(
-        area.shape,
-        scaleCoords(area.coords),
-        area.preFillColor,
-        area.lineWidth ?? lineWidthProp,
-        area.strokeColor ?? strokeColorProp,
+      return drawShape(
+        {
+          shape: area.shape,
+          scaledCoords: scaleCoords(area.coords),
+          fillColor: area.preFillColor,
+          lineWidth: area.lineWidth ?? lineWidthProp,
+          strokeColor: area.strokeColor ?? strokeColorProp,
+        },
         ctx
       );
     });
@@ -134,10 +136,19 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     setStoredMap(mapProp);
   };
 
-  const highlightArea = (area: Area): void => {
-    if (area.active) return;
+  const highlightArea = (area: Area): boolean => {
+    if (area.active) return false;
 
-    callingFn(area.shape, area.scaledCoords, area.fillColor, area.lineWidth, area.strokeColor, ctx);
+    return drawShape(
+      {
+        shape: area.shape,
+        scaledCoords: area.scaledCoords,
+        fillColor: area.fillColor,
+        lineWidth: area.lineWidth,
+        strokeColor: area.strokeColor,
+      },
+      ctx
+    );
   };
 
   const hoverOn = (area: Area, index: number, event: AreaEvent) => {

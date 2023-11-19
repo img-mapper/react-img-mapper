@@ -1,5 +1,10 @@
 import type { rerenderPropsList } from '@/constants';
-import type { CSSProperties, MouseEvent, TouchEvent as ReactTouchEvent } from 'react';
+import type {
+  CSSProperties,
+  MouseEvent,
+  MutableRefObject,
+  TouchEvent as ReactTouchEvent,
+} from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-type-alias
 type NoUndefinedField<T> = { [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>> };
@@ -11,8 +16,8 @@ export interface RefExtraProperties {
 export type RefProperties = RefExtraProperties & HTMLDivElement;
 
 export interface MapArea {
-  id?: string;
-  shape: string;
+  id: string;
+  shape: 'rect' | 'circle' | 'poly';
   coords: number[];
   active?: boolean;
   disabled?: boolean;
@@ -37,12 +42,18 @@ export interface Area
   center: [number, number];
 }
 
+type DrawArea = 'scaledCoords' | 'fillColor' | 'lineWidth' | 'strokeColor';
+export type DrawChosenShape = (area: Pick<Area, DrawArea>, ctx: CTX) => boolean;
+export type DrawShape = (area: Pick<Area, 'shape' | DrawArea>, ctx: CTX<null>) => boolean;
+export type GetShape = (shape: Area['shape']) => DrawChosenShape | false;
+
 export interface WidthHeight {
   width: number;
   height: number;
 }
 
-export type CTX = { current: CanvasRenderingContext2D } | null;
+export type CTX<E = CanvasRenderingContext2D> = MutableRefObject<CanvasRenderingContext2D | E>;
+
 export type TouchEvent = ReactTouchEvent<HTMLAreaElement>;
 export type AreaEvent = MouseEvent<HTMLAreaElement>;
 export type ImageEvent = MouseEvent<HTMLImageElement>;
