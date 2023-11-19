@@ -1,4 +1,12 @@
-import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 
 import isEqual from 'react-fast-compare';
 
@@ -23,6 +31,7 @@ import type {
   Map,
   MapArea,
   RefProperties,
+  Refs,
   WidthHeight,
 } from '@/types';
 
@@ -63,62 +72,72 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   const [map, setMap] = useState<Map>(mapProp);
   const [storedMap, setStoredMap] = useState<Map>(map);
   const [isRendered, setRendered] = useState<boolean>(false);
-  const innerRef = useRef<RefProperties | null>(null);
-  const img = useRef<HTMLImageElement | null>(null);
-  const canvas = useRef<HTMLCanvasElement | null>(null);
-  const ctx = useRef<CanvasRenderingContext2D | null>(null);
+  const containerRef = useRef<Refs['containerRef']>(null);
+  const img = useRef<Refs['imgRef']>(null);
+  const canvas = useRef<Refs['canvasRef']>(null);
+  const ctx = useRef<Refs['ctxRef']>(null);
   const interval = useRef<number>(0);
   const prevParentWidth = useRef<number>(parentWidth ?? 0);
 
+  const init = useCallback(() => {
+    if (img.current?.complete && canvas.current && containerRef.current) {
+      ctx.current = canvas.current.getContext('2d');
+
+      setRendered(true);
+      console.log({ img: img.current });
+    }
+  }, []);
+
   useEffect(() => {
     if (!isRendered) {
-      interval.current = window.setInterval(() => {
-        if (img.current?.complete) {
-          setRendered(true);
-          console.log({ img: img.current });
-        }
-      }, 500);
+      interval.current = window.setInterval(init, 500);
     } else {
       clearInterval(interval.current);
     }
-  }, [isRendered]);
+  }, [init, isRendered]);
 
-  const getPropDimension = (): WidthHeight => {
+  const getPropDimension = useCallback((): WidthHeight => {
     const getDimension = (dimension: Dimension): number => {
       if (!img.current) return 0;
       return typeof dimension === 'function' ? dimension(img.current) : dimension;
     };
 
     return { width: getDimension(width), height: getDimension(height) };
-  };
+  }, [height, width]);
 
-  const scaleCoords = (coords: MapArea['coords']): number[] =>
-    coords.map(coord => {
-      if (responsive && parentWidth && img.current) {
-        return coord / (img.current.naturalWidth / parentWidth);
-      }
+  const scaleCoords = useCallback(
+    (coords: MapArea['coords']): number[] =>
+      coords.map(coord => {
+        if (responsive && parentWidth && img.current) {
+          return coord / (img.current.naturalWidth / parentWidth);
+        }
 
-      const { width: imageWidth } = getPropDimension();
-      const scale = imageWidth && imgWidth > 0 ? imageWidth / imgWidth : 1;
-      return coord * scale;
-    });
+        const { width: imageWidth } = getPropDimension();
+        const scale = imageWidth && imgWidth > 0 ? imageWidth / imgWidth : 1;
+        return coord * scale;
+      }),
+    [getPropDimension, imgWidth, parentWidth, responsive]
+  );
 
-  const renderPrefilledAreas = (mapObj: Map = map) => {
-    mapObj.areas.forEach(area => {
-      if (!area.preFillColor) return false;
+  const renderPrefilledAreas = useCallback(
+    (mapObj: Map = map) => {
+      mapObj.areas.forEach(area => {
+        if (!area.preFillColor) return false;
 
-      return drawShape(
-        {
-          shape: area.shape,
-          scaledCoords: scaleCoords(area.coords),
-          fillColor: area.preFillColor,
-          lineWidth: area.lineWidth ?? lineWidthProp,
-          strokeColor: area.strokeColor ?? strokeColorProp,
-        },
-        ctx
-      );
-    });
-  };
+        return drawShape(
+          {
+            shape: area.shape,
+            scaledCoords: scaleCoords(area.coords),
+            fillColor: area.preFillColor,
+            lineWidth: area.lineWidth ?? lineWidthProp,
+            strokeColor: area.strokeColor ?? strokeColorProp,
+          },
+          ctx
+        );
+      });
+    },
+    [lineWidthProp, map, strokeColorProp, scaleCoords]
+  );
 
   const clearCanvas = () => {
     if (!(ctx.current && canvas.current)) return;
@@ -126,10 +145,13 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
   };
 
-  const updateCanvas = (mapObj: Map): void => {
-    clearCanvas();
-    renderPrefilledAreas(mapObj);
-  };
+  const resetCanvasAndPrefillArea = useCallback(
+    (mapObj: Map): void => {
+      clearCanvas();
+      renderPrefilledAreas(mapObj);
+    },
+    [renderPrefilledAreas]
+  );
 
   const updateMap = () => {
     setMap(mapProp);
@@ -137,7 +159,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   };
 
   const highlightArea = (area: Area): boolean => {
-    if (area.active) return false;
+    if (!area.active) return false;
 
     return drawShape(
       {
@@ -158,7 +180,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   };
 
   const hoverOff = (area: Area, index: number, event: AreaEvent) => {
-    if (active) updateCanvas(map);
+    if (active) resetCanvasAndPrefillArea(map);
 
     if (onMouseLeave) onMouseLeave(area, index, event);
   };
@@ -189,7 +211,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
       setMap(prev => ({ ...prev, areas: updatedAreas }));
 
       if (!stayMultiHighlighted) {
-        updateCanvas(mapProp);
+        resetCanvasAndPrefillArea(mapProp);
         highlightArea(area);
       }
     }
@@ -200,7 +222,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     }
   };
 
-  const getDimensions = (): WidthHeight => {
+  const getDimensions = useCallback((): WidthHeight => {
     const getValues = (type: 'width' | 'height'): number => {
       const { width: imageWidth, height: imageHeight } = getPropDimension();
 
@@ -226,65 +248,75 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     };
 
     return { width: getValues('width'), height: getValues('height') };
-  };
+  }, [getPropDimension, natural, parentWidth, responsive]);
 
-  const initCanvas = () => {
-    const { width: imageWidth, height: imageHeight } = getDimensions();
+  const initCanvas = useCallback(
+    (isFirstTime: boolean | null = false, triggerOnLoad = false) => {
+      const { width: imageWidth, height: imageHeight } = getDimensions();
+      console.log('in', imageWidth, imageHeight);
 
-    if (!(img.current && canvas.current && innerRef.current && ctx.current)) return;
+      if (!(img.current && canvas.current && containerRef.current && ctx.current)) return;
 
-    img.current.width = imageWidth;
-    img.current.height = imageHeight;
+      containerRef.current.style.width = `${imageWidth}px`;
+      containerRef.current.style.height = `${imageHeight}px`;
 
-    canvas.current.width = imageWidth;
-    canvas.current.height = imageHeight;
+      if (isFirstTime) {
+        initCanvas(false, true);
+      } else {
+        img.current.width = imageWidth;
+        img.current.height = imageHeight;
 
-    innerRef.current.style.width = `${imageWidth}px`;
-    innerRef.current.style.height = `${imageHeight}px`;
+        canvas.current.width = imageWidth;
+        canvas.current.height = imageHeight;
 
-    // ctx.current = canvas.current.getContext('2d');
-    ctx.current.fillStyle = fillColorProp;
+        renderPrefilledAreas();
+      }
 
-    renderPrefilledAreas();
-
-    if (onLoad) onLoad(img.current, { width: imageWidth, height: imageHeight });
-  };
+      if (onLoad && triggerOnLoad) {
+        onLoad(img.current, { width: imageWidth, height: imageHeight });
+      }
+    },
+    [getDimensions, onLoad, renderPrefilledAreas]
+  );
 
   useEffect(() => {
-    if (isRendered && canvas.current) {
-      initCanvas();
-      ctx.current = canvas.current.getContext('2d');
-      updateMap();
+    if (isRendered) {
+      initCanvas(true);
     }
   }, [isRendered]);
 
   useEffect(() => {
     if (isRendered) {
-      updateMap();
-      initCanvas();
-      updateCanvas(mapProp);
+      console.log('from 2');
+      // updateMap();
+      // resetCanvasAndPrefillArea(mapProp);
     }
   }, [isRendered, props]);
 
   useEffect(() => {
     if (responsive && parentWidth) {
       if (prevParentWidth.current !== parentWidth) {
-        initCanvas();
+        console.log('from parent width useEffect');
+        initCanvas(true);
         prevParentWidth.current = parentWidth;
       }
     }
-  }, [responsive, parentWidth]);
+  }, [responsive, parentWidth, initCanvas]);
 
   useImperativeHandle(
     ref,
-    () => {
-      innerRef.current.clearHighlightedArea = () => {
+    () => ({
+      clearHighlightedArea: () => {
         setMap(storedMap);
-        initCanvas();
-      };
-      return innerRef.current;
-    },
-    []
+        resetCanvasAndPrefillArea(mapProp);
+      },
+      getRefs: () => ({
+        containerRef: containerRef.current,
+        imgRef: img.current,
+        canvasRef: canvas.current,
+      }),
+    }),
+    [mapProp, resetCanvasAndPrefillArea, storedMap]
   );
 
   const computeCenter = (area: MapArea): Area['center'] => {
@@ -345,7 +377,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     });
 
   return (
-    <div ref={innerRef} id="img-mapper" style={styles.container}>
+    <div ref={containerRef} id="img-mapper" style={styles.container}>
       <img
         ref={img}
         role="presentation"
