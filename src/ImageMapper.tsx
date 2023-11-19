@@ -283,6 +283,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     if (isRendered) {
       initCanvas(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRendered]);
 
   useEffect(() => {

@@ -1,28 +1,33 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
-/node_modules
-/.pnp
+node_modules
+.pnp
 .pnp.js
-.idea
-package-lock.json
-yarn.lock
-/dist
-.eslintcache
 
 # testing
-/coverage
+coverage
 
 # production
-/build
+build
+dist
 
 # misc
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+*.pem
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# debug
+*.log
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# package lock files
+yarn.lock
+package-lock.json
+
+# editor folders
+.idea
+.vscode

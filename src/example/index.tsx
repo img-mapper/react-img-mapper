@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import JSON from '@/example/area.json';
 import ImageMapper from '@/ImageMapper';
@@ -14,6 +14,12 @@ const Example: React.FC = () => {
   const [areas, setAreas] = useState<MapArea[]>(JSON);
   const [parentWidth, setParentWidth] = useState<number>(500);
   const ref = useRef<RefProperties>(null);
+  console.log(ref);
+
+  useEffect(() => {
+    // console.log(ref.current.style.width);
+    console.log(ref);
+  });
 
   const handleClick = () => {
     const area = areas.map((cur: MapArea, i: number) => {
@@ -30,7 +36,7 @@ const Example: React.FC = () => {
   if (!areas.length) return null;
 
   return (
-    <>
+    <React.Fragment>
       <ImageMapper
         src={URL}
         ref={ref}
@@ -41,12 +47,15 @@ const Example: React.FC = () => {
         onClick={() => {
           console.log('imagew');
         }}
+        onLoad={(...arg) => console.log('onLoad =>>>>>>>>>>>>', arg)}
         // onImageClick={() => console.log('lol')}
         stayHighlighted
         stayMultiHighlighted
         toggleHighlighted
         responsive
         parentWidth={parentWidth}
+        // width={640}
+        // height={480}
       />
       <input
         type="range"
@@ -59,10 +68,18 @@ const Example: React.FC = () => {
       <button type="button" onClick={handleClick}>
         Hello
       </button>
-      <button type="button" onClick={() => ref?.current?.clearHighlightedArea()}>
+      <button type="button" onClick={() => ref.current?.clearHighlightedArea()}>
         Clear
       </button>
-    </>
+      <button
+        type="button"
+        onClick={() => {
+          console.log(ref.current?.getRefs());
+        }}
+      >
+        Get
+      </button>
+    </React.Fragment>
   );
 };
 
