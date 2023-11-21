@@ -30,7 +30,6 @@ const imageMapperDefaultProps: ImageMapperDefaultProps = {
   height: 0,
   natural: false,
   highlighted: null,
-  rerenderProps: [],
   responsive: false,
   parentWidth: 0,
 
