@@ -1,13 +1,13 @@
 import type { TouchEvent } from '@/types';
 import type { EventListener, ImageEventListener } from '@/types/events.type';
 
-export const imageMouseMove: ImageEventListener<'onImageMouseMove'> = (event, props) => {
+export const imageMouseMove: ImageEventListener<'onImageMouseMove'> = props => event => {
   const { onImageMouseMove } = props;
 
   if (onImageMouseMove) onImageMouseMove(event);
 };
 
-export const imageClick: ImageEventListener<'onImageClick'> = (event, props) => {
+export const imageClick: ImageEventListener<'onImageClick'> = props => event => {
   const { onImageClick } = props;
 
   if (onImageClick) {
@@ -16,38 +16,75 @@ export const imageClick: ImageEventListener<'onImageClick'> = (event, props) => 
   }
 };
 
-export const mouseMove: EventListener<'onMouseMove'> = ({ area, index, event }, props) => {
-  const { onMouseMove } = props;
+export const mouseEnter: EventListener<'onMouseEnter'> =
+  ({ area, index }, props) =>
+  event => {
+    const { onMouseEnter, cb } = props;
 
-  if (onMouseMove) onMouseMove(area, index, event);
-};
+    if (cb) cb(area);
 
-export const mouseDown: EventListener<'onMouseDown'> = ({ area, index, event }, props) => {
-  const { onMouseDown } = props;
+    if (onMouseEnter) onMouseEnter(area, index, event);
+  };
 
-  if (onMouseDown) onMouseDown(area, index, event);
-};
+export const mouseLeave: EventListener<'onMouseLeave'> =
+  ({ area, index }, props) =>
+  event => {
+    const { onMouseLeave, cb } = props;
 
-export const mouseUp: EventListener<'onMouseUp'> = ({ area, index, event }, props) => {
-  const { onMouseUp } = props;
+    if (cb) cb(area);
 
-  if (onMouseUp) onMouseUp(area, index, event);
-};
+    if (onMouseLeave) onMouseLeave(area, index, event);
+  };
 
-export const touchStart: EventListener<'onTouchStart', TouchEvent> = (
-  { area, index, event },
-  props
-) => {
-  const { onTouchStart } = props;
+export const click: EventListener<'onClick'> =
+  ({ area, index }, props) =>
+  event => {
+    const { onClick, cb } = props;
 
-  if (onTouchStart) onTouchStart(area, index, event);
-};
+    if (cb) cb(area);
 
-export const touchEnd: EventListener<'onTouchEnd', TouchEvent> = (
-  { area, index, event },
-  props
-) => {
-  const { onTouchEnd } = props;
+    if (onClick) {
+      event.preventDefault();
+      onClick(area, index, event);
+    }
+  };
 
-  if (onTouchEnd) onTouchEnd(area, index, event);
-};
+export const mouseMove: EventListener<'onMouseMove'> =
+  ({ area, index }, props) =>
+  event => {
+    const { onMouseMove } = props;
+
+    if (onMouseMove) onMouseMove(area, index, event);
+  };
+
+export const mouseDown: EventListener<'onMouseDown'> =
+  ({ area, index }, props) =>
+  event => {
+    const { onMouseDown } = props;
+
+    if (onMouseDown) onMouseDown(area, index, event);
+  };
+
+export const mouseUp: EventListener<'onMouseUp'> =
+  ({ area, index }, props) =>
+  event => {
+    const { onMouseUp } = props;
+
+    if (onMouseUp) onMouseUp(area, index, event);
+  };
+
+export const touchStart: EventListener<'onTouchStart', TouchEvent> =
+  ({ area, index }, props) =>
+  event => {
+    const { onTouchStart } = props;
+
+    if (onTouchStart) onTouchStart(area, index, event);
+  };
+
+export const touchEnd: EventListener<'onTouchEnd', TouchEvent> =
+  ({ area, index }, props) =>
+  event => {
+    const { onTouchEnd } = props;
+
+    if (onTouchEnd) onTouchEnd(area, index, event);
+  };

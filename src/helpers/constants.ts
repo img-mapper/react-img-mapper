@@ -1,22 +1,24 @@
 import type { ImageMapperProps } from '@/types';
+import type { ImageMapperDefaultProps } from '@/types/constants.type';
 
 export const rerenderPropsList = [
   'src',
+  'areaKeyName',
   'active',
   'disabled',
-  'width',
-  'height',
-  'imgWidth',
   'fillColor',
   'strokeColor',
   'lineWidth',
+  'imgWidth',
+  'width',
+  'height',
   'natural',
-  'areaKeyName',
-  'parentWidth',
+  'highlighted',
   'responsive',
+  'parentWidth',
 ] as const;
 
-export const ImageMapperDefaultProps: Omit<ImageMapperProps, 'src' | 'map' | 'onChange'> = {
+const imageMapperDefaultProps: ImageMapperDefaultProps = {
   areaKeyName: 'id',
   active: true,
   disabled: false,
@@ -46,7 +48,7 @@ export const ImageMapperDefaultProps: Omit<ImageMapperProps, 'src' | 'map' | 'on
 };
 
 export const generateProps = <T extends ImageMapperProps>(props: T): Required<T> =>
-  Object.entries(ImageMapperDefaultProps).reduce(
+  Object.entries(imageMapperDefaultProps).reduce(
     (acc, val) => {
       const [key, value] = val as [keyof T, typeof val];
 

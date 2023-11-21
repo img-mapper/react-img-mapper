@@ -1,17 +1,16 @@
-import type { rerenderPropsList } from '@/constants';
+import type { rerenderPropsList } from '@/helpers/constants';
 import type { NoUndefinedField } from '@/types/lib.type';
-import type { MouseEvent, MutableRefObject, TouchEvent as ReactTouchEvent } from 'react';
+import type { MouseEvent, TouchEvent as ReactTouchEvent } from 'react';
 
 export interface Refs {
   containerRef: HTMLDivElement | null;
   imgRef: HTMLImageElement | null;
   canvasRef: HTMLCanvasElement | null;
-  ctxRef: CTX<null>['current'];
 }
 
 export interface RefProperties {
   clearHighlightedArea: () => void;
-  getRefs: () => Omit<Refs, 'ctxRef'>;
+  getRefs: () => Refs;
 }
 
 export interface MapArea {
@@ -27,20 +26,19 @@ export interface MapArea {
   preFillColor?: string;
 }
 
-type RequiredMapArea = 'active' | 'fillColor' | 'lineWidth' | 'strokeColor';
-type RequiredArea<T, R extends keyof T> = Omit<T, R> & Pick<NoUndefinedField<T>, R>;
-
 export interface Map {
   name: string;
   areas: MapArea[];
 }
 
-export interface Area extends RequiredArea<MapArea, RequiredMapArea> {
+type RequiredMapArea = 'active' | 'fillColor' | 'lineWidth' | 'strokeColor';
+type RequiredArea<T extends MapArea = MapArea, R extends keyof T = RequiredMapArea> = Omit<T, R> &
+  Pick<NoUndefinedField<T>, R>;
+
+export interface Area extends RequiredArea {
   scaledCoords: number[];
   center: [number, number];
 }
-
-export type CTX<E = CanvasRenderingContext2D> = MutableRefObject<CanvasRenderingContext2D | E>;
 
 export interface HighlightedOptions {
   isMulti?: boolean;
@@ -54,22 +52,23 @@ export interface WidthHeight {
   height: number;
 }
 
-export type TouchEvent = ReactTouchEvent<HTMLAreaElement>;
-export type AreaEvent = MouseEvent<HTMLAreaElement>;
-export type ImageEvent = MouseEvent<HTMLImageElement>;
-
 export type Dimension = number | ((event: HTMLImageElement) => number);
+
 export type RerenderProps = (keyof Omit<
   ImageMapperProps,
   'rerenderProps' | (typeof rerenderPropsList)[number]
 >)[];
 
+export type TouchEvent = ReactTouchEvent<HTMLAreaElement>;
+export type AreaEvent = MouseEvent<HTMLAreaElement>;
+export type ImageEvent = MouseEvent<HTMLImageElement>;
+
+export type ChangeEventHandler = (selectedArea: MapArea, areas: MapArea[]) => void;
 export type ImageEventHandler = ((event: ImageEvent) => void) | null;
 export type EventHandler<T = AreaEvent, A = MapArea> =
   | ((area: A, index: number, e: T) => void)
   | null;
 export type LoadEventHandler = ((event: HTMLImageElement, dimensions: WidthHeight) => void) | null;
-export type ChangeEventHandler = (selectedArea: MapArea, areas: MapArea[]) => void;
 
 export interface ImageMapperProps {
   src: string;

@@ -4,18 +4,24 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react';
 
 import isEqual from 'react-fast-compare';
 
-import { generateProps, rerenderPropsList } from '@/constants';
+import { getExtendedArea } from '@/helpers/area';
+import { generateProps, rerenderPropsList } from '@/helpers/constants';
+import { getDimensions } from '@/helpers/dimensions';
 import drawShape from '@/helpers/draw';
 import {
+  click,
   imageClick,
   imageMouseMove,
   mouseDown,
+  mouseEnter,
+  mouseLeave,
   mouseMove,
   mouseUp,
   touchEnd,
@@ -23,17 +29,9 @@ import {
 } from '@/helpers/events';
 import styles from '@/helpers/styles';
 
-import type {
-  Area,
-  AreaEvent,
-  Dimension,
-  ImageMapperProps,
-  Map,
-  MapArea,
-  RefProperties,
-  Refs,
-  WidthHeight,
-} from '@/types';
+import type { ImageMapperProps, Map, MapArea, RefProperties, Refs } from '@/types';
+import type { CTX } from '@/types/draw.type';
+import type { ReactNode } from 'react';
 
 export * from '@/types';
 
@@ -73,9 +71,24 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   const containerRef = useRef<Refs['containerRef']>(null);
   const img = useRef<Refs['imgRef']>(null);
   const canvas = useRef<Refs['canvasRef']>(null);
-  const ctx = useRef<Refs['ctxRef']>(null);
+  const ctx = useRef<CTX<null>['current']>(null);
   const interval = useRef<number>(0);
   const prevParentWidth = useRef<number>(parentWidth ?? 0);
+
+  const dimensionParams = useMemo(
+    () => ({ width, height, responsive, parentWidth, natural }),
+    [width, height, responsive, parentWidth, natural]
+  );
+
+  const scaleCoordsParams = useMemo(
+    () => ({ width, height, responsive, parentWidth, imgWidth }),
+    [width, height, responsive, parentWidth, imgWidth]
+  );
+
+  const areaParams = useMemo(
+    () => ({ fillColor, lineWidth, strokeColor }),
+    [fillColor, lineWidth, strokeColor]
+  );
 
   const init = useCallback(() => {
     if (img.current?.complete && canvas.current && containerRef.current) {
@@ -94,80 +107,15 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     }
   }, [init, isRendered]);
 
-  const getPropDimension = useCallback((): WidthHeight => {
-    const getDimension = (dimension: Dimension): number => {
-      if (!img.current) return 0;
-      return typeof dimension === 'function' ? dimension(img.current) : dimension;
-    };
-
-    return { width: getDimension(width), height: getDimension(height) };
-  }, [height, width]);
-
-  const scaleCoords = useCallback(
-    (coords: MapArea['coords']): number[] =>
-      coords.map(coord => {
-        if (responsive && parentWidth && img.current) {
-          return coord / (img.current.naturalWidth / parentWidth);
-        }
-
-        const { width: imageWidth } = getPropDimension();
-        const scale = imageWidth && imgWidth > 0 ? imageWidth / imgWidth : 1;
-        return coord * scale;
-      }),
-    [getPropDimension, imgWidth, parentWidth, responsive]
-  );
-
-  const computeCenter = useCallback(
-    (area: MapArea): Area['center'] => {
-      if (!area) return [0, 0];
-
-      const scaledCoords = scaleCoords(area.coords);
-
-      switch (area.shape) {
-        case 'circle':
-          return [scaledCoords[0], scaledCoords[1]];
-        case 'poly':
-        case 'rect':
-        default: {
-          const n = scaledCoords.length / 2;
-          const { y: scaleY, x: scaleX } = scaledCoords.reduce(
-            ({ y, x }, val, idx) => (!(idx % 2) ? { y, x: x + val / n } : { y: y + val / n, x }),
-            { y: 0, x: 0 }
-          );
-          return [scaleX, scaleY];
-        }
-      }
-    },
-    [scaleCoords]
-  );
-
-  const getExtendedArea = useCallback(
-    (area: MapArea): Area => {
-      const scaledCoords = scaleCoords(area.coords);
-      const center = computeCenter(area);
-
-      return {
-        ...area,
-        scaledCoords,
-        center,
-        active: area.active ?? true,
-        fillColor: area.fillColor ?? fillColor,
-        lineWidth: area.lineWidth ?? lineWidth,
-        strokeColor: area.strokeColor ?? strokeColor,
-      };
-    },
-    [computeCenter, fillColor, lineWidth, scaleCoords, strokeColor]
-  );
-
   const renderPrefilledAreas = useCallback(() => {
     map.areas.forEach(area => {
-      const extendedArea = getExtendedArea(area);
+      const extendedArea = getExtendedArea(area, { img, ...scaleCoordsParams }, areaParams);
 
       if (!extendedArea.preFillColor) return false;
 
       return drawShape({ ...extendedArea, fillColor: extendedArea.preFillColor }, ctx);
     });
-  }, [map.areas, getExtendedArea]);
+  }, [areaParams, map, scaleCoordsParams]);
 
   const clearCanvas = useCallback(() => {
     if (!(ctx.current && canvas.current)) return;
@@ -181,14 +129,14 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   }, [clearCanvas, renderPrefilledAreas]);
 
   const highlightArea = (area: MapArea): boolean => {
-    const extendedArea = getExtendedArea(area);
+    const extendedArea = getExtendedArea(area, { img, ...scaleCoordsParams }, areaParams);
 
     if (!extendedArea.active) return false;
 
     return drawShape(extendedArea, ctx);
   };
 
-  const onHighlightArea = (area: MapArea) => {
+  const onHighlightArea = (area: MapArea): void => {
     if (!highlighted) return;
 
     const { isMulti = true, toggle = false } = highlighted;
@@ -197,7 +145,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     const chosenArea = isMulti ? area : areasRef.find(c => c[areaKeyName] === area[areaKeyName]);
     if (!chosenArea) return;
 
-    const extendedArea = getExtendedArea(chosenArea);
+    const extendedArea = getExtendedArea(chosenArea, { img, ...scaleCoordsParams }, areaParams);
     if (!(active && extendedArea.active)) return;
 
     const chosenMap = isMulti ? map : mapRef.current;
@@ -220,58 +168,9 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     onChange(newArea, areas);
   };
 
-  const hoverOn = (area: MapArea, index: number, event: AreaEvent) => {
-    if (active) highlightArea(area);
-
-    if (onMouseEnter) onMouseEnter(area, index, event);
-  };
-
-  const hoverOff = (area: MapArea, index: number, event: AreaEvent) => {
-    if (active) resetCanvasAndPrefillArea();
-
-    if (onMouseLeave) onMouseLeave(area, index, event);
-  };
-
-  const click = (area: MapArea, index: number, event: AreaEvent) => {
-    onHighlightArea(area);
-
-    if (onClick) {
-      event.preventDefault();
-      onClick(area, index, event);
-    }
-  };
-
-  const getDimensions = useCallback((): WidthHeight => {
-    const getValues = (type: 'width' | 'height'): number => {
-      const { width: imageWidth, height: imageHeight } = getPropDimension();
-
-      if (img.current) {
-        const { naturalWidth, naturalHeight, clientWidth, clientHeight } = img.current;
-
-        if (type === 'width') {
-          if (responsive) return parentWidth;
-          if (natural) return naturalWidth;
-          if (imageWidth) return imageWidth;
-          return clientWidth;
-        }
-
-        if (type === 'height') {
-          if (responsive) return clientHeight;
-          if (natural) return naturalHeight;
-          if (imageHeight) return imageHeight;
-          return clientHeight;
-        }
-      }
-
-      return 0;
-    };
-
-    return { width: getValues('width'), height: getValues('height') };
-  }, [getPropDimension, natural, parentWidth, responsive]);
-
   const initCanvas = useCallback(
     (isFirstTime = true, triggerOnLoad = false) => {
-      const { width: imageWidth, height: imageHeight } = getDimensions();
+      const { width: imageWidth, height: imageHeight } = getDimensions({ img, ...dimensionParams });
 
       if (!(img.current && canvas.current && containerRef.current && ctx.current)) return;
 
@@ -294,7 +193,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
         onLoad(img.current, { width: imageWidth, height: imageHeight });
       }
     },
-    [getDimensions, onLoad, renderPrefilledAreas]
+    [dimensionParams, onLoad, renderPrefilledAreas]
   );
 
   useEffect(() => {
@@ -324,27 +223,41 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     [resetCanvasAndPrefillArea]
   );
 
-  const renderAreas = () =>
+  const handleMouseEnter = (area: MapArea): void => {
+    if (active) highlightArea(area);
+  };
+
+  const handleMouseLeave = (): void => {
+    if (active) resetCanvasAndPrefillArea();
+  };
+
+  const handleClick = (area: MapArea): void => {
+    onHighlightArea(area);
+  };
+
+  const renderAreas = (): ReactNode =>
     map.areas.map((area, index) => {
-      const { scaledCoords } = getExtendedArea(area);
+      const { scaledCoords } = getExtendedArea(area, { img, ...scaleCoordsParams }, areaParams);
 
       if (area.disabled) return null;
 
+      const { preFillColor, shape, href } = area;
+
       return (
         <area
-          {...(area.preFillColor ? { className: 'img-mapper-area-highlighted' } : {})}
+          {...(preFillColor ? { className: 'img-mapper-area-highlighted' } : {})}
           key={area[areaKeyName] ?? index.toString()}
-          shape={area.shape}
+          shape={shape}
           coords={scaledCoords.join(',')}
-          onMouseEnter={event => hoverOn(area, index, event)}
-          onMouseLeave={event => hoverOff(area, index, event)}
-          onMouseMove={event => mouseMove({ area, index, event }, { onMouseMove })}
-          onMouseDown={event => mouseDown({ area, index, event }, { onMouseDown })}
-          onMouseUp={event => mouseUp({ area, index, event }, { onMouseUp })}
-          onTouchStart={event => touchStart({ area, index, event }, { onTouchStart })}
-          onTouchEnd={event => touchEnd({ area, index, event }, { onTouchEnd })}
-          onClick={event => click(area, index, event)}
-          href={area.href}
+          onMouseEnter={mouseEnter({ area, index }, { onMouseEnter, cb: handleMouseEnter })}
+          onMouseLeave={mouseLeave({ area, index }, { onMouseLeave, cb: handleMouseLeave })}
+          onMouseMove={mouseMove({ area, index }, { onMouseMove })}
+          onMouseDown={mouseDown({ area, index }, { onMouseDown })}
+          onMouseUp={mouseUp({ area, index }, { onMouseUp })}
+          onTouchStart={touchStart({ area, index }, { onTouchStart })}
+          onTouchEnd={touchEnd({ area, index }, { onTouchEnd })}
+          onClick={click({ area, index }, { onClick, cb: handleClick })}
+          href={href}
           alt="map"
         />
       );
@@ -360,8 +273,8 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
         src={src}
         useMap={`#${map.name}`}
         alt="map"
-        onClick={event => imageClick(event, { onImageClick })}
-        onMouseMove={event => imageMouseMove(event, { onImageMouseMove })}
+        onClick={imageClick({ onImageClick })}
+        onMouseMove={imageMouseMove({ onImageMouseMove })}
       />
       <canvas ref={canvas} className="img-mapper-canvas" style={styles.canvas} />
       <map className="img-mapper-map" name={map.name} style={styles.map(onClick)}>
