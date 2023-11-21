@@ -19,7 +19,7 @@ const Example: FC = () => {
 
   useEffect(() => {
     // console.log(ref.current.style.width);
-    console.log(ref);
+    // console.log(ref);
   });
 
   const handleClick = () => {
@@ -39,20 +39,19 @@ const Example: FC = () => {
   return (
     <React.Fragment>
       <ImageMapper
-        src={URL}
         ref={ref}
-        map={{
-          name: 'my-map',
-          areas,
+        src={URL}
+        map={{ name: 'my-map', areas }}
+        onChange={(selectedArea, allAreas) => {
+          console.log(selectedArea);
+          setAreas(allAreas);
         }}
         onClick={() => {
-          console.log('imagew');
+          // console.log('imagew');
         }}
         onLoad={(...arg) => console.log('onLoad =>>>>>>>>>>>>', arg)}
         // onImageClick={() => console.log('lol')}
-        stayHighlighted
-        stayMultiHighlighted
-        toggleHighlighted
+        highlighted={{ toggle: true, isMulti: false }}
         responsive
         parentWidth={parentWidth}
         // width={640}

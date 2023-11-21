@@ -1,13 +1,6 @@
 import type { rerenderPropsList } from '@/constants';
-import type {
-  CSSProperties,
-  MouseEvent,
-  MutableRefObject,
-  TouchEvent as ReactTouchEvent,
-} from 'react';
-
-// eslint-disable-next-line @typescript-eslint/no-type-alias
-type NoUndefinedField<T> = { [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>> };
+import type { NoUndefinedField } from '@/types/lib.type';
+import type { MouseEvent, MutableRefObject, TouchEvent as ReactTouchEvent } from 'react';
 
 export interface Refs {
   containerRef: HTMLDivElement | null;
@@ -35,25 +28,19 @@ export interface MapArea {
 }
 
 type RequiredMapArea = 'active' | 'fillColor' | 'lineWidth' | 'strokeColor';
+type RequiredArea<T, R extends keyof T> = Omit<T, R> & Pick<NoUndefinedField<T>, R>;
 
 export interface Map {
   name: string;
   areas: MapArea[];
 }
 
-export interface Area
-  extends Omit<MapArea, RequiredMapArea>,
-    Pick<NoUndefinedField<MapArea>, RequiredMapArea> {
+export interface Area extends RequiredArea<MapArea, RequiredMapArea> {
   scaledCoords: number[];
   center: [number, number];
 }
 
-type DrawArea = 'scaledCoords' | 'fillColor' | 'lineWidth' | 'strokeColor';
-
 export type CTX<E = CanvasRenderingContext2D> = MutableRefObject<CanvasRenderingContext2D | E>;
-export type DrawChosenShape = (area: Pick<Area, DrawArea>, ctx: CTX) => boolean;
-export type DrawShape = (area: Pick<Area, 'shape' | DrawArea>, ctx: CTX<null>) => boolean;
-export type GetShape = (shape: Area['shape']) => DrawChosenShape | false;
 
 export interface HighlightedOptions {
   isMulti?: boolean;
@@ -83,22 +70,6 @@ export type EventHandler<T = AreaEvent, A = MapArea> =
   | null;
 export type LoadEventHandler = ((event: HTMLImageElement, dimensions: WidthHeight) => void) | null;
 export type ChangeEventHandler = (selectedArea: MapArea, areas: MapArea[]) => void;
-
-export interface EventListenerParam<E> {
-  area: MapArea;
-  index: number;
-  event: E;
-}
-
-export type EventListener<T extends keyof ImageMapperProps, E = AreaEvent> = (
-  params: EventListenerParam<E>,
-  props: Pick<ImageMapperProps, T>
-) => void;
-
-export type ImageEventListener<T extends keyof ImageMapperProps> = (
-  event: ImageEvent,
-  props: Pick<ImageMapperProps, T>
-) => void;
 
 export interface ImageMapperProps {
   src: string;
@@ -130,11 +101,4 @@ export interface ImageMapperProps {
   onMouseEnter?: EventHandler;
   onMouseLeave?: EventHandler;
   onLoad?: LoadEventHandler;
-}
-
-export interface StylesProps {
-  container: CSSProperties;
-  canvas: CSSProperties;
-  img: (responsive: ImageMapperProps['responsive']) => CSSProperties;
-  map: (onClick: ImageMapperProps['onClick']) => CSSProperties | undefined;
 }

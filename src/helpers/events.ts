@@ -1,4 +1,5 @@
-import type { EventListener, ImageEventListener, TouchEvent } from '@/types';
+import type { TouchEvent } from '@/types';
+import type { EventListener, ImageEventListener } from '@/types/events.type';
 
 export const imageMouseMove: ImageEventListener<'onImageMouseMove'> = (event, props) => {
   const { onImageMouseMove } = props;
