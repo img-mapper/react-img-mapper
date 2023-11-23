@@ -11,6 +11,7 @@ export interface MapAreas {
   active?: boolean;
   disabled?: boolean;
   href?: string;
+  target?: string;
   fillColor?: string;
   strokeColor?: string;
   lineWidth?: number;
