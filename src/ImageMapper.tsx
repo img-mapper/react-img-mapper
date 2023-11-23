@@ -41,21 +41,20 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   const {
     active,
     disabled,
-    fillColor: fillColorProp,
-    lineWidth: lineWidthProp,
-    map: mapProp,
-    src: srcProp,
-    strokeColor: strokeColorProp,
+    fillColor,
+    lineWidth,
+    map,
+    src,
+    strokeColor,
     natural,
     height,
     width,
     imgWidth,
     areaKeyName,
-    stayHighlighted,
-    stayMultiHighlighted,
-    toggleHighlighted,
+    highlighted,
     parentWidth,
     responsive,
+    onChange,
     onLoad,
     onMouseEnter,
     onMouseLeave,
@@ -69,9 +68,8 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     onMouseMove,
   } = props;
 
-  const [map, setMap] = useState<Map>(mapProp);
-  const [storedMap, setStoredMap] = useState<Map>(map);
   const [isRendered, setRendered] = useState<boolean>(false);
+  const mapRef = useRef<Map>(map);
   const containerRef = useRef<Refs['containerRef']>(null);
   const img = useRef<Refs['imgRef']>(null);
   const canvas = useRef<Refs['canvasRef']>(null);
@@ -119,102 +117,123 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     [getPropDimension, imgWidth, parentWidth, responsive]
   );
 
-  const renderPrefilledAreas = useCallback(
-    (mapObj: Map = map) => {
-      mapObj.areas.forEach(area => {
-        if (!area.preFillColor) return false;
+  const computeCenter = useCallback(
+    (area: MapArea): Area['center'] => {
+      if (!area) return [0, 0];
 
-        return drawShape(
-          {
-            shape: area.shape,
-            scaledCoords: scaleCoords(area.coords),
-            fillColor: area.preFillColor,
-            lineWidth: area.lineWidth ?? lineWidthProp,
-            strokeColor: area.strokeColor ?? strokeColorProp,
-          },
-          ctx
-        );
-      });
+      const scaledCoords = scaleCoords(area.coords);
+
+      switch (area.shape) {
+        case 'circle':
+          return [scaledCoords[0], scaledCoords[1]];
+        case 'poly':
+        case 'rect':
+        default: {
+          const n = scaledCoords.length / 2;
+          const { y: scaleY, x: scaleX } = scaledCoords.reduce(
+            ({ y, x }, val, idx) => (!(idx % 2) ? { y, x: x + val / n } : { y: y + val / n, x }),
+            { y: 0, x: 0 }
+          );
+          return [scaleX, scaleY];
+        }
+      }
     },
-    [lineWidthProp, map, strokeColorProp, scaleCoords]
+    [scaleCoords]
   );
 
-  const clearCanvas = () => {
+  const getExtendedArea = useCallback(
+    (area: MapArea): Area => {
+      const scaledCoords = scaleCoords(area.coords);
+      const center = computeCenter(area);
+
+      return {
+        ...area,
+        scaledCoords,
+        center,
+        active: area.active ?? true,
+        fillColor: area.fillColor ?? fillColor,
+        lineWidth: area.lineWidth ?? lineWidth,
+        strokeColor: area.strokeColor ?? strokeColor,
+      };
+    },
+    [computeCenter, fillColor, lineWidth, scaleCoords, strokeColor]
+  );
+
+  const renderPrefilledAreas = useCallback(() => {
+    map.areas.forEach(area => {
+      const extendedArea = getExtendedArea(area);
+
+      if (!extendedArea.preFillColor) return false;
+
+      return drawShape({ ...extendedArea, fillColor: extendedArea.preFillColor }, ctx);
+    });
+  }, [map.areas, getExtendedArea]);
+
+  const clearCanvas = useCallback(() => {
     if (!(ctx.current && canvas.current)) return;
 
     ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
+  }, []);
+
+  const resetCanvasAndPrefillArea = useCallback(() => {
+    clearCanvas();
+    renderPrefilledAreas();
+  }, [clearCanvas, renderPrefilledAreas]);
+
+  const highlightArea = (area: MapArea): boolean => {
+    const extendedArea = getExtendedArea(area);
+
+    if (!extendedArea.active) return false;
+
+    return drawShape(extendedArea, ctx);
   };
 
-  const resetCanvasAndPrefillArea = useCallback(
-    (mapObj: Map): void => {
-      clearCanvas();
-      renderPrefilledAreas(mapObj);
-    },
-    [renderPrefilledAreas]
-  );
+  const onHighlightArea = (area: MapArea) => {
+    if (!highlighted) return;
 
-  const updateMap = () => {
-    setMap(mapProp);
-    setStoredMap(mapProp);
-  };
+    const { isMulti = true, toggle = false } = highlighted;
+    const areasRef = mapRef.current.areas;
 
-  const highlightArea = (area: Area): boolean => {
-    if (!area.active) return false;
+    const chosenArea = isMulti ? area : areasRef.find(c => c[areaKeyName] === area[areaKeyName]);
+    if (!chosenArea) return;
 
-    return drawShape(
-      {
-        shape: area.shape,
-        scaledCoords: area.scaledCoords,
-        fillColor: area.fillColor,
-        lineWidth: area.lineWidth,
-        strokeColor: area.strokeColor,
-      },
-      ctx
+    const extendedArea = getExtendedArea(chosenArea);
+    if (!(active && extendedArea.active)) return;
+
+    const chosenMap = isMulti ? map : mapRef.current;
+    const newArea = { ...chosenArea };
+
+    if (toggle && newArea.preFillColor) {
+      const isPreFillColorFromJSON = chosenMap.areas.find(
+        c => c[areaKeyName] === area[areaKeyName]
+      );
+
+      if (isPreFillColorFromJSON?.preFillColor) delete newArea.preFillColor;
+    } else {
+      newArea.preFillColor = extendedArea.fillColor;
+    }
+
+    const areas = chosenMap.areas.map(cur =>
+      cur[areaKeyName] === area[areaKeyName] ? newArea : cur
     );
+
+    onChange(newArea, areas);
   };
 
-  const hoverOn = (area: Area, index: number, event: AreaEvent) => {
+  const hoverOn = (area: MapArea, index: number, event: AreaEvent) => {
     if (active) highlightArea(area);
 
     if (onMouseEnter) onMouseEnter(area, index, event);
   };
 
-  const hoverOff = (area: Area, index: number, event: AreaEvent) => {
-    if (active) resetCanvasAndPrefillArea(map);
+  const hoverOff = (area: MapArea, index: number, event: AreaEvent) => {
+    if (active) resetCanvasAndPrefillArea();
 
     if (onMouseLeave) onMouseLeave(area, index, event);
   };
 
-  const click = (area: Area, index: number, event: AreaEvent) => {
-    const isAreaActive = area.active ?? true;
-
-    if (active && isAreaActive && (stayHighlighted || stayMultiHighlighted || toggleHighlighted)) {
-      const newArea = { ...area };
-      const chosenArea = stayMultiHighlighted ? map : storedMap;
-
-      if (toggleHighlighted && newArea.preFillColor) {
-        const isPreFillColorFromJSON = storedMap.areas.find(
-          c => c[areaKeyName] === area[areaKeyName]
-        );
-
-        if (isPreFillColorFromJSON && !isPreFillColorFromJSON.preFillColor) {
-          delete newArea.preFillColor;
-        }
-      } else if (stayHighlighted || stayMultiHighlighted) {
-        newArea.preFillColor = area.fillColor ?? fillColorProp;
-      }
-
-      const updatedAreas = chosenArea.areas.map(cur =>
-        cur[areaKeyName] === area[areaKeyName] ? newArea : cur
-      );
-
-      setMap(prev => ({ ...prev, areas: updatedAreas }));
-
-      if (!stayMultiHighlighted) {
-        resetCanvasAndPrefillArea(mapProp);
-        highlightArea(area);
-      }
-    }
+  const click = (area: MapArea, index: number, event: AreaEvent) => {
+    onHighlightArea(area);
 
     if (onClick) {
       event.preventDefault();
@@ -251,9 +270,8 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   }, [getPropDimension, natural, parentWidth, responsive]);
 
   const initCanvas = useCallback(
-    (isFirstTime: boolean | null = false, triggerOnLoad = false) => {
+    (isFirstTime = true, triggerOnLoad = false) => {
       const { width: imageWidth, height: imageHeight } = getDimensions();
-      console.log('in', imageWidth, imageHeight);
 
       if (!(img.current && canvas.current && containerRef.current && ctx.current)) return;
 
@@ -280,25 +298,14 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   );
 
   useEffect(() => {
-    if (isRendered) {
-      initCanvas(true);
-    }
+    if (isRendered) initCanvas();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRendered]);
 
   useEffect(() => {
-    if (isRendered) {
-      console.log('from 2');
-      // updateMap();
-      // resetCanvasAndPrefillArea(mapProp);
-    }
-  }, [isRendered, props]);
-
-  useEffect(() => {
     if (responsive && parentWidth) {
       if (prevParentWidth.current !== parentWidth) {
-        console.log('from parent width useEffect');
-        initCanvas(true);
+        initCanvas();
         prevParentWidth.current = parentWidth;
       }
     }
@@ -307,53 +314,19 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   useImperativeHandle(
     ref,
     () => ({
-      clearHighlightedArea: () => {
-        setMap(storedMap);
-        resetCanvasAndPrefillArea(mapProp);
-      },
+      clearHighlightedArea: () => resetCanvasAndPrefillArea(),
       getRefs: () => ({
         containerRef: containerRef.current,
         imgRef: img.current,
         canvasRef: canvas.current,
       }),
     }),
-    [mapProp, resetCanvasAndPrefillArea, storedMap]
+    [resetCanvasAndPrefillArea]
   );
-
-  const computeCenter = (area: MapArea): Area['center'] => {
-    if (!area) return [0, 0];
-
-    const scaledCoords = scaleCoords(area.coords);
-
-    switch (area.shape) {
-      case 'circle':
-        return [scaledCoords[0], scaledCoords[1]];
-      case 'poly':
-      case 'rect':
-      default: {
-        const n = scaledCoords.length / 2;
-        const { y: scaleY, x: scaleX } = scaledCoords.reduce(
-          ({ y, x }, val, idx) => (!(idx % 2) ? { y, x: x + val / n } : { y: y + val / n, x }),
-          { y: 0, x: 0 }
-        );
-        return [scaleX, scaleY];
-      }
-    }
-  };
 
   const renderAreas = () =>
     map.areas.map((area, index) => {
-      const scaledCoords = scaleCoords(area.coords);
-      const center = computeCenter(area);
-      const extendedArea = {
-        ...area,
-        scaledCoords,
-        center,
-        active: area.active ?? true,
-        fillColor: area.fillColor ?? fillColorProp,
-        lineWidth: area.lineWidth ?? lineWidthProp,
-        strokeColor: area.strokeColor ?? strokeColorProp,
-      };
+      const { scaledCoords } = getExtendedArea(area);
 
       if (area.disabled) return null;
 
@@ -363,14 +336,14 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
           key={area[areaKeyName] ?? index.toString()}
           shape={area.shape}
           coords={scaledCoords.join(',')}
-          onMouseEnter={event => hoverOn(extendedArea, index, event)}
-          onMouseLeave={event => hoverOff(extendedArea, index, event)}
-          onMouseMove={event => mouseMove(extendedArea, index, event, { onMouseMove })}
-          onMouseDown={event => mouseDown(extendedArea, index, event, { onMouseDown })}
-          onMouseUp={event => mouseUp(extendedArea, index, event, { onMouseUp })}
-          onTouchStart={event => touchStart(extendedArea, index, event, { onTouchStart })}
-          onTouchEnd={event => touchEnd(extendedArea, index, event, { onTouchEnd })}
-          onClick={event => click(extendedArea, index, event)}
+          onMouseEnter={event => hoverOn(area, index, event)}
+          onMouseLeave={event => hoverOff(area, index, event)}
+          onMouseMove={event => mouseMove({ area, index, event }, { onMouseMove })}
+          onMouseDown={event => mouseDown({ area, index, event }, { onMouseDown })}
+          onMouseUp={event => mouseUp({ area, index, event }, { onMouseUp })}
+          onTouchStart={event => touchStart({ area, index, event }, { onTouchStart })}
+          onTouchEnd={event => touchEnd({ area, index, event }, { onTouchEnd })}
+          onClick={event => click(area, index, event)}
           href={area.href}
           alt="map"
         />
@@ -384,7 +357,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
         role="presentation"
         className="img-mapper-img"
         style={{ ...styles.img(responsive), ...(!isRendered ? { display: 'none' } : null) }}
-        src={srcProp}
+        src={src}
         useMap={`#${map.name}`}
         alt="map"
         onClick={event => imageClick(event, { onImageClick })}
