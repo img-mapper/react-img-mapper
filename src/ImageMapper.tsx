@@ -293,9 +293,7 @@ const ImageMapperRequired = forwardRef<RefProperties, ImageMapperProps>((props, 
 ImageMapperRequired.displayName = 'ImageMapperRequiredForwarded';
 
 export default memo(ImageMapperRequired, (prevProps, nextProps) => {
-  const watchedProps = [...rerenderPropsList, ...(nextProps.rerenderProps ?? [])];
-
-  const propChanged = watchedProps.some(prop => prevProps[prop] !== nextProps[prop]);
+  const propChanged = rerenderPropsList.some(prop => prevProps[prop] !== nextProps[prop]);
 
   return isEqual(prevProps.map, nextProps.map) && !propChanged;
 });

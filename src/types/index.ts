@@ -1,4 +1,3 @@
-import type { rerenderPropsList } from '@/helpers/constants';
 import type { NoUndefinedField } from '@/types/lib.type';
 import type { MouseEvent, TouchEvent as ReactTouchEvent } from 'react';
 
@@ -54,11 +53,6 @@ export interface WidthHeight {
 
 export type Dimension = number | ((event: HTMLImageElement) => number);
 
-export type RerenderProps = (keyof Omit<
-  ImageMapperProps,
-  'rerenderProps' | (typeof rerenderPropsList)[number]
->)[];
-
 export type TouchEvent = ReactTouchEvent<HTMLAreaElement>;
 export type AreaEvent = MouseEvent<HTMLAreaElement>;
 export type ImageEvent = MouseEvent<HTMLImageElement>;
@@ -84,7 +78,6 @@ export interface ImageMapperProps {
   height?: Dimension;
   natural?: boolean;
   highlighted: Highlighted;
-  rerenderProps?: RerenderProps;
   responsive?: boolean;
   parentWidth?: number;
 
