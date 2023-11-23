@@ -1,4 +1,4 @@
-import type { StylesProps } from '@/types';
+import type { StylesProps } from '@/types/styles.type';
 import type { CSSProperties } from 'react';
 
 const absPos: CSSProperties = {

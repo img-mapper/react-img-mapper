@@ -11,7 +11,7 @@ import React, {
 import isEqual from 'react-fast-compare';
 
 import { generateProps, rerenderPropsList } from '@/constants';
-import drawShape from '@/draw';
+import drawShape from '@/helpers/draw';
 import {
   imageClick,
   imageMouseMove,
@@ -20,8 +20,8 @@ import {
   mouseUp,
   touchEnd,
   touchStart,
-} from '@/events';
-import styles from '@/styles';
+} from '@/helpers/events';
+import styles from '@/helpers/styles';
 
 import type {
   Area,
