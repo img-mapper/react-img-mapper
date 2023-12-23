@@ -13,7 +13,7 @@ export interface RefProperties {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface OverrideMapArea {}
+export interface OverrideMapArea {}
 
 export interface MapArea extends OverrideMapArea {
   id: string;
