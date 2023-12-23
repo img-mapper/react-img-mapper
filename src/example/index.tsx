@@ -47,7 +47,6 @@ const Example: FC = () => {
           setAreas(allAreas);
         }}
         onLoad={(...arg) => console.log('onLoad =>>>>>>>>>>>>', arg)}
-        highlighted={{ isMulti: false, toggle: false }}
         responsive
         parentWidth={parentWidth}
       />
