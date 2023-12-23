@@ -42,11 +42,11 @@ export interface Area extends RequiredArea {
 }
 
 export interface HighlightedOptions {
-  isMulti?: boolean;
-  toggle?: boolean;
+  isMulti: boolean;
+  toggle: boolean;
 }
 
-export type Highlighted = HighlightedOptions | null;
+export type Highlighted = HighlightedOptions;
 
 export interface WidthHeight {
   width: number;

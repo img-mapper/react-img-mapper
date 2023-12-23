@@ -139,7 +139,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   const onHighlightArea = (area: MapArea): void => {
     if (!highlighted) return;
 
-    const { isMulti = true, toggle = false } = highlighted;
+    const { isMulti, toggle } = highlighted;
     const areasRef = mapRef.current.areas;
 
     const chosenArea = isMulti ? area : areasRef.find(c => c[areaKeyName] === area[areaKeyName]);
