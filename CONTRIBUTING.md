@@ -4,10 +4,9 @@
 
 Issues are very valuable to this project.
 
-  - Ideas are a valuable source of contributions others can make
-  - Problems show where this project is lacking
-  - With a question you show where contributors can improve the user
-    experience
+- Ideas are a valuable source of contributions others can make
+- Problems show where this project is lacking
+- With a question you show where contributors can improve the user experience
 
 Thank you for creating them.
 
@@ -15,13 +14,11 @@ Thank you for creating them.
 
 Pull requests are, a great way to get your ideas into this repository.
 
-When deciding if I merge in a pull request I look at the following
-things:
+When deciding if I merge in a pull request I look at the following things:
 
 ### Does it state intent
 
-You should be clear which problem you're trying to solve with your
-contribution.
+You should be clear which problem you're trying to solve with your contribution.
 
 For example:
 
@@ -29,15 +26,13 @@ For example:
 
 Doesn't tell me anything about why you're doing that
 
-> Add link to code of conduct in README.md because users don't always
-> look in the CONTRIBUTING.md
+> Add link to code of conduct in README.md because users don't always look in the CONTRIBUTING.md
 
-Tells me the problem that you have found, and the pull request shows me
-the action you have taken to solve it.
+Tells me the problem that you have found, and the pull request shows me the action you have taken to
+solve it.
 
 ### Is it of good quality
 
-  - There are no spelling mistakes
-  - It reads well
-  - For english language contributions: Has a good score on
-    [Grammarly](grammarly.com)
+- There are no spelling mistakes
+- It reads well
+- For english language contributions: Has a good score on [Grammarly](grammarly.com)
