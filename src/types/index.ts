@@ -8,7 +8,6 @@ export interface Refs {
 }
 
 export interface RefProperties {
-  clearHighlightedArea: () => void;
   getRefs: () => Refs;
 }
 
