@@ -95,7 +95,6 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
       ctx.current = canvas.current.getContext('2d');
 
       setRendered(true);
-      console.log({ img: img.current });
     }
   }, []);
 
@@ -115,7 +114,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
 
       return drawShape({ ...extendedArea, fillColor: extendedArea.preFillColor }, ctx);
     });
-  }, [areaParams, map, scaleCoordsParams]);
+  }, [areaParams, map.areas, scaleCoordsParams]);
 
   const clearCanvas = useCallback(() => {
     if (!(ctx.current && canvas.current)) return;
@@ -196,6 +195,11 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     [dimensionParams, onLoad, renderPrefilledAreas]
   );
 
+  const getRefs = useCallback(
+    () => ({ containerRef: containerRef.current, imgRef: img.current, canvasRef: canvas.current }),
+    []
+  );
+
   useEffect(() => {
     if (isRendered) initCanvas();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -210,18 +214,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     }
   }, [responsive, parentWidth, initCanvas]);
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      clearHighlightedArea: () => resetCanvasAndPrefillArea(),
-      getRefs: () => ({
-        containerRef: containerRef.current,
-        imgRef: img.current,
-        canvasRef: canvas.current,
-      }),
-    }),
-    [resetCanvasAndPrefillArea]
-  );
+  useImperativeHandle(ref, () => ({ getRefs }), [getRefs]);
 
   const handleMouseEnter = (area: MapArea): void => {
     if (active) highlightArea(area);
