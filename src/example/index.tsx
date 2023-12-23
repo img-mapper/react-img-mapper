@@ -43,19 +43,13 @@ const Example: FC = () => {
         src={URL}
         map={{ name: 'my-map', areas }}
         onChange={(selectedArea, allAreas) => {
-          console.log(selectedArea);
+          console.log(selectedArea, allAreas);
           setAreas(allAreas);
         }}
-        onClick={() => {
-          // console.log('imagew');
-        }}
         onLoad={(...arg) => console.log('onLoad =>>>>>>>>>>>>', arg)}
-        // onImageClick={() => console.log('lol')}
-        highlighted={{ toggle: true, isMulti: false }}
+        highlighted={{ isMulti: false, toggle: false }}
         responsive
         parentWidth={parentWidth}
-        // width={640}
-        // height={480}
       />
       <input
         type="range"
@@ -66,18 +60,13 @@ const Example: FC = () => {
         max={1000}
       />
       <button type="button" onClick={handleClick}>
-        Hello
+        Highlight
       </button>
-      <button type="button" onClick={() => ref.current?.clearHighlightedArea()}>
+      <button type="button" onClick={() => setAreas(JSON)}>
         Clear
       </button>
-      <button
-        type="button"
-        onClick={() => {
-          console.log(ref.current?.getRefs());
-        }}
-      >
-        Get
+      <button type="button" onClick={() => console.log(ref.current?.getRefs())}>
+        Get Ref
       </button>
     </React.Fragment>
   );
