@@ -1,4 +1,4 @@
-import type { NoUndefinedField } from '@/types/lib.type';
+import type { ConditionalKeys, NoUndefinedField } from '@/types/lib.type';
 import type { MouseEvent, TouchEvent as ReactTouchEvent } from 'react';
 
 export interface Refs {
@@ -12,7 +12,10 @@ export interface RefProperties {
   getRefs: () => Refs;
 }
 
-export interface MapArea {
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface OverrideMapArea {}
+
+export interface MapArea extends OverrideMapArea {
   id: string;
   shape: string;
   coords: number[];
@@ -67,7 +70,7 @@ export type LoadEventHandler = ((event: HTMLImageElement, dimensions: WidthHeigh
 export interface ImageMapperProps {
   src: string;
   map: Map;
-  areaKeyName?: 'id';
+  areaKeyName?: ConditionalKeys<MapArea, string>;
   active?: boolean;
   disabled?: boolean;
   fillColor?: string;
