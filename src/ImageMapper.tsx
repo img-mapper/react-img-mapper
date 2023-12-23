@@ -206,6 +206,10 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   }, [isRendered]);
 
   useEffect(() => {
+    resetCanvasAndPrefillArea();
+  }, [map.areas, resetCanvasAndPrefillArea]);
+
+  useEffect(() => {
     if (responsive && parentWidth) {
       if (prevParentWidth.current !== parentWidth) {
         initCanvas();
