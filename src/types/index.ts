@@ -41,13 +41,6 @@ export interface Area extends RequiredArea {
   center: [number, number];
 }
 
-export interface HighlightedOptions {
-  isMulti?: boolean;
-  toggle?: boolean;
-}
-
-export type Highlighted = HighlightedOptions | null;
-
 export interface WidthHeight {
   width: number;
   height: number;
@@ -70,6 +63,8 @@ export interface ImageMapperProps {
   src: string;
   map: Map;
   areaKeyName?: ConditionalKeys<MapArea, string>;
+  isMulti?: boolean;
+  toggle?: boolean;
   active?: boolean;
   disabled?: boolean;
   fillColor?: string;
@@ -79,7 +74,6 @@ export interface ImageMapperProps {
   width?: Dimension;
   height?: Dimension;
   natural?: boolean;
-  highlighted: Highlighted;
   responsive?: boolean;
   parentWidth?: number;
 
