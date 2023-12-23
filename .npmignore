@@ -26,6 +26,7 @@ package-lock.json
 .github
 .husky
 src
+scripts
 
 # ignored files
 .*.js
