@@ -4,6 +4,8 @@ import type { ImageMapperDefaultProps } from '@/types/constants.type';
 export const rerenderPropsList = [
   'src',
   'areaKeyName',
+  'isMulti',
+  'toggle',
   'active',
   'disabled',
   'fillColor',
@@ -13,13 +15,14 @@ export const rerenderPropsList = [
   'width',
   'height',
   'natural',
-  'highlighted',
   'responsive',
   'parentWidth',
 ] as const;
 
 const imageMapperDefaultProps: ImageMapperDefaultProps = {
   areaKeyName: 'id',
+  isMulti: true,
+  toggle: false,
   active: true,
   disabled: false,
   fillColor: 'rgba(255, 255, 255, 0.5)',
@@ -29,7 +32,6 @@ const imageMapperDefaultProps: ImageMapperDefaultProps = {
   width: 0,
   height: 0,
   natural: false,
-  highlighted: null,
   responsive: false,
   parentWidth: 0,
 
@@ -49,7 +51,7 @@ const imageMapperDefaultProps: ImageMapperDefaultProps = {
 export const generateProps = <T extends ImageMapperProps>(props: T): Required<T> =>
   Object.entries(imageMapperDefaultProps).reduce(
     (acc, val) => {
-      const [key, value] = val as [keyof T, typeof val];
+      const [key, value] = val as unknown as [keyof T, typeof val];
 
       // @ts-expect-error acc key error
       acc[key] = props[key] ?? value;

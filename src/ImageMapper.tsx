@@ -37,33 +37,35 @@ export * from '@/types';
 
 const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props, ref) => {
   const {
+    src,
+    map,
+    areaKeyName,
+    isMulti,
+    toggle,
     active,
     disabled,
     fillColor,
-    lineWidth,
-    map,
-    src,
     strokeColor,
-    natural,
-    height,
-    width,
+    lineWidth,
     imgWidth,
-    areaKeyName,
-    highlighted,
-    parentWidth,
+    width,
+    height,
+    natural,
     responsive,
+    parentWidth,
+
     onChange,
-    onLoad,
-    onMouseEnter,
-    onMouseLeave,
-    onClick,
     onImageClick,
     onImageMouseMove,
+    onClick,
+    onMouseDown,
+    onMouseUp,
     onTouchStart,
     onTouchEnd,
-    onMouseUp,
-    onMouseDown,
     onMouseMove,
+    onMouseEnter,
+    onMouseLeave,
+    onLoad,
   } = props;
 
   const [isRendered, setRendered] = useState<boolean>(false);
@@ -137,9 +139,6 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   };
 
   const onHighlightArea = (area: MapArea): void => {
-    if (!highlighted) return;
-
-    const { isMulti, toggle } = highlighted;
     const areasRef = mapRef.current.areas;
 
     const chosenArea = isMulti ? area : areasRef.find(c => c[areaKeyName] === area[areaKeyName]);
