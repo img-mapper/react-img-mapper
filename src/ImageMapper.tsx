@@ -97,7 +97,6 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
       ctx.current = canvas.current.getContext('2d');
 
       setRendered(true);
-      console.log({ img: img.current });
     }
   }, []);
 
