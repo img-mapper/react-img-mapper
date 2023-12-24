@@ -54,9 +54,7 @@ export type ImageEvent = MouseEvent<HTMLImageElement>;
 
 export type ChangeEventHandler = (selectedArea: MapArea, areas: MapArea[]) => void;
 export type ImageEventHandler = ((event: ImageEvent) => void) | null;
-export type EventHandler<T = AreaEvent, A = MapArea> =
-  | ((area: A, index: number, e: T) => void)
-  | null;
+export type EventHandler<T = AreaEvent> = ((area: MapArea, index: number, e: T) => void) | null;
 export type LoadEventHandler = ((event: HTMLImageElement, dimensions: WidthHeight) => void) | null;
 
 export interface ImageMapperProps {
