@@ -5,7 +5,7 @@ import type {
   GetPropDimension,
 } from '@/types/dimensions.type';
 
-const getDimension: GetDimension = (dimension, img) => {
+export const getDimension: GetDimension = (dimension, img) => {
   if (!img.current) return 0;
 
   return typeof dimension === 'function' ? dimension(img.current) : dimension;

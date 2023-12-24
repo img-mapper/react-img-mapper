@@ -13,7 +13,7 @@ import isEqual from 'react-fast-compare';
 
 import { getExtendedArea } from '@/helpers/area';
 import { generateProps, rerenderPropsList } from '@/helpers/constants';
-import { getDimensions } from '@/helpers/dimensions';
+import { getDimension, getDimensions, getPropDimension } from '@/helpers/dimensions';
 import drawShape from '@/helpers/draw';
 import {
   click,
@@ -30,6 +30,7 @@ import {
 import styles from '@/helpers/styles';
 
 import type { ImageMapperProps, Map, MapArea, RefProperties, Refs } from '@/types';
+import type { PrevStateRef } from '@/types/dimensions.type';
 import type { CTX } from '@/types/draw.type';
 import type { ReactNode } from 'react';
 
@@ -75,7 +76,9 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   const canvas = useRef<Refs['canvasRef']>(null);
   const ctx = useRef<CTX<null>['current']>(null);
   const interval = useRef<number>(0);
-  const prevParentWidth = useRef<number>(parentWidth ?? 0);
+  const prevState = useRef<PrevStateRef>(
+    (() => ({ parentWidth, ...getPropDimension({ width, height, img }) }))()
+  );
 
   const dimensionParams = useMemo(
     () => ({ width, height, responsive, parentWidth, natural }),
@@ -218,13 +221,21 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
   }, [map.areas, resetCanvasAndPrefillArea]);
 
   useEffect(() => {
-    if (responsive && parentWidth) {
-      if (prevParentWidth.current !== parentWidth) {
-        initCanvas();
-        prevParentWidth.current = parentWidth;
-      }
+    if (responsive && parentWidth && prevState.current.parentWidth !== parentWidth) {
+      initCanvas();
+      prevState.current.parentWidth = parentWidth;
     }
-  }, [responsive, parentWidth, initCanvas]);
+
+    if (width && prevState.current.width !== width) {
+      initCanvas();
+      prevState.current.width = getDimension(width, img);
+    }
+
+    if (height && prevState.current.height !== height) {
+      initCanvas();
+      prevState.current.height = getDimension(height, img);
+    }
+  }, [height, initCanvas, parentWidth, responsive, width]);
 
   useImperativeHandle(ref, () => ({ getRefs }), [getRefs]);
 
