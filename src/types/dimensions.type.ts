@@ -24,3 +24,9 @@ export type GetDimensionValues = (
 type GetDimensionsParams = Omit<GetDimensionValuesParams, 'type'>;
 
 export type GetDimensions = (params: GetDimensionsParams) => WidthHeight;
+
+export interface PrevStateRef {
+  parentWidth: number;
+  width: number;
+  height: number;
+}
