@@ -149,7 +149,16 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     const chosenMap = isMulti ? map : mapRef.current;
     const newArea = { ...chosenArea };
 
-    if (toggle && newArea.preFillColor) {
+    const isCurrentAreaSelected = (() => {
+      if (toggle) {
+        if (isMulti && newArea.preFillColor) return true;
+        return !isMulti && !!area.preFillColor;
+      }
+
+      return false;
+    })();
+
+    if (isCurrentAreaSelected) {
       const isPreFillColorFromJSON = chosenMap.areas.find(
         c => c[areaKeyName] === area[areaKeyName]
       );
