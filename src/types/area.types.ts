@@ -9,7 +9,10 @@ export type ScaleCoords = (
   scaleCoordsParams: ScaleCoordsParams
 ) => number[];
 
-export type ComputeCenter = (area: MapArea, scaleCoordsParams: ScaleCoordsParams) => Area['center'];
+export type ComputeCenter = (
+  shape: MapArea['shape'],
+  scaleCoordsParams: ReturnType<ScaleCoords>
+) => Area['center'];
 
 type GetExtendedAreaParams = Pick<
   Required<ImageMapperProps>,

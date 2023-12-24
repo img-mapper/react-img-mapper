@@ -16,12 +16,8 @@ const scaleCoords: ScaleCoords = (
     return coord * scale;
   });
 
-const computeCenter: ComputeCenter = (area, scaleCoordsParams) => {
-  if (!area) return [0, 0];
-
-  const scaledCoords = scaleCoords(area.coords, scaleCoordsParams);
-
-  switch (area.shape) {
+const computeCenter: ComputeCenter = (shape, scaledCoords) => {
+  switch (shape) {
     case 'circle':
       return [scaledCoords[0], scaledCoords[1]];
     case 'poly':
@@ -43,7 +39,7 @@ export const getExtendedArea: GetExtendedArea = (
   { fillColor, lineWidth, strokeColor }
 ) => {
   const scaledCoords = scaleCoords(area.coords, scaleCoordsParams);
-  const center = computeCenter(area, scaleCoordsParams);
+  const center = computeCenter(area.shape, scaledCoords);
 
   return {
     ...area,
