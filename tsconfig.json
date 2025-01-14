@@ -26,6 +26,6 @@
       }
     ]
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.mjs"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.mjs", "**/*.mts"],
   "exclude": ["node_modules", "dist"]
 }
