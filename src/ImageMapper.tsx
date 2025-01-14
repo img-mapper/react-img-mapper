@@ -175,7 +175,7 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
       cur[areaKeyName] === area[areaKeyName] ? newArea : cur
     );
 
-    onChange(newArea, areas);
+    if (onChange) onChange(newArea, areas);
   };
 
   const initCanvas = useCallback(
