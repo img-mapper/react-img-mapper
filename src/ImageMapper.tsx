@@ -34,7 +34,7 @@ import type { PrevStateRef } from '@/types/dimensions.type';
 import type { CTX } from '@/types/draw.type';
 import type { ReactNode } from 'react';
 
-export * from '@/types';
+export type * from '@/types';
 
 const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props, ref) => {
   const {
