@@ -30,9 +30,9 @@
     "lint:fix": "pnpm lint --fix",
     "prepare": "pnpm husky && pnpm ts-patch install -s",
     "prepublishOnly": "pnpm build",
-    "prettier:init": "pnpm prettier \"**/*.{js,jsx,ts,tsx,css,scss,json,md}\"",
     "prettier:check": "pnpm prettier:init --check",
     "prettier:fix": "pnpm prettier:init --write",
+    "prettier:init": "pnpm prettier \"**/*.{js,jsx,ts,tsx,css,scss,json,md}\"",
     "script:lint": "bash -e ./scripts/lint.sh",
     "ts": "pnpm tsc --noEmit --skipLibCheck -p tsconfig.json"
   },
@@ -72,7 +72,7 @@
   "engines": {
     "node": ">=16",
     "npm": ">=8",
-    "yarn": ">=1.22",
-    "pnpm": ">=8"
+    "pnpm": ">=8",
+    "yarn": ">=1.22"
   }
 }
