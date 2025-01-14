@@ -1,35 +1,5 @@
-# dependencies
-node_modules
+# Ignore everything
+/*
 
-# misc
-.DS_Store
-
-# debug
-*.log
-
-# local env files
-.env*.local
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# package lock files
-yarn.lock
-package-lock.json
-pnpm-lock.yaml
-
-# editor folders
-.idea
-.vscode
-
-# ignored folders
-.github
-.husky
-src
-scripts
-
-# ignored files
-.*.js
-*.md
-tsconfig.json
+# Not ignored folders
+!dist
