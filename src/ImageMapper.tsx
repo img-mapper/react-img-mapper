@@ -1,5 +1,4 @@
 import React, {
-  forwardRef,
   memo,
   useCallback,
   useEffect,
@@ -29,14 +28,15 @@ import {
 } from '@/helpers/events';
 import styles from '@/helpers/styles';
 
-import type { ImageMapperProps, Map, MapArea, RefProperties, Refs } from '@/types';
+import type { ImageMapperPropsWithRef, Map, MapArea, Refs } from '@/types';
 import type { PrevStateRef } from '@/types/dimensions.type';
 import type { CTX } from '@/types/draw.type';
-import type { ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 
 export type * from '@/types';
 
-const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props, ref) => {
+const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
+  const generatedProps = generateProps(props);
   const {
     src,
     map,
@@ -67,7 +67,7 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
     onMouseEnter,
     onMouseLeave,
     onLoad,
-  } = props;
+  } = generatedProps;
 
   const [isRendered, setRendered] = useState<boolean>(false);
   const mapRef = useRef<Map>(map);
@@ -298,17 +298,9 @@ const ImageMapper = forwardRef<RefProperties, Required<ImageMapperProps>>((props
       </map>
     </div>
   );
-});
+};
 
-ImageMapper.displayName = 'ImageMapperForwarded';
-
-const ImageMapperRequired = forwardRef<RefProperties, ImageMapperProps>((props, ref) => (
-  <ImageMapper ref={ref} {...generateProps(props)} />
-));
-
-ImageMapperRequired.displayName = 'ImageMapperRequiredForwarded';
-
-export default memo(ImageMapperRequired, (prevProps, nextProps) => {
+export default memo(ImageMapper, (prevProps, nextProps) => {
   const propChanged = rerenderPropsList.some(prop => prevProps[prop] !== nextProps[prop]);
 
   return isEqual(prevProps.map, nextProps.map) && !propChanged;

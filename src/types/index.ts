@@ -1,5 +1,5 @@
 import type { ConditionalKeys, NoUndefinedField } from '@/types/lib.type';
-import type { MouseEvent, TouchEvent as ReactTouchEvent } from 'react';
+import type { MouseEvent, TouchEvent as ReactTouchEvent, Ref } from 'react';
 
 export interface Refs {
   containerRef: HTMLDivElement | null;
@@ -87,4 +87,8 @@ export interface ImageMapperProps {
   onMouseEnter?: EventHandler;
   onMouseLeave?: EventHandler;
   onLoad?: LoadEventHandler;
+}
+
+export interface ImageMapperPropsWithRef extends ImageMapperProps {
+  ref: Ref<RefProperties>;
 }

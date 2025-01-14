@@ -42,8 +42,8 @@
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@types/node": "^22.10.6",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "eslint": "^8.57.1",
@@ -66,8 +66,8 @@
     "typescript-transform-paths": "^3.5.3"
   },
   "peerDependencies": {
-    "react": "16.x || 17.x || 18.x",
-    "react-dom": "16.x || 17.x || 18.x"
+    "react": "16.x || 17.x || 18.x || 19.x",
+    "react-dom": "16.x || 17.x || 18.x || 19.x"
   },
   "packageManager": "pnpm@9.15.1",
   "engines": {
