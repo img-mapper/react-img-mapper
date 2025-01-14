@@ -58,7 +58,7 @@ const Mapper = props => {
     areas: 'https://raw.githubusercontent.com/img-mapper/react-docs/master/src/assets/example.json',
   };
 
-  return <ImageMapper src={URL} map={MAP} />;
+  return <ImageMapper src={URL} map={MAP} onChange={() => null} />;
 };
 
 export default Mapper;
