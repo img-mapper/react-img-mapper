@@ -9,14 +9,6 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint'],
   rules: {
-    // FORMATTING
-    'lines-between-class-members': 'off',
-    '@typescript-eslint/lines-between-class-members': [
-      'error',
-      'always',
-      { exceptAfterSingleLine: true },
-    ],
-
     // EXTRA RULES ( NOT IN EXTENDED CONFIG )
     '@typescript-eslint/consistent-type-exports': 'error',
     '@typescript-eslint/consistent-type-imports': 'error',
@@ -40,7 +32,7 @@ module.exports = {
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
     'no-throw-literal': 'off',
-    '@typescript-eslint/no-throw-literal': 'error',
+    '@typescript-eslint/only-throw-error': 'error',
     '@typescript-eslint/no-unnecessary-type-arguments': 'warn',
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'error',
@@ -73,15 +65,6 @@ module.exports = {
     {
       files: ['*.js', '*.mjs'],
       extends: ['plugin:@typescript-eslint/disable-type-checked'],
-      rules: {
-        '@typescript-eslint/explicit-module-boundary-types': 'off',
-      },
-    },
-    {
-      files: ['src/features/**/use*.ts'],
-      rules: {
-        '@typescript-eslint/explicit-module-boundary-types': 'off',
-      },
     },
   ],
 };
