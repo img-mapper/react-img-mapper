@@ -35,6 +35,7 @@ const imageMapperDefaultProps: ImageMapperDefaultProps = {
   responsive: false,
   parentWidth: 0,
 
+  onChange: null,
   onImageClick: null,
   onImageMouseMove: null,
   onClick: null,
@@ -57,5 +58,5 @@ export const generateProps = <T extends ImageMapperProps>(props: T): Required<T>
       acc[key] = props[key] ?? value;
       return acc;
     },
-    { src: props.src, map: props.map, onChange: props.onChange }
+    { src: props.src, map: props.map }
   ) as Required<T>;
