@@ -1,0 +1,63 @@
+name: Bug report 🐛
+description: Create a bug report
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for contributing by creating an issue! ❤️
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: |
+        **⚠️ Issues that we can't reproduce can't be fixed.**
+
+        Please provide the steps to reproduce the behavior:
+      value: |
+        Steps:
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Current behavior
+      description: Describe what happens instead of the expected behavior.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: Describe what should happen.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Context
+      description: What are you trying to accomplish? Providing context helps us come up with a solution that is more useful in the real world.
+  - type: textarea
+    attributes:
+      label: Error stack
+      description: Please provide the error stack of your error
+  - type: input
+    attributes:
+      label: Live example link
+      description: Please provide a link to a live example, you can use codesandbox/stackblitz for that
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Your environment
+      description: Please provide your desktop & smartphone environment if applicable
+      value: |
+        Desktop
+        
+        - OS: [e.g. ubuntu]
+        - Browser: [e.g. chrome, safari]
+        - Version: [e.g. 22.04]
+        
+        Smartphone
+        
+        - Device: [e.g. samsung 24]
+        - OS: [e.g. Android 15]
+        - Browser: [e.g. chrome, safari]
