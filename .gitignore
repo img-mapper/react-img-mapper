@@ -30,3 +30,6 @@ next-env.d.ts
 
 # vite
 .vite
+
+# storybook
+storybook-static

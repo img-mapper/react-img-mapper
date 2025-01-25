@@ -1,0 +1,35 @@
+{
+  "name": "react-img-mapper-docs",
+  "type": "commonjs",
+  "scripts": {
+    "build": "build-storybook",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d storybook-static",
+    "start": "start-storybook -p 3000"
+  },
+  "dependencies": {
+    "@storybook/addon-actions": "^6.4.9",
+    "@storybook/addon-essentials": "^6.4.9",
+    "@storybook/addon-links": "^6.4.9",
+    "@storybook/addons": "^6.4.9",
+    "@storybook/api": "^6.4.9",
+    "@storybook/components": "^6.4.9",
+    "@storybook/preset-scss": "^1.0.3",
+    "@storybook/react": "^6.4.9",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-fast-compare": "^3.2.0",
+    "react-img-mapper": "^1.5.0",
+    "react-syntax-highlighter": "^15.4.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "css-loader": "^5.1.3",
+    "gh-pages": "^3.1.0",
+    "prettier": "^2.5.1",
+    "sass": "^1.45.0",
+    "sass-loader": "^10.1.1",
+    "style-loader": "^2.0.0"
+  }
+}
