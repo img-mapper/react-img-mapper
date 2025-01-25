@@ -21,10 +21,6 @@ module.exports = {
             group: ['./*', '../*'],
             message: "Please use the absolute path '@/*' instead.",
           },
-          {
-            group: ['@/api/api'],
-            message: 'Please use the api default export instead.',
-          },
         ],
       },
     ],
@@ -59,4 +55,12 @@ module.exports = {
     ],
     'import/no-unresolved': 'error',
   },
+  overrides: [
+    {
+      files: ['**/*.config.mts'],
+      rules: {
+        'import/no-extraneous-dependencies': 'off',
+      },
+    },
+  ],
 };

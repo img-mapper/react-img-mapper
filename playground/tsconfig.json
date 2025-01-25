@@ -10,23 +10,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react",
-    "declaration": true,
-    "outDir": "./dist",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@playground/*": ["./playground/src/*"]
-    },
-    "plugins": [
-      {
-        "transform": "typescript-transform-paths"
-      },
-      {
-        "transform": "typescript-transform-paths",
-        "afterDeclarations": true
-      }
-    ]
+      "@/*": ["../src/*"],
+      "@playground/*": ["./src/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.mjs", "**/*.mts"],
-  "exclude": ["node_modules", "dist", "playground"]
+  "exclude": ["node_modules"]
 }

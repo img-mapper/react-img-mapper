@@ -1,5 +1,9 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: ['./tsconfig.json', './playground/tsconfig.json'],
+  },
+  ignorePatterns: ['.eslintrc.js'],
   root: true,
   env: {
     es6: true,
@@ -8,8 +12,8 @@ module.exports = {
     'eslint:recommended',
     'airbnb',
     'airbnb/hooks',
-    './lint/.eslintrc-import.js',
     './lint/.eslintrc-typescript.js',
+    './lint/.eslintrc-import.js',
     './lint/.eslintrc-react.js',
     'prettier',
   ],

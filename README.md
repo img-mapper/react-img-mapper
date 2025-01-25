@@ -32,9 +32,9 @@ Live Demo: [Demo](https://img-mapper.github.io/react-docs)
 To run the example locally
 
 ```
-git clone https://github.com/img-mapper/react-docs.git
-yarn install
-yarn start
+git clone https://github.com/img-mapper/react-img-mapper.git
+pnpm playground:install
+pnpm playground:dev
 ```
 
 Then open [`localhost:3000`](http://localhost:3000) in a browser.
@@ -142,4 +142,4 @@ When received from an event handler, an area is extended with the following prop
 
 Distributed with an MIT License. See LICENSE.txt for more details!
 
-Copyright (c) 2024 Nisharg Shah
+Copyright (c) 2025 Nisharg Shah

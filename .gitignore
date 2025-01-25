@@ -27,3 +27,6 @@ next-env.d.ts
 # editor folders
 .idea
 .vscode
+
+# vite
+.vite

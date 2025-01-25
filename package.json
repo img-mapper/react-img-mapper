@@ -1,6 +1,6 @@
 {
   "name": "react-img-mapper",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0-alpha.6",
   "description": "React Component to highlight interactive zones in images",
   "keywords": [
     "react",
@@ -28,21 +28,23 @@
     "build": "pnpm tsc",
     "lint": "pnpm eslint . --ignore-path .gitignore",
     "lint:fix": "pnpm lint --fix",
+    "playground:dev": "pnpm --dir ./playground run dev",
+    "playground:install": "pnpm --dir ./playground install",
     "prepare": "pnpm husky && pnpm ts-patch install -s",
     "prepublishOnly": "pnpm build",
     "prettier:check": "pnpm prettier:init --check",
     "prettier:fix": "pnpm prettier:init --write",
     "prettier:init": "pnpm prettier \"**/*.{js,jsx,ts,tsx,css,scss,json,md}\"",
     "script:lint": "bash -e ./scripts/lint.sh",
-    "ts": "pnpm tsc --noEmit --skipLibCheck -p tsconfig.json"
+    "ts": "pnpm tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "react-fast-compare": "^3.2.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.0",
-    "@types/node": "^22.10.6",
-    "@types/react": "^19.0.7",
+    "@babel/core": "^7.26.7",
+    "@types/node": "^22.10.10",
+    "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
@@ -53,11 +55,11 @@
     "eslint-import-resolver-typescript": "^3.7.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.3.0",
+    "lint-staged": "^15.4.2",
     "prettier": "^3.4.2",
     "react": "^19.0.0",
     "ts-patch": "^3.3.0",
@@ -69,7 +71,7 @@
     "react": "16.x || 17.x || 18.x || 19.x",
     "react-dom": "16.x || 17.x || 18.x || 19.x"
   },
-  "packageManager": "pnpm@9.15.1",
+  "packageManager": "pnpm@9.15.4",
   "engines": {
     "node": ">=16",
     "npm": ">=8",
