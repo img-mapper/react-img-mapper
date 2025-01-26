@@ -1,5 +1,12 @@
 name: Bug report 🐛
 description: Create a bug report
+assignees:
+  - NishargShah
+labels:
+  - bug
+  - help wanted
+  - question
+type: Bug
 body:
   - type: markdown
     attributes:

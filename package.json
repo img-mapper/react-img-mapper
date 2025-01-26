@@ -30,7 +30,7 @@
   "types": "dist/ImageMapper.d.ts",
   "scripts": {
     "build": "pnpm tsc",
-    "lint": "pnpm eslint . --ignore-path .gitignore",
+    "lint": "pnpm eslint --ignore-pattern=.gitignore,.eslintignore .",
     "lint:fix": "pnpm lint --fix",
     "playground:dev": "pnpm --dir ./playground run dev",
     "playground:install": "pnpm --dir ./playground install",
