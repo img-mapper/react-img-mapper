@@ -34,6 +34,11 @@ const imageMapperDefaultProps: ImageMapperDefaultProps = {
   natural: false,
   responsive: false,
   parentWidth: 0,
+  containerProps: null,
+  imgProps: null,
+  canvasProps: null,
+  mapProps: null,
+  areaProps: null,
 
   onChange: null,
   onImageClick: null,

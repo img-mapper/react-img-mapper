@@ -54,6 +54,11 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
     natural,
     responsive,
     parentWidth,
+    containerProps,
+    imgProps,
+    canvasProps,
+    mapProps,
+    areaProps,
 
     onChange,
     onImageClick,
@@ -261,9 +266,16 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
 
       return (
         <area
-          {...(preFillColor ? { className: 'img-mapper-area-highlighted' } : {})}
+          alt="map"
+          {...areaProps}
+          className={[
+            'img-mapper-area',
+            ...(preFillColor ? ['img-mapper-area-highlighted'] : []),
+            ...(areaProps?.className ? [areaProps.className] : []),
+          ].join(' ')}
           key={area[areaKeyName] ?? index.toString()}
-          shape={shape}
+          href={href ?? areaProps?.href}
+          shape={shape ?? areaProps?.shape}
           coords={scaledCoords.join(',')}
           onMouseEnter={mouseEnter({ area, index }, { onMouseEnter, cb: handleMouseEnter })}
           onMouseLeave={mouseLeave({ area, index }, { onMouseLeave, cb: handleMouseLeave })}
@@ -273,27 +285,52 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
           onTouchStart={touchStart({ area, index }, { onTouchStart })}
           onTouchEnd={touchEnd({ area, index }, { onTouchEnd })}
           onClick={click({ area, index }, { onClick, cb: handleClick })}
-          href={href}
-          alt="map"
         />
       );
     });
 
   return (
-    <div ref={containerRef} id="img-mapper" style={styles.container}>
+    <div
+      {...containerProps}
+      ref={containerRef}
+      id="img-mapper"
+      style={{ ...containerProps?.style, ...styles.container }}
+    >
       <img
-        ref={img}
         role="presentation"
-        className="img-mapper-img"
-        style={{ ...styles.img(responsive), ...(!isRendered ? { display: 'none' } : null) }}
+        alt="map"
+        {...imgProps}
+        ref={img}
         src={src}
         useMap={`#${map.name}`}
-        alt="map"
+        className={['img-mapper-img', ...(imgProps?.className ? [imgProps.className] : [])].join(
+          ' '
+        )}
+        style={{
+          ...imgProps?.style,
+          ...styles.img(responsive),
+          ...(!isRendered ? { display: 'none' } : null),
+        }}
         onClick={imageClick({ onImageClick })}
         onMouseMove={imageMouseMove({ onImageMouseMove })}
       />
-      <canvas ref={canvas} className="img-mapper-canvas" style={styles.canvas} />
-      <map className="img-mapper-map" name={map.name} style={styles.map(onClick)}>
+      <canvas
+        {...canvasProps}
+        ref={canvas}
+        className={[
+          'img-mapper-canvas',
+          ...(canvasProps?.className ? [canvasProps.className] : []),
+        ].join(' ')}
+        style={{ ...canvasProps?.style, ...styles.canvas }}
+      />
+      <map
+        {...mapProps}
+        className={['img-mapper-map', ...(mapProps?.className ? [mapProps.className] : [])].join(
+          ' '
+        )}
+        name={map.name}
+        style={{ ...mapProps?.style, ...styles.map(onClick) }}
+      >
         {isRendered && !disabled && renderAreas()}
       </map>
     </div>

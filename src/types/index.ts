@@ -1,5 +1,5 @@
 import type { ConditionalKeys, NoUndefinedField } from '@/types/lib.type';
-import type { MouseEvent, TouchEvent as ReactTouchEvent, Ref } from 'react';
+import type { HTMLProps, MouseEvent, TouchEvent as ReactTouchEvent, Ref } from 'react';
 
 export interface Refs {
   containerRef: HTMLDivElement | null;
@@ -48,6 +48,27 @@ export interface WidthHeight {
 
 export type Dimension = number | ((event: HTMLImageElement) => number);
 
+export type ContainerProps = Omit<HTMLProps<HTMLDivElement>, 'ref' | 'id'> | null;
+export type ImgProps = Omit<
+  HTMLProps<HTMLImageElement>,
+  'ref' | 'src' | 'useMap' | 'onClick' | 'onMouseMove'
+> | null;
+export type CanvasProps = Omit<HTMLProps<HTMLCanvasElement>, 'ref'> | null;
+export type MapProps = Omit<HTMLProps<HTMLMapElement>, 'name'> | null;
+export type AreaProps = Omit<
+  HTMLProps<HTMLAreaElement>,
+  | 'key'
+  | 'coords'
+  | 'onMouseEnter'
+  | 'onMouseLeave'
+  | 'onMouseMove'
+  | 'onMouseDown'
+  | 'onMouseUp'
+  | 'onTouchStart'
+  | 'onTouchEnd'
+  | 'onClick'
+> | null;
+
 export type TouchEvent = ReactTouchEvent<HTMLAreaElement>;
 export type AreaEvent = MouseEvent<HTMLAreaElement>;
 export type ImageEvent = MouseEvent<HTMLImageElement>;
@@ -74,6 +95,11 @@ export interface ImageMapperProps {
   natural?: boolean;
   responsive?: boolean;
   parentWidth?: number;
+  containerProps?: ContainerProps;
+  imgProps?: ImgProps;
+  canvasProps?: CanvasProps;
+  mapProps?: MapProps;
+  areaProps?: AreaProps;
 
   onChange?: ChangeEventHandler;
   onImageClick?: ImageEventHandler;
