@@ -58,7 +58,8 @@ const Mapper = props => {
   const MAP = {
     name: 'my-map',
     // GET JSON FROM BELOW URL AS AN EXAMPLE AND PUT IT HERE
-    areas: 'https://raw.githubusercontent.com/img-mapper/react-img-mapper/refs/heads/master/playground/src/data/areas.json',
+    areas:
+      'https://raw.githubusercontent.com/img-mapper/react-img-mapper/refs/heads/master/playground/src/data/areas.json',
   };
 
   return <ImageMapper src={URL} map={MAP} />;
@@ -69,24 +70,29 @@ export default Mapper;
 
 ## Properties
 
-| Props           | Type                       | Description                                                                        | Default                  |
-| --------------- | -------------------------- | ---------------------------------------------------------------------------------- | ------------------------ |
-| **src**         | _string_                   | Image source url                                                                   | **required**             |
-| **map**         | _object_                   | Mapping object                                                                     | **required**             |
-| **areaKeyName** | _string_                   | unique key name of the json                                                        | id                       |
-| **isMulti**     | _bool_                     | Enable/Disable multiple highlight areas by clicking on the specific area           | true                     |
-| **toggle**      | _bool_                     | Enable/Disable toggle selected highlighted area                                    | false                    |
-| **active**      | _bool_                     | Enable/Disable listeners and highlighting                                          | true                     |
-| **disabled**    | _bool_                     | Enable/Disable listeners, highlighting and add/remove area tag from the UI         | false                    |
-| **fillColor**   | _string_                   | Fill color of the highlighted zone                                                 | rgba(255, 255, 255, 0.5) |
-| **strokeColor** | _string_                   | Border color of the highlighted zone                                               | rgba(0, 0, 0, 0.5)       |
-| **lineWidth**   | _number_                   | Border thickness of the highlighted zone                                           | 1                        |
-| **imgWidth**    | _number_                   | Original image width                                                               | 0                        |
-| **width**       | number \| func => number   | Image width, in function you will get image reference object                       | 0                        |
-| **height**      | _number \| func => number_ | Image height, in function you will get image reference object                      | 0                        |
-| **natural**     | _bool_                     | Give the original dimensions ( height & width ) to canvas and image wrapper        | false                    |
-| **responsive**  | _bool_                     | responsive map in all resolution ( for enable it you need to specify parentWidth ) | false                    |
-| **parentWidth** | _number_                   | parent max width for responsive                                                    | 0                        |
+| Props              | Type                       | Description                                                                        | Default                  |
+| ------------------ | -------------------------- | ---------------------------------------------------------------------------------- | ------------------------ |
+| **src**            | _string_                   | Image source url                                                                   | **required**             |
+| **map**            | _object_                   | Mapping object                                                                     | **required**             |
+| **areaKeyName**    | _string_                   | unique key name of the json                                                        | id                       |
+| **isMulti**        | _bool_                     | Enable/Disable multiple highlight areas by clicking on the specific area           | true                     |
+| **toggle**         | _bool_                     | Enable/Disable toggle selected highlighted area                                    | false                    |
+| **active**         | _bool_                     | Enable/Disable listeners and highlighting                                          | true                     |
+| **disabled**       | _bool_                     | Enable/Disable listeners, highlighting and add/remove area tag from the UI         | false                    |
+| **fillColor**      | _string_                   | Fill color of the highlighted zone                                                 | rgba(255, 255, 255, 0.5) |
+| **strokeColor**    | _string_                   | Border color of the highlighted zone                                               | rgba(0, 0, 0, 0.5)       |
+| **lineWidth**      | _number_                   | Border thickness of the highlighted zone                                           | 1                        |
+| **imgWidth**       | _number_                   | Original image width                                                               | 0                        |
+| **width**          | number \| func => number   | Image width, in function you will get image reference object                       | 0                        |
+| **height**         | _number \| func => number_ | Image height, in function you will get image reference object                      | 0                        |
+| **natural**        | _bool_                     | Give the original dimensions ( height & width ) to canvas and image wrapper        | false                    |
+| **responsive**     | _bool_                     | responsive map in all resolution ( for enable it you need to specify parentWidth ) | false                    |
+| **parentWidth**    | _number_                   | parent max width for responsive                                                    | 0                        |
+| **containerProps** | _object_                   | Main container ( div ) tag props                                                   | null                     |
+| **imgProps**       | _object_                   | Image tag props                                                                    | null                     |
+| **canvasProps**    | _object_                   | Canvas tag props                                                                   | null                     |
+| **mapProps**       | _object_                   | Map tag props                                                                      | null                     |
+| **areaProps**      | _object_                   | Area tag props                                                                     | null                     |
 
 ## Properties Callback
 
