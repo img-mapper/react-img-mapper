@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import ImageMapper from '@/ImageMapper';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import JSON from '@resources/areas.json';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import example from '@resources/example.jpg';
 
 import type { MapArea, RefProperties } from '@/ImageMapper';
 import type { FC } from 'react';
@@ -40,8 +42,9 @@ const App: FC = () => {
     <React.Fragment>
       <ImageMapper
         ref={ref}
-        src="/assets/example.jpg"
-        map={{ name: 'my-map', areas }}
+        src={example}
+        name="my-map"
+        areas={areas}
         // onChange={(selectedArea, allAreas) => {
         //   console.log(selectedArea, allAreas);
         //   setAreas(allAreas);
