@@ -19,17 +19,20 @@ Package: [react-img-mapper](https://www.npmjs.com/package/react-img-mapper)
 
 ```
 # via npm
-npm install react-img-mapper --save
+npm install react-img-mapper
 
 # via yarn
 yarn add react-img-mapper
+
+# via pnpm
+pnpm install react-img-mapper
 ```
 
 ## Demo & Examples
 
 Live Demo: [Demo](https://img-mapper.github.io/react-docs)
 
-To run the example locally
+To run the example locally, please install `pnpm` and follow below steps
 
 ```
 git clone https://github.com/img-mapper/react-img-mapper.git
