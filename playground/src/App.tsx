@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ImageMapper from '@/ImageMapper';
 
-import JSON from '@playground/data/area.json';
+import JSON from '@playground/data/areas.json';
 
 import type { MapArea, RefProperties } from '@/ImageMapper';
 import type { FC } from 'react';

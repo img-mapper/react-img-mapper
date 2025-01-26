@@ -15,7 +15,7 @@
     "docs react image mapper",
     "react image mapper docs"
   ],
-  "homepage": "https://img-mapper.github.io/react-docs",
+  "homepage": "https://img-mapper.github.io/react-img-mapper",
   "bugs": {
     "url": "https://github.com/img-mapper/react-img-mapper/issues"
   },
@@ -36,7 +36,7 @@
     "playground:install": "pnpm --dir ./playground install",
     "docs:dev": "pnpm --dir ./docs run dev",
     "docs:install": "pnpm --dir ./docs install",
-    "docs:deploy": "pnpm --dir ./docs deploy",
+    "docs:deploy": "pnpm --dir ./docs run deploy",
     "prepare": "pnpm husky && pnpm ts-patch install -s",
     "prepublishOnly": "pnpm build",
     "prettier:check": "pnpm prettier:init --check",

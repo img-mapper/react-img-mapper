@@ -1,13 +1,14 @@
-import React from 'react';
+import React from "react";
 
-const URL = 'https://raw.githubusercontent.com/img-mapper/react-docs/master/src/assets/example.jpg';
+const URL =
+  "https://raw.githubusercontent.com/img-mapper/react-img-mapper/refs/heads/master/playground/public/assets/example.jpg";
 const MAP = `{
     name: 'my-map',
     // GET JSON FROM BELOW URL AS AN EXAMPLE
-    areas: 'https://raw.githubusercontent.com/img-mapper/react-docs/master/src/assets/example.json',
+    areas: 'https://raw.githubusercontent.com/img-mapper/react-img-mapper/refs/heads/master/playground/src/data/areas.json',
   }`;
 
-const common = code =>
+const common = (code) =>
   `import React from 'react';
 import ImageMapper from 'react-img-mapper';
 

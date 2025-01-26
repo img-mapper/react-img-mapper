@@ -30,7 +30,7 @@ pnpm install react-img-mapper
 
 ## Demo & Examples
 
-Live Demo: [Demo](https://img-mapper.github.io/react-docs)
+Live Demo: [Demo](https://img-mapper.github.io/react-img-mapper)
 
 To run the example locally, please install `pnpm` and follow below steps
 
@@ -54,11 +54,11 @@ import ImageMapper from 'react-img-mapper';
 
 const Mapper = props => {
   const URL =
-    'https://raw.githubusercontent.com/img-mapper/react-docs/master/src/assets/example.jpg';
+    'https://raw.githubusercontent.com/img-mapper/react-img-mapper/refs/heads/master/playground/public/assets/example.jpg';
   const MAP = {
     name: 'my-map',
     // GET JSON FROM BELOW URL AS AN EXAMPLE AND PUT IT HERE
-    areas: 'https://raw.githubusercontent.com/img-mapper/react-docs/master/src/assets/example.json',
+    areas: 'https://raw.githubusercontent.com/img-mapper/react-img-mapper/refs/heads/master/playground/src/data/areas.json',
   };
 
   return <ImageMapper src={URL} map={MAP} />;
