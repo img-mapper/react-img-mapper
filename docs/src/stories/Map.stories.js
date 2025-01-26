@@ -63,7 +63,7 @@ NonResponsiveDimensions.argTypes = {
 // 2 => ResponsiveDimensions
 export const ResponsiveDimensions = args => (
   <Mapper
-    responsive={args.responsive}
+    responsive
     parentWidth={args.parentWidth}
     TopComponent={() =>
       TopComponent(
@@ -94,12 +94,10 @@ ResponsiveDimensions.parameters = {
 };
 
 ResponsiveDimensions.args = {
-  responsive: false,
   parentWidth: 640,
 };
 
 ResponsiveDimensions.argTypes = {
-  responsive: { control: 'boolean' },
   parentWidth: { control: 'number' },
 };
 

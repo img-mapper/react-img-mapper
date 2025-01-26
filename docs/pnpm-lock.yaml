@@ -42,8 +42,8 @@ importers:
         specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
       react-img-mapper:
-        specifier: ^1.5.0
-        version: 1.5.1(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
+        specifier: ^2.0.0-alpha.9
+        version: 2.0.0-alpha.9(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       react-syntax-highlighter:
         specifier: ^15.4.5
         version: 15.6.1(react@17.0.2)
@@ -4422,11 +4422,12 @@ packages:
   react-fast-compare@3.2.2:
     resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
 
-  react-img-mapper@1.5.1:
-    resolution: {integrity: sha512-PsWRnZqWRo2tvllxa33oTfRUJ6djRAenfpFpHwHpQQ5FbP7neziJmKOO+bxEqbut5+2rlH/HAWt31pPsV0IlKQ==}
+  react-img-mapper@2.0.0-alpha.9:
+    resolution: {integrity: sha512-QdnnCeUNfTg6tBHPTy9DskZvi5LIO2plyqaiDaEQYRIYAfBGiWda6RYgRTIt35XdmjvOJklvHYBiJBXaCdoQFw==}
+    engines: {node: '>=16', npm: '>=8', pnpm: '>=8', yarn: '>=1.22'}
     peerDependencies:
-      react: 16.x || 17.x || 18.x
-      react-dom: 16.x || 17.x || 18.x
+      react: 16.x || 17.x || 18.x || 19.x
+      react-dom: 16.x || 17.x || 18.x || 19.x
 
   react-inspector@5.1.1:
     resolution: {integrity: sha512-GURDaYzoLbW8pMGXwYPDBIv6nqei4kK7LPRZ9q9HCZF54wqXz/dnylBp/kfE9XmekBhHvLDdcYeyIwSrvtOiWg==}
@@ -11302,7 +11303,7 @@ snapshots:
 
   react-fast-compare@3.2.2: {}
 
-  react-img-mapper@1.5.1(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
+  react-img-mapper@2.0.0-alpha.9(react-dom@17.0.2(react@17.0.2))(react@17.0.2):
     dependencies:
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)

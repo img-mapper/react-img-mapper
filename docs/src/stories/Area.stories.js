@@ -104,7 +104,7 @@ DisabledArea.parameters = {
 };
 
 DisabledArea.args = {
-  disabled: false,
+  disabled: true,
 };
 
 DisabledArea.argTypes = {
@@ -141,16 +141,16 @@ InArrayDisabledArea.parameters = {
 };
 
 // 5 => StaySelectedHighlightedArea
-export const StaySelectedHighlightedArea = args => (
+export const StaySelectedHighlightedArea = () => (
   <Mapper
-    stayHighlighted={args.stayHighlighted}
+    isOnChangeNeeded
+    isMulti={false}
     TopComponent={() =>
       TopComponent(
         'Stay Selected Highlighted Area Example',
         <p>
-          In this example, if you set the storybook <span className="tag">control tabs</span> -{' '}
-          <span className="tag">stayHighlighted</span> to true, you can{' '}
-          <span className="tag">freeze</span> the <span className="tag">area</span> you want to keep
+          In this example, you can <span className="tag">freeze</span> the{' '}
+          <span className="tag">area</span> you want to keep
           <span className="tag">highlighted</span>, just by clicking and you can still be able to
           highlight the <span className="tag">remaining</span> area on hover.
         </p>
@@ -163,25 +163,18 @@ StaySelectedHighlightedArea.parameters = {
   code: staySelectedHighlightedArea,
 };
 
-StaySelectedHighlightedArea.args = {
-  stayHighlighted: true,
-};
-
-StaySelectedHighlightedArea.argTypes = {
-  stayHighlighted: { control: 'boolean' },
-};
-
 // 6 => StayMultipleSelectedHighlightedArea
-export const StayMultipleSelectedHighlightedArea = args => (
+export const StayMultipleSelectedHighlightedArea = () => (
   <Mapper
-    stayMultiHighlighted={args.stayMultiHighlighted}
+    isOnChangeNeeded
+    isMulti
     TopComponent={() =>
       TopComponent(
         'Stay Multiple Selected Highlighted Area Example',
         <p>
-          This example is similar to <span className="tag">stayHighlighted</span> property, the only
-          additional feature is you can freeze <span className="tag">multiple</span> highlighted
-          areas.
+          This example is similar to <span className="tag">Stay Selected Highlighted Area</span>{' '}
+          section, the only additional feature is you can freeze{' '}
+          <span className="tag">multiple</span> highlighted areas.
         </p>
       )
     }
@@ -192,45 +185,28 @@ StayMultipleSelectedHighlightedArea.parameters = {
   code: stayMultipleSelectedHighlightedArea,
 };
 
-StayMultipleSelectedHighlightedArea.args = {
-  stayMultiHighlighted: true,
-};
-
-StayMultipleSelectedHighlightedArea.argTypes = {
-  stayMultiHighlighted: { control: 'boolean' },
-};
-
-// 7 => ClearMultipleSelectedHighlightedArea
-export const ClearSelectedHighlightedArea = args => {
-  const myRef = useRef(null);
-
-  const callingMe = () => {
-    myRef.current.clearHighlightedArea();
-  };
-
-  return (
-    <Mapper
-      containerRef={myRef}
-      stayMultiHighlighted
-      TopComponent={() =>
-        TopComponent(
-          'Stay Selected Highlighted Area Example',
-          <p>
-            You can clear the <span className="tag">single/multiple</span> selected highlighted area
-            by calling <span className="tag">myRef.current.clearHighlightedArea()</span>, you can
-            press the below button to see the <span className="tag">live</span> results in image
-            mapper
-            <br />
-            <br />
-            <button type="button" onClick={callingMe}>
-              Clear
-            </button>
-          </p>
-        )
-      }
-    />
-  );
-};
+// 7 => ClearSelectedHighlightedArea
+export const ClearSelectedHighlightedArea = () => (
+  <Mapper
+    isOnChangeNeeded
+    isMulti
+    TopComponent={({ resetAreas }) =>
+      TopComponent(
+        'Clear Selected Highlighted Area Example',
+        <p>
+          You can clear the <span className="tag">single/multiple</span> selected highlighted area
+          by resetting your state to initial, you can press the below button to see the{' '}
+          <span className="tag">live</span> results in image mapper
+          <br />
+          <br />
+          <button type="button" onClick={resetAreas}>
+            Clear
+          </button>
+        </p>
+      )
+    }
+  />
+);
 
 ClearSelectedHighlightedArea.parameters = {
   code: clearSelectedHighlightedArea,
@@ -239,23 +215,16 @@ ClearSelectedHighlightedArea.parameters = {
 // 8 => ToggleStayHighlightedArea
 export const ToggleStayHighlightedArea = args => (
   <Mapper
-    stayHighlighted={args.stayHighlighted}
-    stayMultiHighlighted={args.stayMultiHighlighted}
-    toggleHighlighted={args.toggleHighlighted}
+    isOnChangeNeeded
+    isMulti={args.isMulti}
+    toggle={args.toggle}
     TopComponent={() =>
       TopComponent(
         'Toggle Stay Highlighted Area Example',
         <p>
-          In this example, a new feature of <span className="tag">toggleHighlighted</span> property
-          is added which will be used to <span className="tag">toggle</span> freezed highlighted
-          area.
+          In this example, a new feature of <span className="tag">toggle</span> property is added
+          which will be used to <span className="tag">toggle</span> freezed highlighted area.
           <br />
-          <br />
-          <span className="block">
-            Note: <span className="tag">toggleHighlighted</span> property will work only if one of
-            the <span className="tag">stayHighlighted</span> or{' '}
-            <span className="tag">stayMultiHighlighted</span> is true.
-          </span>
         </p>
       )
     }
@@ -267,15 +236,13 @@ ToggleStayHighlightedArea.parameters = {
 };
 
 ToggleStayHighlightedArea.args = {
-  stayHighlighted: true,
-  stayMultiHighlighted: false,
-  toggleHighlighted: true,
+  isMulti: true,
+  toggle: true,
 };
 
 ToggleStayHighlightedArea.argTypes = {
-  stayHighlighted: { control: 'boolean' },
-  stayMultiHighlighted: { control: 'boolean' },
-  toggleHighlighted: { control: 'boolean' },
+  isMulti: { control: 'boolean' },
+  toggle: { control: 'boolean' },
 };
 
 // 9 => ZoomInZoomOutArea

@@ -2,20 +2,21 @@ import common from './common';
 
 export const dynamicAllProperties = common(`(
     <ImageMapper 
-      src={URL} 
-      map={MAP}
+      src={url} 
+      name={name}
+      areas={areas}
+      isMulti={props.isMulti}
+      toggle={props.toggle}
       active={props.active}
-      width={props.width}
-      height={props.height}
+      disabled={props.disabled}
       fillColor={props.fillColor}
       strokeColor={props.strokeColor}
       lineWidth={props.lineWidth}
       imgWidth={props.imgWidth}
+      width={props.width}
+      height={props.height}
       natural={props.natural}
-      stayHighlighted={props.stayHighlighted}
-      stayMultiHighlighted={props.stayMultiHighlighted}
-      toggleHighlighted={props.toggleHighlighted}
-      parentWidth={props.parentWidth}
       responsive={props.responsive}
+      parentWidth={props.parentWidth}
    />
   )`);

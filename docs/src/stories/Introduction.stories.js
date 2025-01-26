@@ -15,15 +15,10 @@ export const Introduction = () => (
       zones in images
     </p>
     <br />
-    <p className="block">
-      This repository is based on <b>react-image-mapper</b> but with some enhancements
-    </p>
-    <br />
     <b>Introduction</b>
     <br />
     <br />
     <p>In this mapper library, I have tried to create a few functionalities to map the images.</p>
-    <br />
     <br />
     <p className="tag-block">
       1) You can assign different colors (static/dynamic) to highlight a different area of the image
