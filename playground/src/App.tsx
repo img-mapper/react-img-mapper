@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ImageMapper from '@/ImageMapper';
-
-import JSON from '@playground/data/areas.json';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import JSON from '@resources/areas.json';
 
 import type { MapArea, RefProperties } from '@/ImageMapper';
 import type { FC } from 'react';

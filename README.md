@@ -67,12 +67,12 @@ import ImageMapper from 'react-img-mapper';
 
 const Mapper = () => {
   const URL =
-    'https://raw.githubusercontent.com/img-mapper/react-img-mapper/refs/heads/master/playground/public/assets/example.jpg';
+    'https://raw.githubusercontent.com/img-mapper/react-img-mapper/refs/heads/master/resources/example.jpg';
   const MAP = {
     name: 'my-map',
     // GET JSON FROM BELOW URL AS AN EXAMPLE AND PUT IT HERE
     areas:
-      'https://raw.githubusercontent.com/img-mapper/react-img-mapper/refs/heads/master/playground/src/data/areas.json',
+      'https://raw.githubusercontent.com/img-mapper/react-img-mapper/refs/heads/master/resources/areas.json',
   };
 
   return <ImageMapper src={URL} map={MAP} />;
