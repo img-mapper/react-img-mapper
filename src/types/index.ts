@@ -27,11 +27,6 @@ export interface MapArea extends OverrideMapArea {
   preFillColor?: string;
 }
 
-export interface Map {
-  name: string;
-  areas: MapArea[];
-}
-
 type RequiredMapArea = 'active' | 'fillColor' | 'lineWidth' | 'strokeColor';
 type RequiredArea<T extends MapArea = MapArea, R extends keyof T = RequiredMapArea> = Omit<T, R> &
   Pick<NoUndefinedField<T>, R>;
@@ -80,7 +75,8 @@ export type LoadEventHandler = ((event: HTMLImageElement, dimensions: WidthHeigh
 
 export interface ImageMapperProps {
   src: string;
-  map: Map;
+  name: string;
+  areas: MapArea[];
   areaKeyName?: ConditionalKeys<MapArea, string>;
   isMulti?: boolean;
   toggle?: boolean;

@@ -28,7 +28,7 @@ import {
 } from '@/helpers/events';
 import styles from '@/helpers/styles';
 
-import type { ImageMapperPropsWithRef, Map, MapArea, Refs } from '@/types';
+import type { ImageMapperPropsWithRef, MapArea, Refs } from '@/types';
 import type { PrevStateRef } from '@/types/dimensions.type';
 import type { CTX } from '@/types/draw.type';
 import type { FC, ReactNode } from 'react';
@@ -39,7 +39,8 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
   const generatedProps = generateProps(props);
   const {
     src,
-    map,
+    name,
+    areas,
     areaKeyName,
     isMulti,
     toggle,
@@ -75,7 +76,7 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
   } = generatedProps;
 
   const [isRendered, setRendered] = useState<boolean>(false);
-  const mapRef = useRef<Map>(map);
+  const areasRef = useRef<MapArea[]>(areas);
   const containerRef = useRef<Refs['containerRef']>(null);
   const img = useRef<Refs['imgRef']>(null);
   const canvas = useRef<Refs['canvasRef']>(null);
@@ -117,14 +118,14 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
   }, [init, isRendered]);
 
   const renderPrefilledAreas = useCallback(() => {
-    map.areas.forEach(area => {
+    areas.forEach(area => {
       const extendedArea = getExtendedArea(area, { img, ...scaleCoordsParams }, areaParams);
 
       if (!extendedArea.preFillColor) return false;
 
       return drawShape({ ...extendedArea, fillColor: extendedArea.preFillColor }, ctx);
     });
-  }, [areaParams, map.areas, scaleCoordsParams]);
+  }, [areaParams, areas, scaleCoordsParams]);
 
   const clearCanvas = useCallback(() => {
     if (!(ctx.current && canvas.current)) return;
@@ -146,15 +147,18 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
   };
 
   const onHighlightArea = (area: MapArea): void => {
-    const areasRef = mapRef.current.areas;
+    const chosenAreasRef = areasRef.current;
 
-    const chosenArea = isMulti ? area : areasRef.find(c => c[areaKeyName] === area[areaKeyName]);
+    const chosenArea = isMulti
+      ? area
+      : chosenAreasRef.find(c => c[areaKeyName] === area[areaKeyName]);
+
     if (!chosenArea) return;
 
     const extendedArea = getExtendedArea(chosenArea, { img, ...scaleCoordsParams }, areaParams);
     if (!(active && extendedArea.active)) return;
 
-    const chosenMap = isMulti ? map : mapRef.current;
+    const chosenAreas = isMulti ? areas : chosenAreasRef;
     const newArea = { ...chosenArea };
 
     const isCurrentAreaSelected = (() => {
@@ -167,20 +171,17 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
     })();
 
     if (isCurrentAreaSelected) {
-      const isPreFillColorFromJSON = chosenMap.areas.find(
-        c => c[areaKeyName] === area[areaKeyName]
-      );
-
+      const isPreFillColorFromJSON = chosenAreas.find(c => c[areaKeyName] === area[areaKeyName]);
       if (isPreFillColorFromJSON?.preFillColor) delete newArea.preFillColor;
     } else {
       newArea.preFillColor = extendedArea.fillColor;
     }
 
-    const areas = chosenMap.areas.map(cur =>
+    const updatedAreas = chosenAreas.map(cur =>
       cur[areaKeyName] === area[areaKeyName] ? newArea : cur
     );
 
-    if (onChange) onChange(newArea, areas);
+    if (onChange) onChange(newArea, updatedAreas);
   };
 
   const initCanvas = useCallback(
@@ -223,7 +224,7 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
 
   useEffect(() => {
     resetCanvasAndPrefillArea();
-  }, [map.areas, resetCanvasAndPrefillArea]);
+  }, [areas, resetCanvasAndPrefillArea]);
 
   useEffect(() => {
     if (responsive && parentWidth && prevState.current.parentWidth !== parentWidth) {
@@ -257,7 +258,7 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
   };
 
   const renderAreas = (): ReactNode =>
-    map.areas.map((area, index) => {
+    areas.map((area, index) => {
       const { scaledCoords } = getExtendedArea(area, { img, ...scaleCoordsParams }, areaParams);
 
       if (area.disabled) return null;
@@ -302,7 +303,7 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
         {...imgProps}
         ref={img}
         src={src}
-        useMap={`#${map.name}`}
+        useMap={`#${name}`}
         className={['img-mapper-img', ...(imgProps?.className ? [imgProps.className] : [])].join(
           ' '
         )}
@@ -328,7 +329,7 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
         className={['img-mapper-map', ...(mapProps?.className ? [mapProps.className] : [])].join(
           ' '
         )}
-        name={map.name}
+        name={name}
         style={{ ...mapProps?.style, ...styles.map(onClick) }}
       >
         {isRendered && !disabled && renderAreas()}
@@ -340,5 +341,5 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
 export default memo(ImageMapper, (prevProps, nextProps) => {
   const propChanged = rerenderPropsList.some(prop => prevProps[prop] !== nextProps[prop]);
 
-  return isEqual(prevProps.map, nextProps.map) && !propChanged;
+  return isEqual(prevProps.areas, nextProps.areas) && !propChanged;
 });

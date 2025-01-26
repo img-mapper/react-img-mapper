@@ -3,6 +3,7 @@ import type { ImageMapperDefaultProps } from '@/types/constants.type';
 
 export const rerenderPropsList = [
   'src',
+  'name',
   'areaKeyName',
   'isMulti',
   'toggle',
@@ -63,5 +64,5 @@ export const generateProps = <T extends ImageMapperProps>(props: T): Required<T>
       acc[key] = props[key] ?? value;
       return acc;
     },
-    { src: props.src, map: props.map }
+    { src: props.src, name: props.name, areas: props.areas }
   ) as Required<T>;
