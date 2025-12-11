@@ -75,6 +75,21 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
   } = generatedProps;
 
   const [isRendered, setIsRendered] = useState<boolean>(false);
+
+  const [hoverOpacity, setHoverOpacity] = useState<Record<string, number>>({});
+
+
+  const animate = (from: number, to: number, duration: number, cb: (v: number) => void) => {
+    const start = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      const v = from + (to - from) * t;
+      cb(v);
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+
   const areasRef = useRef<MapArea[]>(areas);
   const containerRef = useRef<Refs['containerRef']>(null);
   const img = useRef<Refs['imgRef']>(null);
@@ -104,7 +119,6 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
   const init = useCallback(() => {
     if (img.current?.complete && canvas.current && containerRef.current) {
       ctx.current = canvas.current.getContext('2d');
-
       setIsRendered(true);
     }
   }, []);
@@ -113,25 +127,23 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
     if (isRendered) {
       clearInterval(interval.current);
     } else {
-      // eslint-disable-next-line unicorn/prefer-global-this
       interval.current = window.setInterval(init, 500);
     }
   }, [init, isRendered]);
 
   const renderPrefilledAreas = useCallback(() => {
-    // eslint-disable-next-line unicorn/no-array-for-each
     areas.forEach((area) => {
       const extendedArea = getExtendedArea(area, { img, ...scaleCoordsParams }, areaParams);
-
       if (!extendedArea.preFillColor) return false;
-
-      return drawShape({ ...extendedArea, fillColor: extendedArea.preFillColor }, ctx);
+      return drawShape(
+        { ...extendedArea, fillColor: extendedArea.preFillColor },
+        ctx
+      );
     });
   }, [areaParams, areas, scaleCoordsParams]);
 
   const clearCanvas = useCallback(() => {
     if (!(ctx.current && canvas.current)) return;
-
     ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
   }, []);
 
@@ -140,12 +152,20 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
     renderPrefilledAreas();
   }, [clearCanvas, renderPrefilledAreas]);
 
-  const highlightArea = (area: MapArea): boolean => {
+  const highlightArea = (area: MapArea, opacity = 1): boolean => {
     const extendedArea = getExtendedArea(area, { img, ...scaleCoordsParams }, areaParams);
-
     if (!extendedArea.active) return false;
 
-    return drawShape(extendedArea, ctx);
+    const rgba = extendedArea.fillColor
+      .replace(/rgba?\(([^)]+)\)/, (match, inner) => {
+        const base = inner.split(',').slice(0, 3).join(',');
+        return `rgba(${base}, ${opacity})`;
+      });
+
+    return drawShape(
+      { ...extendedArea, fillColor: rgba },
+      ctx
+    );
   };
 
   const onHighlightArea = (area: MapArea): void => {
@@ -168,7 +188,6 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
         if (isMulti && newArea.preFillColor) return true;
         return !isMulti && !!area.preFillColor;
       }
-
       return false;
     })();
 
@@ -221,7 +240,6 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
 
   useEffect(() => {
     if (isRendered) initCanvas();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRendered]);
 
   useEffect(() => {
@@ -248,11 +266,27 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
   useImperativeHandle(ref, () => ({ getRefs }), [getRefs]);
 
   const handleMouseEnter = (area: MapArea): void => {
-    if (active) highlightArea(area);
+    if (!active) return;
+    const key = area[areaKeyName];
+
+    animate(0, 1, 250, (value) => {
+      setHoverOpacity((prev) => ({ ...prev, [key]: value }));
+      resetCanvasAndPrefillArea();
+      highlightArea(area, value);
+    });
   };
 
-  const handleMouseLeave = (): void => {
-    if (active) resetCanvasAndPrefillArea();
+  
+  const handleMouseLeave = (area: MapArea): void => {
+    if (!active) return;
+    const key = area[areaKeyName];
+    const current = hoverOpacity[key] ?? 1;
+
+    animate(current, 0, 250, (value) => {
+      setHoverOpacity((prev) => ({ ...prev, [key]: value }));
+      resetCanvasAndPrefillArea();
+      if (value > 0) highlightArea(area, value);
+    });
   };
 
   const handleClick = (area: MapArea): void => {
@@ -273,10 +307,8 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
           if (areaKeyNameProp) {
             return areaProps.find((cur) => cur && cur[areaKeyNameProp] === area[areaKeyNameProp]);
           }
-
           return areaProps[index];
         }
-
         return areaProps;
       })();
 
@@ -289,8 +321,8 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
           href={href ?? currentAreaProps?.href}
           onClick={click({ area, index }, { onClick, cb: handleClick })}
           onMouseDown={mouseDown({ area, index }, { onMouseDown })}
-          onMouseEnter={mouseEnter({ area, index }, { onMouseEnter, cb: handleMouseEnter })}
-          onMouseLeave={mouseLeave({ area, index }, { onMouseLeave, cb: handleMouseLeave })}
+          onMouseEnter={mouseEnter({ area, index }, { onMouseEnter, cb: () => handleMouseEnter(area) })}
+          onMouseLeave={mouseLeave({ area, index }, { onMouseLeave, cb: () => handleMouseLeave(area) })}
           onMouseMove={mouseMove({ area, index }, { onMouseMove })}
           onMouseUp={mouseUp({ area, index }, { onMouseUp })}
           onTouchEnd={touchEnd({ area, index }, { onTouchEnd })}
@@ -355,6 +387,5 @@ const ImageMapper: FC<ImageMapperPropsWithRef> = ({ ref, ...props }) => {
 
 export default memo(ImageMapper, (prevProps, nextProps) => {
   const propChanged = rerenderPropsList.some((prop) => prevProps[prop] !== nextProps[prop]);
-
   return isEqual(prevProps.areas, nextProps.areas) && !propChanged;
 });
